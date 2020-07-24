@@ -13,7 +13,7 @@ public class InstantiateGrabbableObject : MonoBehaviour
         // Notify us when Realtime successfully connects to the room
         _realtime.didConnectToRoom += DidConnectToRoom;
 
-        _realtimeTransform.RequestOwnership();
+        //_realtimeTransform.RequestOwnership();
     }
 
     private void DidConnectToRoom(Realtime realtime)

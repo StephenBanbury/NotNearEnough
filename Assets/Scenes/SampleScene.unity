@@ -446,6 +446,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff9a62edc7995824bba93cde76171ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &518279406 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114501696213753918, guid: fca9d4afb3743274e8f7da14019d7e0b,
+    type: 3}
+  m_PrefabInstance: {fileID: 518279403}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 518279404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99dcaba2234393f4a829d0fd1fb4a608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &646150717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,6 +1388,8 @@ GameObject:
   - component: {fileID: 2012956335}
   - component: {fileID: 2012956334}
   - component: {fileID: 2012956338}
+  - component: {fileID: 2012956341}
+  - component: {fileID: 2012956340}
   m_Layer: 0
   m_Name: Cube1
   m_TagString: Untagged
@@ -1470,3 +1484,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scaleText: {fileID: 1021449611}
+--- !u!114 &2012956340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012956333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6882e959db6a5ec4b9053f458a918d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2012956341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012956333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1011e140c5c34458f64fd8ad5095b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 518279406}
+  _sceneViewUUID: b5af08891007e64fac48714ed339a75c
+  _sceneViewOwnedByCreatingClient: 0
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _isRootPrefabView: 0
+  _components:
+  - componentID: 1
+    component: {fileID: 2012956340}
+    componentIDHasBeenUsed: 1
+  _parentView: {fileID: 0}
+  _childViews: []
