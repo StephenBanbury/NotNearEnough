@@ -12,15 +12,10 @@ public class BoxEntered : MonoBehaviour
     private float _previousScaleValue;
 
     private SlidingScaleSync _slidingScaleSync;
-
-    //public float ScaleValue { 
-    //    get => _scaleValue; 
-    //    set => _scaleValue = value;
-    //}
-
+    
     public void SetScaleValue(float scaleValue)
     {
-        Debug.Log($"SetScaleValue: {scaleValue}");
+        //Debug.Log($"SetScaleValue: {scaleValue}");
         _scaleValue = scaleValue;
         _scaleText.text = _scaleValue.ToString();
     }
@@ -36,10 +31,6 @@ public class BoxEntered : MonoBehaviour
         if (other.CompareTag("Hand"))
         {
             Debug.Log("Hand entered!");
-            Debug.Log($"Extra: { other.transform}");
-
-            //_handHeight = other.transform.position.y;
-            //Debug.Log($"_handHeight: {_handHeight}");
         }
     }
 

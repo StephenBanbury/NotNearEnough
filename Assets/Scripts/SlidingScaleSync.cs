@@ -44,15 +44,14 @@ public class SlidingScaleSync : RealtimeComponent
     private void ValueDidChange(SlidingScaleSyncModel model, float value)
     {
         // Update the scale value
-        Debug.Log("In ValueDidChange");
+        //Debug.Log("In ValueDidChange");
         UpdateSlidingScaleValue();
     }
 
     private void UpdateSlidingScaleValue()
     {
         // Get the value from the model and set it on the sliding scale
-        Debug.Log("In UpdateSlidingScaleValue");
-        //_boxEntered.ScaleValue = _model.scaleValue;
+        //Debug.Log("In UpdateSlidingScaleValue");
         _boxEntered.SetScaleValue(_model.scaleValue);
     }
 
@@ -60,8 +59,6 @@ public class SlidingScaleSync : RealtimeComponent
     {
         // Set the scale value on the model
         // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
-        Debug.Log($"_model.value before: {_model.scaleValue}");
         _model.scaleValue = value;
-        Debug.Log($"_model.value after: {_model.scaleValue}");
     }
 }
