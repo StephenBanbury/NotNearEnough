@@ -40,7 +40,7 @@ public class BoxEntered : MonoBehaviour
         if (other.CompareTag("Hand"))
         {
             // Round to nearest 2 decimal places
-            _scaleValue = Mathf.Round(other.transform.position.y * 100f) / 100f;
+            _scaleValue = Mathf.Round(other.transform.position.y * 100f) / 10f;
             //Debug.Log($"_handHeight: {_scaleValue}");
             _scaleText.text = _scaleValue.ToString();
 
