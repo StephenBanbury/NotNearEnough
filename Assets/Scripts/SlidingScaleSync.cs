@@ -10,7 +10,7 @@ public class SlidingScaleSync : RealtimeComponent
 
     void Start()
     {
-        Debug.Log("In SlidingScaleSync Start");
+        //Debug.Log("In SlidingScaleSync Start");
         _boxEntered = GetComponent<BoxEntered>();
     }
 
@@ -18,7 +18,7 @@ public class SlidingScaleSync : RealtimeComponent
     {
         set
         {
-            Debug.Log($"In model setter. Value: {value}");
+            //Debug.Log($"In model setter. Value: {value}");
 
             if (_model != null)
             {
@@ -34,7 +34,7 @@ public class SlidingScaleSync : RealtimeComponent
                 // Update the scale value to match the new model
                 UpdateSlidingScaleValue();
 
-                // Register for events so we'll know if the color changes later
+                // Register for events so we'll know if the value changes later
                 _model.valueDidChange += ValueDidChange;
             }
         }
