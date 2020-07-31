@@ -8,10 +8,9 @@ public class SlidingScaleSync : RealtimeComponent
     private BoxEntered _boxEntered;
     private SlidingScaleSyncModel _model;
 
-    // Start is called before the first frame update
     void Start()
     {
-        // TODO: needed?
+        Debug.Log("In SlidingScaleSync Start");
         _boxEntered = GetComponent<BoxEntered>();
     }
 
