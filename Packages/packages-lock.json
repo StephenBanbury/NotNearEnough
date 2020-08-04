@@ -86,7 +86,7 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.subsystemregistration": "1.0.5"
+        "com.unity.subsystemregistration": "1.0.6"
       },
       "url": "https://packages.unity.com"
     },
@@ -118,7 +118,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.windowsmr": {
-      "version": "2.1.5",
+      "version": "2.2.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {

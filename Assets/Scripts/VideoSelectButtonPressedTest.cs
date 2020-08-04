@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 
-public class VideoSelectButtonPressed : MonoBehaviour
-{
-    [SerializeField] private int _videoId;
+public class VideoSelectButtonPressedTest : MonoBehaviour
+{ 
+    public int _videoId;
 
     //private VideoSelectSync _videoSelectSync;
     private VideoSelectDisplay _videoSelectDisplay;
+
+    //public static VideoSelectButtonPressedTest instance;
 
     void Start()
     {
@@ -14,13 +16,12 @@ public class VideoSelectButtonPressed : MonoBehaviour
         _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelectDisplay>();
     }
 
-    private void OnTriggerEnter (Collider other)
+    public void OnPress()
     {
-        if (other.CompareTag("Hand"))
-        {
-            _videoSelectDisplay.SetVideoId(_videoId);
-            _videoSelectDisplay.KeepInSync(_videoId);
-        }
+        _videoId = Random.Range(1, 16);
+
+        _videoSelectDisplay.SetVideoId(_videoId);
+        _videoSelectDisplay.KeepInSync(_videoId);
     }
-    
+
 }

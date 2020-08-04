@@ -17,6 +17,8 @@ public class VideoSelectSync : RealtimeComponent
     {
         set
         {
+            Debug.Log("In VideoSelectSyncModel");
+
             if (_model != null)
             {
                 // Unregister from events
@@ -39,15 +41,19 @@ public class VideoSelectSync : RealtimeComponent
 
     private void VideoIdDidChange(VideoSelectSyncModel model, int value)
     {
+        Debug.Log("In VideoIdDidChange");
+
         // Update the video id
         UpdateVideoId();
     }
 
     private void UpdateVideoId()
     {
+        Debug.Log("In UpdateVideoId");
+
         // Get the value from the model and set it on the sliding scale
-       // Debug.Log($"_videoSelectDisplay exists: {_videoSelectDisplay != null}");
-       _videoSelectDisplay.SetVideoId(_model.videoId);
+        // Debug.Log($"_videoSelectDisplay exists: {_videoSelectDisplay != null}");
+        _videoSelectDisplay.SetVideoId(_model.videoId);
     }
     
     public void SetId(int id)
@@ -55,5 +61,7 @@ public class VideoSelectSync : RealtimeComponent
         // Set the value on the model
         // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
         _model.videoId = id;
+
+        Debug.Log($"model.videoId:{_model.videoId}");
     }
 }
