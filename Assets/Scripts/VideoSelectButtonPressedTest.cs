@@ -7,7 +7,7 @@ namespace Assets.Scripts
         public int _videoId;
 
         //private VideoSelectSync _videoSelectSync;
-        private VideoSelectDisplay _videoSelectDisplay;
+        private VideoSelect _videoSelectDisplay;
 
         //public static VideoSelectButtonPressedTest instance;
 
@@ -15,7 +15,7 @@ namespace Assets.Scripts
         {
             // Get reference to the sync and action components
             //_videoSelectSync = gameObject.GetComponentInParent<VideoSelectSync>();
-            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelectDisplay>();
+            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelect>();
         }
 
         public void OnPress()

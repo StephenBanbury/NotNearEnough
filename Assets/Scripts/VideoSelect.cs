@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class VideoSelectDisplay : MonoBehaviour
+    public class VideoSelect : MonoBehaviour
     {
         [SerializeField] private Text _videoIdText;
 
-        private int _id;
+        private int _videoId;
         private int _previousId;
         
         private VideoSelectSync _videoSelectSync;
@@ -22,23 +22,27 @@ namespace Assets.Scripts
 
         public void SetVideoId(int id)
         {
-            _id = id;
+            _videoId = id;
 
-            if (_id > 0)
+            if (_videoId > 0 && _videoId != _previousId)
             {
-                _videoIdText.text = _id.ToString();
+                _videoIdText.text = _videoId.ToString();
+
+                VideoDisplayManager.instance.SelectedVideo = _videoId;
+
+                //VideoManager.instance.AssignVideoToDisplay(1, _videoId);
             }
         }
 
-        public void KeepInSync(int videoId)
+        public void KeepInSync(int id)
         {
-            _id = videoId;
+            _videoId = id;
             
             // If the id has changed, call SetId on the sync component
-            if (_id != _previousId)
+            if (_videoId != _previousId)
             {
-                _videoSelectSync.SetId(_id);
-                _previousId = _id;
+                _videoSelectSync.SetId(_videoId);
+                _previousId = _videoId;
             }
         }
     }

@@ -8,11 +8,11 @@ namespace Assets.Scripts
     public class VideoSelectSync : RealtimeComponent
     {
         private VideoSelectSyncModel _model;
-        private VideoSelectDisplay _videoSelectDisplay;
+        private VideoSelect _videoSelectDisplay;
 
         void Start()
         {
-            _videoSelectDisplay = GetComponent<VideoSelectDisplay>();
+            _videoSelectDisplay = GetComponent<VideoSelect>();
         }
 
         private VideoSelectSyncModel model

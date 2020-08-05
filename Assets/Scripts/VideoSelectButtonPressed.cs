@@ -6,11 +6,11 @@ namespace Assets.Scripts
     {
         [SerializeField] private int _videoId;
 
-        private VideoSelectDisplay _videoSelectDisplay;
+        private VideoSelect _videoSelectDisplay;
 
         void Start()
         {
-            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelectDisplay>();
+            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelect>();
         }
 
         private void OnTriggerEnter(Collider other)

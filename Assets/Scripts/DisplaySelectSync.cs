@@ -5,24 +5,24 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class ScreenSelectSync : RealtimeComponent
+    public class DisplaySelectSync : RealtimeComponent
     {
-        private ScreenSelectSyncModel _model;
-        private ScreenSelectDisplay _screenSelectDisplay;
+        private DisplaySelectSyncModel _model;
+        private DisplaySelect _displaySelect;
 
         void Start()
         {
-            _screenSelectDisplay = GetComponent<ScreenSelectDisplay>();
+            _displaySelect = GetComponent<DisplaySelect>();
         }
 
-        private ScreenSelectSyncModel model
+        private DisplaySelectSyncModel model
         {
             set
             {
                 if (_model != null)
                 {
                     // Unregister from events
-                    _model.screenIdDidChange -= ScreenIdDidChange;
+                    _model.displayIdDidChange -= DisplayIdDidChange;
                 }
 
                 // Store the model
@@ -30,33 +30,33 @@ namespace Assets.Scripts
 
                 if (_model != null)
                 {
-                    // Update the screen id to match the new model
-                    UpdateScreenId();
+                    // Update the display id to match the new model
+                    UpdateDisplayId();
 
                     // Register for events so we'll know if the value changes later
-                    _model.screenIdDidChange += ScreenIdDidChange;
+                    _model.displayIdDidChange += DisplayIdDidChange;
                 }
             }
         }
 
-        private void ScreenIdDidChange(ScreenSelectSyncModel model, int value)
+        private void DisplayIdDidChange(DisplaySelectSyncModel model, int value)
         {
-            // Update the screen id
-            UpdateScreenId();
+            // Update the display id
+            UpdateDisplayId();
         }
 
-        private void UpdateScreenId()
+        private void UpdateDisplayId()
         {
             // Get the value from the model and set it on the sliding scale
-            // Debug.Log($"_screenSelectDisplay exists: {_screenSelectDisplay != null}");
-            _screenSelectDisplay.SetScreenId(_model.screenId);
+            // Debug.Log($"_displaySelectDisplay exists: {_displaySelectDisplay != null}");
+            _displaySelect.SetDisplayId(_model.displayId);
         }
 
         public void SetId(int id)
         {
             // Set the value on the model
             // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
-            _model.screenId = id;
+            _model.displayId = id;
         }
     }
 }

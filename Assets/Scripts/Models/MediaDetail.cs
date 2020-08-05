@@ -14,5 +14,6 @@ namespace Assets.Scripts.Models
         public MediaType MediaType { get; set; }
         public Source Source { get; set; }
         public string Url { get; set; }
+        public bool Show { get; set; }
     }
 }
