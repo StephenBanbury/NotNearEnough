@@ -29,9 +29,14 @@ public class VideoSelectDisplay : MonoBehaviour
 
     public void SetVideoId(int id)
     {
+        Debug.Log($"SetVideoId - id:{id}");
+
         _id = id;
-        //_videoIdText.text = _id.ToString();
-        _videoIdText.text = _videos[_id];
+        if (_id > 0)
+        {
+            //_videoIdText.text = _id.ToString();
+            _videoIdText.text = _videos[_id];
+        }
     }
 
     public void KeepInSync(int videoId)
