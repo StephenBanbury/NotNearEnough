@@ -3,65 +3,68 @@ using System.Collections.Generic;
 using Normal.Realtime;
 using UnityEngine;
 
-public class VideoSelectSync : RealtimeComponent
+namespace Assets.Scripts
 {
-    private VideoSelectSyncModel _model;
-    private VideoSelectDisplay _videoSelectDisplay;
-
-    void Start()
+    public class VideoSelectSync : RealtimeComponent
     {
-        _videoSelectDisplay = GetComponent<VideoSelectDisplay>();
-    }
+        private VideoSelectSyncModel _model;
+        private VideoSelectDisplay _videoSelectDisplay;
 
-    private VideoSelectSyncModel model
-    {
-        set
+        void Start()
         {
-            Debug.Log("In VideoSelectSyncModel");
+            _videoSelectDisplay = GetComponent<VideoSelectDisplay>();
+        }
 
-            if (_model != null)
+        private VideoSelectSyncModel model
+        {
+            set
             {
-                // Unregister from events
-                _model.videoIdDidChange -= VideoIdDidChange;
-            }
+                //Debug.Log("In VideoSelectSyncModel");
 
-            // Store the model
-            _model = value;
+                if (_model != null)
+                {
+                    // Unregister from events
+                    _model.videoIdDidChange -= VideoIdDidChange;
+                }
 
-            if (_model != null)
-            {
-                // Update the video id to match the new model
-                UpdateVideoId();
+                // Store the model
+                _model = value;
 
-                // Register for events so we'll know if the value changes later
-                _model.videoIdDidChange += VideoIdDidChange;
+                if (_model != null)
+                {
+                    // Update the video id to match the new model
+                    UpdateVideoId();
+
+                    // Register for events so we'll know if the value changes later
+                    _model.videoIdDidChange += VideoIdDidChange;
+                }
             }
         }
-    }
 
-    private void VideoIdDidChange(VideoSelectSyncModel model, int value)
-    {
-        Debug.Log("In VideoIdDidChange");
+        private void VideoIdDidChange(VideoSelectSyncModel model, int value)
+        {
+            //Debug.Log("In VideoIdDidChange");
 
-        // Update the video id
-        UpdateVideoId();
-    }
+            // Update the video id
+            UpdateVideoId();
+        }
 
-    private void UpdateVideoId()
-    {
-        Debug.Log("In UpdateVideoId");
+        private void UpdateVideoId()
+        {
+            //Debug.Log("In UpdateVideoId");
 
-        // Get the value from the model and set it on the sliding scale
-        // Debug.Log($"_videoSelectDisplay exists: {_videoSelectDisplay != null}");
-        _videoSelectDisplay.SetVideoId(_model.videoId);
-    }
-    
-    public void SetId(int id)
-    {
-        // Set the value on the model
-        // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
-        _model.videoId = id;
+            // Get the value from the model and set it on the sliding scale
+            // Debug.Log($"_videoSelectDisplay exists: {_videoSelectDisplay != null}");
+            _videoSelectDisplay.SetVideoId(_model.videoId);
+        }
 
-        Debug.Log($"model.videoId:{_model.videoId}");
+        public void SetId(int id)
+        {
+            // Set the value on the model
+            // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
+            _model.videoId = id;
+
+            //Debug.Log($"model.videoId:{_model.videoId}");
+        }
     }
 }

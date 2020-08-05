@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
 
-public class VideoSelectButtonPressed : MonoBehaviour
+namespace Assets.Scripts
 {
-    [SerializeField] private int _videoId;
-
-    //private VideoSelectSync _videoSelectSync;
-    private VideoSelectDisplay _videoSelectDisplay;
-
-    void Start()
+    public class VideoSelectButtonPressed : MonoBehaviour
     {
-        // Get reference to the sync and action components
-        //_videoSelectSync = gameObject.GetComponentInParent<VideoSelectSync>();
-        _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelectDisplay>();
-    }
+        [SerializeField] private int _videoId;
 
-    private void OnTriggerEnter (Collider other)
-    {
-        if (other.CompareTag("Hand"))
+        private VideoSelectDisplay _videoSelectDisplay;
+
+        void Start()
         {
-            _videoSelectDisplay.SetVideoId(_videoId);
-            _videoSelectDisplay.KeepInSync(_videoId);
+            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelectDisplay>();
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Hand"))
+            {
+                _videoSelectDisplay.SetVideoId(_videoId);
+                _videoSelectDisplay.KeepInSync(_videoId);
+            }
+        }
+
     }
-    
 }

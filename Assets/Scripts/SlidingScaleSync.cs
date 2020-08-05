@@ -3,61 +3,64 @@ using System.Collections.Generic;
 using Normal.Realtime;
 using UnityEngine;
 
-public class SlidingScaleSync : RealtimeComponent
+namespace Assets.Scripts
 {
-    private BoxEntered _boxEntered;
-    private SlidingScaleSyncModel _model;
-
-    void Start()
+    public class SlidingScaleSync : RealtimeComponent
     {
-        //Debug.Log("In SlidingScaleSync Start");
-        _boxEntered = GetComponent<BoxEntered>();
-    }
+        private BoxEntered _boxEntered;
+        private SlidingScaleSyncModel _model;
 
-    private SlidingScaleSyncModel model
-    {
-        set
+        void Start()
         {
-            //Debug.Log($"In model setter. Value: {value}");
+            //Debug.Log("In SlidingScaleSync Start");
+            _boxEntered = GetComponent<BoxEntered>();
+        }
 
-            if (_model != null)
+        private SlidingScaleSyncModel model
+        {
+            set
             {
-                // Unregister from events
-                _model.valueDidChange -= ValueDidChange;
-            }
+                //Debug.Log($"In model setter. Value: {value}");
 
-            // Store the model
-            _model = value;
+                if (_model != null)
+                {
+                    // Unregister from events
+                    _model.valueDidChange -= ValueDidChange;
+                }
 
-            if (_model != null)
-            {
-                // Update the scale value to match the new model
-                UpdateSlidingScaleValue();
+                // Store the model
+                _model = value;
 
-                // Register for events so we'll know if the value changes later
-                _model.valueDidChange += ValueDidChange;
+                if (_model != null)
+                {
+                    // Update the scale value to match the new model
+                    UpdateSlidingScaleValue();
+
+                    // Register for events so we'll know if the value changes later
+                    _model.valueDidChange += ValueDidChange;
+                }
             }
         }
-    }
 
-    private void ValueDidChange(SlidingScaleSyncModel model, float value)
-    {
-        // Update the scale value
-        //Debug.Log("In ValueDidChange");
-        UpdateSlidingScaleValue();
-    }
+        private void ValueDidChange(SlidingScaleSyncModel model, float value)
+        {
+            // Update the scale value
+            //Debug.Log("In ValueDidChange");
+            UpdateSlidingScaleValue();
+        }
 
-    private void UpdateSlidingScaleValue()
-    {
-        // Get the value from the model and set it on the sliding scale
-        //Debug.Log("In UpdateSlidingScaleValue");
-        _boxEntered.SetScaleValue(_model.scaleValue);
-    }
+        private void UpdateSlidingScaleValue()
+        {
+            // Get the value from the model and set it on the sliding scale
+            //Debug.Log("In UpdateSlidingScaleValue");
+            _boxEntered.SetScaleValue(_model.scaleValue);
+        }
 
-    public void SetValue(float value)
-    {
-        // Set the scale value on the model
-        // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
-        _model.scaleValue = value;
+        public void SetValue(float value)
+        {
+            // Set the scale value on the model
+            // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
+            _model.scaleValue = value;
+        }
     }
 }

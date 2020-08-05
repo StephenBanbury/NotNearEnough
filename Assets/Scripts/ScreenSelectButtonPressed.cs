@@ -4,27 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenSelectButtonPressed : MonoBehaviour
+namespace Assets.Scripts
 {
-    [SerializeField] private int _screenId;
-
-    private ScreenSelectSync _screenSelectSync;
-    private ScreenSelectDisplay _screenSelectDisplay;
-
-    void Start()
+    public class ScreenSelectButtonPressed : MonoBehaviour
     {
-        // Get reference to the sync and action components
-        _screenSelectSync = gameObject.GetComponentInParent<ScreenSelectSync>();
-        _screenSelectDisplay = gameObject.GetComponentInParent<ScreenSelectDisplay>();
-    }
+        [SerializeField] private int _screenId;
 
-    private void OnTriggerEnter (Collider other)
-    {
-        if (other.CompareTag("Hand"))
+        private ScreenSelectSync _screenSelectSync;
+        private ScreenSelectDisplay _screenSelectDisplay;
+
+        void Start()
         {
-            _screenSelectDisplay.SetScreenId(_screenId);
-            _screenSelectDisplay.KeepInSync(_screenId);
+            // Get reference to the sync and action components
+            _screenSelectSync = gameObject.GetComponentInParent<ScreenSelectSync>();
+            _screenSelectDisplay = gameObject.GetComponentInParent<ScreenSelectDisplay>();
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Hand"))
+            {
+                _screenSelectDisplay.SetScreenId(_screenId);
+                _screenSelectDisplay.KeepInSync(_screenId);
+            }
+        }
+
     }
-    
 }
