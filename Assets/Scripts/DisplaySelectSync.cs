@@ -41,15 +41,16 @@ namespace Assets.Scripts
 
         private void DisplayIdDidChange(DisplaySelectSyncModel model, int value)
         {
-            // Update the display id
             UpdateDisplayId();
         }
 
         private void UpdateDisplayId()
         {
-            // Get the value from the model and set it on the sliding scale
-            // Debug.Log($"_displaySelectDisplay exists: {_displaySelectDisplay != null}");
+            // Get the value from the model, display it and update the video display manager
             _displaySelect.SetDisplayId(_model.displayId);
+
+            VideoDisplayManager.instance.SelectedDisplay = _model.displayId;
+            VideoDisplayManager.instance.AssignVideoToDisplay();
         }
 
         public void SetId(int id)

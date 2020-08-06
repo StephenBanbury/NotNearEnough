@@ -23,7 +23,7 @@ namespace Assets.Scripts
             _videoId = Random.Range(1, 16);
 
             _videoSelectDisplay.SetVideoId(_videoId);
-            _videoSelectDisplay.KeepInSync(_videoId);
+            //_videoSelectDisplay.KeepInSync(_videoId);
         }
 
     }

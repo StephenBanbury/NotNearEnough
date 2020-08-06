@@ -27,17 +27,12 @@ namespace Assets.Scripts
             if (_videoId > 0 && _videoId != _previousId)
             {
                 _videoIdText.text = _videoId.ToString();
-
                 VideoDisplayManager.instance.SelectedVideo = _videoId;
-
-                //VideoManager.instance.AssignVideoToDisplay(1, _videoId);
             }
         }
 
-        public void KeepInSync(int id)
+        public void KeepInSync()
         {
-            _videoId = id;
-            
             // If the id has changed, call SetId on the sync component
             if (_videoId != _previousId)
             {

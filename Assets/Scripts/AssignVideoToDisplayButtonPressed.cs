@@ -9,7 +9,7 @@ public class AssignVideoToDisplayButtonPressed : MonoBehaviour
     {
         if (other.CompareTag("Hand"))
         {
-            VideoDisplayManager.instance.AssignVideoToDisplay();
+            //VideoDisplayManager.instance.AssignVideoToDisplay();
         }
     }
 

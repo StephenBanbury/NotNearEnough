@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -10,13 +6,10 @@ namespace Assets.Scripts
     {
         [SerializeField] private int _displayId;
 
-        private DisplaySelectSync _displaySelectSync;
         private DisplaySelect _displaySelectDisplay;
 
         void Start()
         {
-            // Get reference to the sync and action components
-            _displaySelectSync = gameObject.GetComponentInParent<DisplaySelectSync>();
             _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
         }
 
@@ -25,7 +18,7 @@ namespace Assets.Scripts
             if (other.CompareTag("Hand"))
             {
                 _displaySelectDisplay.SetDisplayId(_displayId);
-                _displaySelectDisplay.KeepInSync(_displayId);
+                _displaySelectDisplay.KeepInSync();
             }
         }
 

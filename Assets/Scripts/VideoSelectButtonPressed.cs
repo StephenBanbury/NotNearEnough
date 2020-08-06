@@ -18,7 +18,7 @@ namespace Assets.Scripts
             if (other.CompareTag("Hand"))
             {
                 _videoSelectDisplay.SetVideoId(_videoId);
-                _videoSelectDisplay.KeepInSync(_videoId);
+                _videoSelectDisplay.KeepInSync();
             }
         }
 

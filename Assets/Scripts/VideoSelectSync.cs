@@ -43,19 +43,15 @@ namespace Assets.Scripts
 
         private void VideoIdDidChange(VideoSelectSyncModel model, int value)
         {
-            //Debug.Log("In VideoIdDidChange");
-
-            // Update the video id
             UpdateVideoId();
         }
 
         private void UpdateVideoId()
         {
-            //Debug.Log("In UpdateVideoId");
-
-            // Get the value from the model and set it on the sliding scale
-            // Debug.Log($"_videoSelectDisplay exists: {_videoSelectDisplay != null}");
+            // Get the value from the model, display it 
             _videoSelectDisplay.SetVideoId(_model.videoId);
+
+            VideoDisplayManager.instance.SelectedVideo = _model.videoId;
         }
 
         public void SetId(int id)
@@ -63,8 +59,6 @@ namespace Assets.Scripts
             // Set the value on the model
             // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
             _model.videoId = id;
-
-            //Debug.Log($"model.videoId:{_model.videoId}");
         }
     }
 }
