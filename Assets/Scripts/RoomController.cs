@@ -7,32 +7,45 @@ using UnityEngine.Android;
 #endif
 
 /// <summary>
-///    TestHome serves a game controller object for this application.
+///    RoomController serves a game controller object for this application.
 /// </summary>
-public class TestHome : MonoBehaviour
+public class RoomController : MonoBehaviour
 {
 
-    // Use this for initialization
+    public static RoomController instance;
+
+    // Use this for initializations
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
 #endif
+
+
     static TestHelloUnityVideo app = null;
-
-    private string HomeSceneName = "SceneHome";
-
-    private string PlaySceneName = "SceneHelloVideo";
+    private string HomeSceneName = "JoinRoom";
+    private string PlaySceneName = "MainRoom";
 
     // PLEASE KEEP THIS App ID IN SAFE PLACE
     // Get your own App ID at https://dashboard.agora.io/
-    [SerializeField]
-    private string AppID = "your_appid";
+    [SerializeField] private string AppID = "your_appid";
+
+    [SerializeField] private string _roomName;
+    [SerializeField] private Text _testText;
 
     void Awake()
     {
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
 		permissionList.Add(Permission.Microphone);         
-		permissionList.Add(Permission.Camera);               
+		permissionList.Add(Permission.Camera);
 #endif
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
 
         // keep this alive across scenes
         DontDestroyOnLoad(this.gameObject);
@@ -69,11 +82,9 @@ public class TestHome : MonoBehaviour
 #endif
     }
 
-    public void onJoinButtonClicked()
+    public void JoinRoom()
     {
-        // get parameters (channel name, channel profile, etc.)
-        GameObject go = GameObject.Find("ChannelName");
-        InputField field = go.GetComponent<InputField>();
+        Debug.Log($"JoinRoom: {app}");
 
         // create app if nonexistent
         if (ReferenceEquals(app, null))
@@ -82,13 +93,31 @@ public class TestHome : MonoBehaviour
             app.loadEngine(AppID); // load engine
         }
 
-        // join channel and jump to next scene
-        app.join(field.text);
-        SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+        var joined = app.Join(_roomName);
+
+        if (joined)
+        {
+            SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+            _testText.text = _roomName;
+        }
+    }
+
+    public void OnJoinButtonClicked()
+    {
+        // get parameters(channel name, channel profile, etc.)
+        GameObject go = GameObject.Find("ChannelName");
+        InputField field = go.GetComponent<InputField>();
+
+        _roomName = field.text;
+
+        // join channel 
+        JoinRoom();
+
+        // jump to next scene
         SceneManager.LoadScene(PlaySceneName, LoadSceneMode.Single);
     }
 
-    public void onLeaveButtonClicked()
+    public void OnLeaveButtonClicked()
     {
         if (!ReferenceEquals(app, null))
         {
@@ -102,7 +131,13 @@ public class TestHome : MonoBehaviour
 
     public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == PlaySceneName)
+        Debug.Log("in OnLevelFinishedLoading");
+
+        if (scene.name != PlaySceneName)
+        {
+            Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
+        }
+        else
         {
             if (!ReferenceEquals(app, null))
             {

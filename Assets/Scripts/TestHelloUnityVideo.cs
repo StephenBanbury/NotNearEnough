@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 using agora_gaming_rtc;
 using agora_utilities;
+using UnityEngine.Video;
 
 
 // this is an example of using Agora Unity SDK
@@ -35,12 +36,12 @@ public class TestHelloUnityVideo
         mRtcEngine.SetLogFilter(LOG_FILTER.DEBUG | LOG_FILTER.INFO | LOG_FILTER.WARNING | LOG_FILTER.ERROR | LOG_FILTER.CRITICAL);
     }
 
-    public void join(string channel)
+    public bool Join(string channel)
     {
         Debug.Log("calling join (channel = " + channel + ")");
 
         if (mRtcEngine == null)
-            return;
+            return false;
 
         // set callbacks (optional)
         mRtcEngine.OnJoinChannelSuccess = onJoinChannelSuccess;
@@ -58,6 +59,8 @@ public class TestHelloUnityVideo
         // Optional: if a data stream is required, here is a good place to create it
         int streamID = mRtcEngine.CreateDataStream(true, true);
         Debug.Log("initializeEngine done, data stream id = " + streamID);
+
+        return true;
     }
 
     public string getSdkVersion()
@@ -123,17 +126,19 @@ public class TestHelloUnityVideo
     // set video transform delegate for statically created GameObject
     public void onSceneHelloVideoLoaded()
     {
+        Debug.Log("in onSceneHelloVideoLoaded");
+
         // Attach the SDK Script VideoSurface for video rendering
-        GameObject quad = GameObject.Find("Quad");
-        if (ReferenceEquals(quad, null))
-        {
-            Debug.Log("BBBB: failed to find Quad");
-            return;
-        }
-        else
-        {
-            quad.AddComponent<VideoSurface>();
-        }
+        //GameObject quad = GameObject.Find("Quad");
+        //if (ReferenceEquals(quad, null))
+        //{
+        //    Debug.Log("BBBB: failed to find Quad");
+        //    return;
+        //}
+        //else
+        //{
+        //    quad.AddComponent<VideoSurface>();
+        //}
 
         GameObject cube = GameObject.Find("Cube");
         if (ReferenceEquals(cube, null))
@@ -143,8 +148,10 @@ public class TestHelloUnityVideo
         }
         else
         {
-            cube.AddComponent<VideoSurface>();
+            Debug.Log("cube.AddComponent<VideoSurface>();");
+            //cube.AddComponent<VideoSurface>();
         }
+
     }
 
     // implement engine callbacks

@@ -8,25 +8,25 @@ public class ButtonHandler : MonoBehaviour
     ///   React to a button click event.  Used in the UI Button action definition.
     /// </summary>
     /// <param name="button"></param>
-    public void onButtonClicked(Button button)
+    public void OnButtonClicked(Button button)
     {
         // which GameObject?
-        GameObject go = GameObject.Find("GameController");
+        GameObject go = GameObject.Find("RoomController");
         if (go != null)
         {
-            TestHome gameController = go.GetComponent<TestHome>();
-            if (gameController == null)
+            RoomController roomController = go.GetComponent<RoomController>();
+            if (roomController == null)
             {
                 Debug.LogError("Missing game controller...");
                 return;
             }
             if (button.name == "JoinButton")
             {
-                gameController.onJoinButtonClicked();
+                roomController.OnJoinButtonClicked();
             }
             else if (button.name == "LeaveButton")
             {
-                gameController.onLeaveButtonClicked();
+                roomController.OnLeaveButtonClicked();
             }
         }
     }
