@@ -48,6 +48,8 @@ namespace agora_gaming_rtc
 
         void Start()
         {
+            Debug.Log($"VideoSurfaceType {VideoSurfaceType == AgoraVideoSurfaceType.Renderer}");
+
             // render video
             if (VideoSurfaceType == AgoraVideoSurfaceType.Renderer)
             {
@@ -57,12 +59,17 @@ namespace agora_gaming_rtc
             if (mRenderer == null || VideoSurfaceType == AgoraVideoSurfaceType.RawImage)
             {
                 mRawImage = GetComponent<RawImage>();
+
+                Debug.Log($"mRawImage{mRawImage}");
                 if (mRawImage != null)
                 {
                     // the variable may have been set to default enum but actually it is a RawImage
                     VideoSurfaceType = AgoraVideoSurfaceType.RawImage;
                 }
             }
+
+            Debug.Log($"mRawImage{mRawImage}");
+            Debug.Log($"mRawImage{mRenderer}");
 
             if (mRawImage == null && mRenderer == null)
             {
@@ -202,6 +209,7 @@ namespace agora_gaming_rtc
         */
         public void SetGameFps(uint fps)
         {
+            Debug.Log("SetGameFps");
             gameFps = fps / 15; // 15 fix me according to the real video frame rate.
         }
 
@@ -245,6 +253,7 @@ namespace agora_gaming_rtc
         */
         public void SetVideoSurfaceType(AgoraVideoSurfaceType agoraVideoSurfaceType)
         {
+            Debug.Log($"agoraVideoSurfaceType {agoraVideoSurfaceType}");
             VideoSurfaceType = agoraVideoSurfaceType;
         }
 
@@ -257,6 +266,8 @@ namespace agora_gaming_rtc
         public void SetEnable(bool enable)
         {
             mEnable = enable;
+
+            Debug.Log("mEnable = " + mEnable);
         }
 
         private void FlipTextureHorizontal(Texture2D original)

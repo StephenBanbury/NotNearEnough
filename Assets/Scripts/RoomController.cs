@@ -49,6 +49,8 @@ public class RoomController : MonoBehaviour
 
         // keep this alive across scenes
         DontDestroyOnLoad(this.gameObject);
+        
+        JoinRoom();
     }
 
     void Start()
@@ -90,7 +92,7 @@ public class RoomController : MonoBehaviour
         if (ReferenceEquals(app, null))
         {
             app = new TestHelloUnityVideo(); // create app
-            app.loadEngine(AppID); // load engine
+            app.LoadEngine(AppID); // load engine
         }
 
         var joined = app.Join(_roomName);
@@ -121,8 +123,8 @@ public class RoomController : MonoBehaviour
     {
         if (!ReferenceEquals(app, null))
         {
-            app.leave(); // leave channel
-            app.unloadEngine(); // delete engine
+            app.Leave(); // leave channel
+            app.UnloadEngine(); // delete engine
             app = null; // delete app
             SceneManager.LoadScene(HomeSceneName, LoadSceneMode.Single);
         }
@@ -141,7 +143,7 @@ public class RoomController : MonoBehaviour
         {
             if (!ReferenceEquals(app, null))
             {
-                app.onSceneHelloVideoLoaded(); // call this after scene is loaded
+                app.OnSceneHelloVideoLoaded(); // call this after scene is loaded
             }
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }
@@ -159,7 +161,7 @@ public class RoomController : MonoBehaviour
     {
         if (!ReferenceEquals(app, null))
         {
-            app.unloadEngine();
+            app.UnloadEngine();
         }
     }
 }
