@@ -77,7 +77,7 @@ namespace Assets.Scripts
 
                 var screensContainer = GameObject.Find("Screens");
                 var vc = _videoClips[_lastSelectedVideoId - 1];
-                var screenObject = screensContainer.transform.Find($"ScreenObject{_lastSelectedDisplayId}");
+                var screenObject = screensContainer.transform.Find($"VideoScreen{_lastSelectedDisplayId}");
                 _videoPlayer = screenObject.GetComponentInChildren<VideoPlayer>();
                 _videoPlayer.clip = vc;
                 _videoPlayer.Play();
