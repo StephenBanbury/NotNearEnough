@@ -20,7 +20,7 @@ public class RoomController : MonoBehaviour
 #endif
 
 
-    static TestHelloUnityVideo app = null;
+    static AgoraInterface app = null;
     private string HomeSceneName = "JoinRoom";
     private string PlaySceneName = "MainRoom";
 
@@ -91,7 +91,7 @@ public class RoomController : MonoBehaviour
         // create app if nonexistent
         if (ReferenceEquals(app, null))
         {
-            app = new TestHelloUnityVideo(); // create app
+            app = new AgoraInterface(); // create app
             app.LoadEngine(AppID); // load engine
         }
 
@@ -100,7 +100,7 @@ public class RoomController : MonoBehaviour
         if (joined)
         {
             SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
-            _testText.text = _roomName;
+            _testText.text = $"Joined {_roomName}";
         }
     }
 
@@ -143,7 +143,7 @@ public class RoomController : MonoBehaviour
         {
             if (!ReferenceEquals(app, null))
             {
-                app.OnSceneHelloVideoLoaded(); // call this after scene is loaded
+                app.OnSceneLoaded(); // call this after scene is loaded
             }
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }

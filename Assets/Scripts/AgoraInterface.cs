@@ -1,19 +1,17 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using agora_gaming_rtc;
 using agora_utilities;
+using Boo.Lang;
 
-
-// this is an example of using Agora Unity SDK
-// It demonstrates:
-// How to enable video
-// How to join/leave channel
-// 
-public class TestHelloUnityVideo
+public class AgoraInterface
 {
-
     // instance of agora engine
     private IRtcEngine mRtcEngine;
+    private uint _localPlayerUid;
+
+    private List<uint> _joinedUsers = new List<uint>();
 
     // load agora engine
     public void LoadEngine(string appId)
@@ -36,7 +34,7 @@ public class TestHelloUnityVideo
 
     public bool Join(string channel)
     {
-        Debug.Log("calling join (channel = " + channel + ")");
+        Debug.Log($"In Join (channel = {channel})");
 
         if (mRtcEngine == null)
             return false;
@@ -80,7 +78,7 @@ public class TestHelloUnityVideo
 
     public void Leave()
     {
-        Debug.Log("calling leave");
+        Debug.Log("In Leave");
 
         if (mRtcEngine == null)
             return;
@@ -94,7 +92,7 @@ public class TestHelloUnityVideo
     // unload agora engine
     public void UnloadEngine()
     {
-        Debug.Log("calling unloadEngine");
+        Debug.Log("In UnloadEngine");
 
         // delete
         if (mRtcEngine != null)
@@ -122,9 +120,9 @@ public class TestHelloUnityVideo
 
     // accessing GameObject in Scnene1
     // set video transform delegate for statically created GameObject
-    public void OnSceneHelloVideoLoaded()
+    public void OnSceneLoaded()
     {
-        Debug.Log("in onSceneHelloVideoLoaded");
+        Debug.Log("In OnSceneLoaded");
 
         // Attach the SDK Script VideoSurface for video rendering
         //GameObject quad = GameObject.Find("Quad");
@@ -137,54 +135,64 @@ public class TestHelloUnityVideo
         //{
         //    quad.AddComponent<VideoSurface>();
         //}
-
-        //GameObject cube = GameObject.Find("Cube");
-        //if (ReferenceEquals(cube, null))
-        //{
-        //    Debug.Log("BBBB: failed to find Cube");
-        //    return;
-        //}
-        //else
-        //{
-        //    Debug.Log("cube.AddComponent<VideoSurface>();");
-        //    //cube.AddComponent<VideoSurface>();
-        //}
-
     }
+
 
     // implement engine callbacks
     private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
     {
-        Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
-        GameObject textVersionGameObject = GameObject.Find("VersionText");
-        textVersionGameObject.GetComponent<Text>().text = "SDK Version : " + GetSdkVersion();
+        Debug.Log("OnJoinChannelSuccess: uid = " + uid);
+
+        _localPlayerUid = uid;
+        _joinedUsers.Add(uid);
+
+        //GameObject textVersionGameObject = GameObject.Find("VersionText");
+        //textVersionGameObject.GetComponent<Text>().text = "SDK Version : " + GetSdkVersion();
     }
 
-    // When a remote user joined, this delegate will be called. Typically
-    // create a GameObject to render video on it
+    // When a remote user joins, this delegate will be called. 
+    // Typically create a GameObject to render video on it
     private void OnUserJoined(uint uid, int elapsed)
     {
         Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
         // this is called in main thread
-
-        // find a game object to render video stream from 'uid'
-        GameObject go = GameObject.Find(uid.ToString());
-        if (!ReferenceEquals(go, null))
+        Debug.Log($"Local player uid: {_localPlayerUid}");
+        
+        foreach (var user in _joinedUsers)
         {
-            return; // reuse
+            Debug.Log($"Joined user: {user.ToString()}");
         }
 
-        // create a GameObject and assign to this new user
-        VideoSurface videoSurface = makeImageSurface(uid.ToString());
-        //VideoSurface videoSurface = findImageSurface(uid.ToString()); 
+        Debug.Log($"Number joined: {_joinedUsers.Count}");
 
-        if (!ReferenceEquals(videoSurface, null))
+        var userAlreadyJoined = 
+            _joinedUsers.Any(u => u.Equals(uid)) || _joinedUsers.Count == 1;
+
+        Debug.Log($"userAlreadyJoined: {userAlreadyJoined}");
+
+        _joinedUsers.Add(uid);
+
+
+        if (!userAlreadyJoined)
         {
-            // configure videoSurface
-            videoSurface.SetForUser(uid);
-            videoSurface.SetEnable(true);
-            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-            videoSurface.SetGameFps(30);
+            // find a game object to render video stream from 'uid'
+            GameObject go = GameObject.Find(uid.ToString());
+            if (!ReferenceEquals(go, null))
+            {
+                return; // reuse
+            }
+
+            // Create a GameObject and assign to this new user
+            VideoSurface videoSurface = MakeImageSurface(uid.ToString());
+
+            if (!ReferenceEquals(videoSurface, null))
+            {
+                // configure videoSurface
+                videoSurface.SetForUser(uid);
+                videoSurface.SetEnable(true);
+                videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
+                videoSurface.SetGameFps(30);
+            }
         }
     }
 
@@ -212,12 +220,11 @@ public class TestHelloUnityVideo
 
     private const float Offset = 100;
 
-    public VideoSurface makeImageSurface(string goName)
+    public VideoSurface MakeImageSurface(string goName)
     {
         GameObject go = new GameObject { name = goName };
 
-
-        // to be rendered onto
+        // To be rendered onto
         go.AddComponent<RawImage>();
 
         // make the object draggable
@@ -229,61 +236,23 @@ public class TestHelloUnityVideo
             go.transform.parent = canvas.transform;
         }
 
-        // set up transform
+        // Set up transform
         //go.transform.Rotate(0f, 0.0f, 180.0f);
         //float xPos = Random.Range(Offset - Screen.width / 2f, Screen.width / 2f - Offset);
         //float yPos = Random.Range(Offset, Screen.height / 2f - Offset);
         //go.transform.localPosition = new Vector3(xPos, yPos, 0f);
         //go.transform.localScale = new Vector3(3f, 4f, 1f);
-
-        //var display = GameObject.Find("Screen");
-        //go.transform.localPosition = Vector3.zero;
-        //go.transform.localPosition = new Vector3(0, 0, 0);
-        //go.transform.localScale = Vector3.zero;
-
+        
         go.transform.localEulerAngles = Vector3.zero;
         go.transform.localPosition = Vector3.zero;
         go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
 
-
-        // configure videoSurface
+        // Configure videoSurface
         VideoSurface videoSurface = go.AddComponent<VideoSurface>();
 
         return videoSurface;
     }
 
-    public VideoSurface MakeImageSurface(string goName)
-    {
-        GameObject go = new GameObject();
-
-        if (go == null)
-        {
-            return null;
-        }
-
-        go.name = goName;
-
-        // to be renderered onto
-        go.AddComponent<RawImage>();
-
-        // make the object draggable
-        go.AddComponent<UIElementDragger>();
-        GameObject canvas = GameObject.Find("Canvas");
-        if (canvas != null)
-        {
-            go.transform.parent = canvas.transform;
-        }
-        // set up transform
-        go.transform.Rotate(0f, 0.0f, 180.0f);
-        float xPos = Random.Range(Offset - Screen.width / 2f, Screen.width / 2f - Offset);
-        float yPos = Random.Range(Offset, Screen.height / 2f - Offset);
-        go.transform.localPosition = new Vector3(xPos, yPos, 0f);
-        go.transform.localScale = new Vector3(3f, 4f, 1f);
-
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
-    }
     // When remote user is offline, this delegate will be called. Typically
     // delete the GameObject for this user
     private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
