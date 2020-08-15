@@ -15,5 +15,6 @@ namespace Assets.Scripts.Models
         public Source Source { get; set; }
         public string Url { get; set; }
         public bool Show { get; set; }
+        public int DisplayId { get; set; }
     }
 }

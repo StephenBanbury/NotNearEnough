@@ -2,8 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using agora_gaming_rtc;
-using agora_utilities;
-using Boo.Lang;
+using System.Collections.Generic;
 
 public class AgoraInterface
 {
@@ -157,13 +156,13 @@ public class AgoraInterface
         Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
         // this is called in main thread
         Debug.Log($"Local player uid: {_localPlayerUid}");
-        
-        foreach (var user in _joinedUsers)
-        {
-            Debug.Log($"Joined user: {user.ToString()}");
-        }
 
         Debug.Log($"Number joined: {_joinedUsers.Count}");
+
+        foreach (var user in _joinedUsers)
+        {
+            Debug.Log($"Joined user: {user}");
+        }
 
         var userAlreadyJoined = 
             _joinedUsers.Any(u => u.Equals(uid)) || _joinedUsers.Count == 1;
