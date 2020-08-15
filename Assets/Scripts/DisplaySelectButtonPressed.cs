@@ -21,6 +21,5 @@ namespace Assets.Scripts
                 _displaySelectDisplay.KeepInSync();
             }
         }
-
     }
 }

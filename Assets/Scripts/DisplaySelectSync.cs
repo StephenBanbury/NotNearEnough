@@ -49,10 +49,10 @@ namespace Assets.Scripts
             // Get the value from the model, display it and update the video display manager
             _displaySelect.SetDisplayId(_model.displayId);
 
-            VideoDisplayManager.instance.SelectedDisplay = _model.displayId;
-            VideoDisplayManager.instance.AssignVideoToDisplay();
+            MediaDisplayManager.instance.SelectedDisplay = _model.displayId;
+            MediaDisplayManager.instance.AssignMediaToDisplay();
         }
-
+        
         public void SetId(int id)
         {
             // Set the value on the model

@@ -23,42 +23,42 @@ namespace Assets.Scripts.Services
                 {
                     Id = 1,
                     Title = "Video1",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.VideoClip
                 },
                 new MediaDetail
                 {
                     Id = 2,
                     Title = "Video2",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.VideoClip
                 },
                 new MediaDetail
                 {
                     Id = 3,
                     Title = "Video3",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.VideoClip
                 },
                 new MediaDetail
                 {
                     Id = 4,
                     Title = "Video4",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.VideoClip
                 },
                 new MediaDetail
                 {
                     Id = 5,
                     Title = "Video5",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.VideoClip
                 },
                 new MediaDetail
                 {
                     Id = 6,
                     Title = "Video6",
-                    MediaType = MediaType.Video,
+                    MediaType = MediaType.VideoClip,
                     Source = Source.Url,
                     Url = "https://giant.gfycat.com/KeyKindheartedCleanerwrasse.webm"
                 }

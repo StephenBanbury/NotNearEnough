@@ -51,7 +51,7 @@ namespace Assets.Scripts
             // Get the value from the model, display it 
             _streamSelectDisplay.SetStreamId(_model.streamId);
 
-            StreamDisplayManager.instance.SelectedStream = _model.streamId;
+            MediaDisplayManager.instance.SelectedStream = _model.streamId;
         }
 
         public void SetId(int id)

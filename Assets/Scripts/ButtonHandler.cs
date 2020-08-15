@@ -14,7 +14,7 @@ public class ButtonHandler : MonoBehaviour
         GameObject go = GameObject.Find("RoomController");
         if (go != null)
         {
-            RoomController roomController = go.GetComponent<RoomController>();
+            AgoraController roomController = go.GetComponent<AgoraController>();
             if (roomController == null)
             {
                 Debug.LogError("Missing game controller...");

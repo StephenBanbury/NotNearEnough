@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -25,7 +26,9 @@ namespace Assets.Scripts
             if (_streamId > 0 && _streamId != _previousId)
             {
                 _streamIdText.text = _streamId.ToString();
-                StreamDisplayManager.instance.SelectedStream = _streamId;
+                MediaDisplayManager.instance.SelectedStream = _streamId;
+                MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoStream;
+
             }
         }
 

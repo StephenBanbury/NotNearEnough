@@ -1,39 +1,31 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
-#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+#if (UNITY_ANDROID)
 using System.Collections;
 using UnityEngine.Android;
 #endif
 
-/// <summary>
-///    RoomController serves a game controller object for this application.
-/// </summary>
-public class RoomController : MonoBehaviour
+public class AgoraController : MonoBehaviour
 {
-
-    public static RoomController instance;
+    public static AgoraController instance;
 
     // Use this for initializations
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
 #endif
-
-
+    
     static AgoraInterface app = null;
     private string HomeSceneName = "JoinRoom";
     private string PlaySceneName = "MainRoom";
 
-    // PLEASE KEEP THIS App ID IN SAFE PLACE
-    // Get your own App ID at https://dashboard.agora.io/
     [SerializeField] private string AppID = "your_appid";
-
     [SerializeField] private string _roomName;
     [SerializeField] private Text _testText;
 
     void Awake()
     {
-#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+#if (UNITY_ANDROID)
 		permissionList.Add(Permission.Microphone);         
 		permissionList.Add(Permission.Camera);
 #endif
@@ -73,7 +65,7 @@ public class RoomController : MonoBehaviour
     /// </summary>
     private void CheckPermissions()
     {
-#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+#if (UNITY_ANDROID)
         foreach(string permission in permissionList)
         {
             if (!Permission.HasUserAuthorizedPermission(permission))

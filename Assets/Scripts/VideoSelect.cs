@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.Scripts.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +26,8 @@ namespace Assets.Scripts
             if (_videoId > 0 && _videoId != _previousId)
             {
                 _videoIdText.text = _videoId.ToString();
-                VideoDisplayManager.instance.SelectedVideo = _videoId;
+                MediaDisplayManager.instance.SelectedVideo = _videoId;
+                MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoClip;
             }
         }
 

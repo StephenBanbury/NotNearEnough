@@ -32,6 +32,7 @@ namespace Assets.Scripts
 
                 if (_model != null)
                 {
+                    //Debug.Log("in VideoSelectSyncModel");
                     // Update the video id to match the new model
                     UpdateVideoId();
 
@@ -51,7 +52,9 @@ namespace Assets.Scripts
             // Get the value from the model, display it 
             _videoSelectDisplay.SetVideoId(_model.videoId);
 
-            VideoDisplayManager.instance.SelectedVideo = _model.videoId;
+            //Debug.Log($"in UpdateVideoId: {_model.videoId}");
+
+            MediaDisplayManager.instance.SelectedVideo = _model.videoId;
         }
 
         public void SetId(int id)

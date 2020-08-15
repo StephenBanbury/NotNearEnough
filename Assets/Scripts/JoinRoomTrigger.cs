@@ -9,7 +9,7 @@ public class JoinRoomTrigger : MonoBehaviour
         if (other.CompareTag("Hand"))
         {
             Debug.Log("JoinRoomTrigger");
-            RoomController.instance.JoinRoom();
+            AgoraController.instance.JoinRoom();
         }
     }
 }
