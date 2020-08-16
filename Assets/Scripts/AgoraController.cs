@@ -1,8 +1,14 @@
-﻿using Assets.Scripts.Models;
+﻿using System;
+using Assets.Scripts.Models;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using agora_gaming_rtc;
+using Assets.Scripts;
+using Object = UnityEngine.Object; // not sure how/why this appeared when it was not in original script
+using Random = UnityEngine.Random; // not sure how/why this appeared when it was not in original script
 
 #if (UNITY_ANDROID)
 using System.Collections;
@@ -24,13 +30,15 @@ public class AgoraController : MonoBehaviour
     private string _playSceneName = "MainRoom";
 
     [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
-    [SerializeField] private string _roomName;
+    [SerializeField] private string _roomName = "unity3d";
     [SerializeField] private Text _testText;
 
     public List<AgoraUser> AgoraUsers
     {
-        get { return _app.AgoraUsers; }
+        get { return _joinedUsers; }
     }
+
+    private List<AgoraUser> _joinedUsers = new List<AgoraUser>();
 
     void Awake()
     {
@@ -62,6 +70,174 @@ public class AgoraController : MonoBehaviour
     void Update()
     {
         CheckPermissions();
+    }
+
+    public void UserJoined(AgoraUser agoraUser)
+    {
+        // TODO check if user already has joined
+        _joinedUsers.Add(agoraUser);
+    }
+
+    public void UserJoinsRoom(uint uid)
+    {
+        //var displayId = UserDisplayId(uid);
+
+        //var userAlreadyJoined = displayId != -1;
+
+        var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
+
+        if (userAlreadyJoined)
+        {
+            Debug.Log($"User already joined");
+        }
+        else
+        {
+            // TODO: displayId to be set by local user 
+            //var displayId = _joinedUsers.Count + 1;
+
+            var agoraUser = new AgoraUser
+            {
+                Id = _joinedUsers.Count + 1,
+                Uid = uid,
+                DateJoined = DateTime.UtcNow,
+                Display = false
+            };
+
+            _joinedUsers.Add(agoraUser);
+
+            Debug.Log($"Number joined: {_joinedUsers.Count}");
+            Debug.Log("Joined users: -");
+            foreach (var user in _joinedUsers)
+            {
+                Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}");
+            }
+
+            MediaDisplayManager.instance.CreateStreamSelectButtons();
+
+            // Create a GameObject and assign to this new user
+            //VideoSurface videoSurface = MakeImageSurface(agoraUser);
+
+            //if (!ReferenceEquals(videoSurface, null))
+            //{
+            //    // configure videoSurface
+            //    videoSurface.SetForUser(uid);
+            //    videoSurface.SetEnable(true);
+            //    videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
+            //    videoSurface.SetGameFps(30);
+            //}
+        }
+    }
+
+    public void UserLeavesRoom(uint uid)
+    {
+        var leavingUser = _joinedUsers.FirstOrDefault(u => u.Uid == uid);
+        if (leavingUser != null)
+        {
+            leavingUser.LeftRoom = true;
+
+            GameObject go = GameObject.Find(uid.ToString());
+            if (!ReferenceEquals(go, null))
+            {
+                Object.Destroy(go);
+            }
+
+            MediaDisplayManager.instance.CreateStreamSelectButtons();
+        }
+    }
+    
+    public VideoSurface MakeImageSurface(AgoraUser user)
+    {
+        // find a game object to render video stream from 'uid'
+
+        var goName = user.Uid.ToString();
+        var displayId = user.DisplayId;
+
+        GameObject go = GameObject.Find(goName);
+
+        if (!ReferenceEquals(go, null))
+        {
+            return null;
+        }
+
+        go = new GameObject { name = goName };
+
+        // To be rendered onto
+        go.AddComponent<RawImage>();
+
+        // make the object draggable
+        //go.AddComponent<UIElementDragger>();
+
+
+        var screensContainer = GameObject.Find("Screens");
+
+        var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
+
+        Debug.Log($"StreamingScreen{displayId}");
+
+        var videoDisplay = screenObject.transform.Find("VideoDisplay");
+        var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+
+        videoDisplay.gameObject.SetActive(false);
+        canvasDisplay.gameObject.SetActive(true);
+
+
+        //var displayName = $"StreamingScreen{displayId}";
+        //var displayParent = GameObject.Find(displayName);
+        //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
+
+        if (canvasDisplay != null)
+        {
+            foreach (GameObject child in canvasDisplay.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+
+            go.transform.parent = canvasDisplay.transform;
+        }
+
+        go.transform.localEulerAngles = Vector3.zero;
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
+
+        // Configure videoSurface
+        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+
+        return videoSurface;
+    }
+
+    public VideoSurface MakePlaneSurface(string goName)
+    {
+        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
+
+        if (go == null)
+        {
+            return null;
+        }
+
+        go.name = goName;
+        // set up transform
+        go.transform.Rotate(-90.0f, 0.0f, 0.0f);
+        float yPos = Random.Range(3.0f, 5.0f);
+        float xPos = Random.Range(-2.0f, 2.0f);
+        go.transform.position = new Vector3(xPos, yPos, 0f);
+        go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
+
+        // configure videoSurface
+        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+        return videoSurface;
+    }
+
+    private int UserDisplayId(uint uid)
+    {
+        Debug.Log($"UserDisplay for user {uid}");
+
+        var agoraUser = _joinedUsers.FirstOrDefault(u => u.Uid == uid);
+        if (agoraUser != null)
+        {
+            return agoraUser.DisplayId;
+        }
+
+        return -1;
     }
 
     private void CheckAppId()

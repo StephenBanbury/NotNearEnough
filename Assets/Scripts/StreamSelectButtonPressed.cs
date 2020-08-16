@@ -4,7 +4,7 @@ namespace Assets.Scripts
 {
     public class StreamSelectButtonPressed : MonoBehaviour
     {
-        [SerializeField] private int _streamId;
+        public int StreamId;
 
         private StreamSelect _streamSelectDisplay;
 
@@ -17,7 +17,7 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                _streamSelectDisplay.SetStreamId(_streamId);
+                _streamSelectDisplay.SetStreamId(StreamId);
                 _streamSelectDisplay.KeepInSync();
             }
         }

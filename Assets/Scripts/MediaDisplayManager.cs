@@ -11,7 +11,7 @@ namespace Assets.Scripts
     public class MediaDisplayManager: MonoBehaviour
     {
         public static MediaDisplayManager instance;
-
+        
         private List<MediaDetail> _videos;
         private List<MediaDetail> _streams;
 
@@ -23,8 +23,9 @@ namespace Assets.Scripts
 
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
-
+        
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
+        [SerializeField] private Transform _selectButton;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -48,6 +49,41 @@ namespace Assets.Scripts
         void Start()
         {
             GetVideosFromService();
+            CreateStreamSelectButtons();
+        }
+
+        public void CreateStreamSelectButtons()
+        {
+            var agoraUsers = AgoraController.instance.AgoraUsers;
+
+            if (agoraUsers != null)
+            {
+                var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
+
+                var selectPanel = GameObject.Find("StreamSelectorPanel");
+                foreach (Transform child in selectPanel.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                Debug.Log($"joinedUsers: {joinedUsers.Count}");
+
+                var xPos = selectPanel.transform.position.x;
+                var yStart = 1.666f;
+                var zPos = selectPanel.transform.position.z - 0.04f;
+
+                for (int i = 1; i <= joinedUsers.Count; i++)
+                {
+                    var buttonName = $"Button{i}";
+                    var yPos = yStart - (i - 1) * 0.117f;
+                    var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos),
+                        _selectButton.transform.rotation);
+                    button.name = buttonName;
+                    var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
+                    buttonScript.StreamId = i;
+                    button.transform.SetParent(selectPanel.transform);
+                }
+            }
         }
 
         private void GetVideosFromService()
@@ -112,23 +148,19 @@ namespace Assets.Scripts
 
         private void AssignStreamToDisplay()
         {
-            //if (_lastSelectedStreamId > 0 && _lastSelectedDisplayId > 0 &&
-            //    _displayStream[_lastSelectedDisplayId].Id != _lastSelectedStreamId)
-            //{
-            //var stream = _streams.FirstOrDefault(v => v.Id == _lastSelectedStreamId);
-            //stream.Show = true;
+            if (_lastSelectedStreamId > 0 && _lastSelectedDisplayId > 0)
+            {
+                var screensContainer = GameObject.Find("Screens");
+                var screenObject = screensContainer.transform.Find($"StreamingScreen{_lastSelectedDisplayId}");
 
-            //// Using _displayStream should be necessary only for URL based content
-            //_displayStream[_lastSelectedDisplayId] = stream;
-            //Debug.Log($"Show stream '{_displayStream[_lastSelectedDisplayId].Title}' on display {_lastSelectedDisplayId}");
+                var videoDisplay = screenObject.transform.Find("VideoDisplay");
+                var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
 
-            //var screensContainer = GameObject.Find("Screens");
-            //var vc = _streamClips[_lastSelectedStreamId - 1];
-            //var screenObject = screensContainer.transform.Find($"StreamScreen{_lastSelectedDisplayId}");
-            //_streamPlayer = screenObject.GetComponentInChildren<StreamPlayer>();
-            //_streamPlayer.clip = vc;
-            //_streamPlayer.Play();
-            //}
+                videoDisplay.gameObject.SetActive(false);
+                canvasDisplay.gameObject.SetActive(true);
+
+                //var agoraUserStream = _agoraController.AgoraUsers.FirstOrDefault(u => u.)
+            }
         }
     }
 }

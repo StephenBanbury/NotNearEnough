@@ -1,22 +1,17 @@
 using System;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using agora_gaming_rtc;
-using System.Collections.Generic;
 using Assets.Scripts.Models;
-using Object = UnityEngine.Object; // not sure how/why this appeared when it was not in original script
-using Random = UnityEngine.Random; // not sure how/why this appeared when it was not in original script
 
 public class AgoraInterface
 {
     // instance of agora engine
     private IRtcEngine mRtcEngine;
     //private uint _localPlayerUid;
+    
+    //private List<AgoraUser> _joinedUsers = new List<AgoraUser>();
 
-    private List<AgoraUser> _joinedUsers = new List<AgoraUser>();
-
-    public List<AgoraUser> AgoraUsers => _joinedUsers;
+    //public List<AgoraUser> AgoraUsers => _joinedUsers;
 
     // load agora engine
     public void LoadEngine(string appId)
@@ -83,10 +78,7 @@ public class AgoraInterface
 
     public void Leave()
     {
-        Debug.Log("In Leave");
-
-        if (mRtcEngine == null)
-            return;
+        if (mRtcEngine == null) return;
 
         // leave channel
         mRtcEngine.LeaveChannel();
@@ -146,9 +138,11 @@ public class AgoraInterface
     // implement engine callbacks
     private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
     {
+        // TODO: not sure this is required
+
         Debug.Log("OnJoinChannelSuccess: uid = " + uid);
 
-        _joinedUsers.Add(new AgoraUser
+        AgoraController.instance.UserJoined(new AgoraUser
         {
             Uid = uid,
             IsLocal = true,
@@ -167,133 +161,88 @@ public class AgoraInterface
 
         Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
 
-        var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid); // || _joinedUsers.Count == 1;
-
-        if (userAlreadyJoined)
-        {
-            Debug.Log($"User already joined");
-        }
-        else
-        {
-            // TODO: displayId to be set by local user 
-            var displayId = _joinedUsers.Count + 1;
-
-            var agoraUser = new AgoraUser
-            {
-                Uid = uid,
-                DateJoined = DateTime.UtcNow,
-                DisplayId = displayId
-            };
-
-            _joinedUsers.Add(agoraUser);
-
-            Debug.Log($"Number joined: {_joinedUsers.Count}");
-            Debug.Log("Joined users: -");
-            foreach (var user in _joinedUsers)
-            {
-                Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}");
-            }
-
-            //// find a game object to render video stream from 'uid'
-            //GameObject go = GameObject.Find(uid.ToString());
-
-            //if (!ReferenceEquals(go, null))
-            //{
-            //    return; // reuse
-            //}
-
-            // Create a GameObject and assign to this new user
-            VideoSurface videoSurface = MakeImageSurface(agoraUser);
-
-            if (!ReferenceEquals(videoSurface, null))
-            {
-                // configure videoSurface
-                videoSurface.SetForUser(uid);
-                videoSurface.SetEnable(true);
-                videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-                videoSurface.SetGameFps(30);
-            }
-        }
+        AgoraController.instance.UserJoinsRoom(uid);
+       
     }
 
-    public VideoSurface MakeImageSurface(AgoraUser user)
-    {
-        // find a game object to render video stream from 'uid'
+    //public VideoSurface MakeImageSurface(AgoraUser user)
+    //{
+    //    // find a game object to render video stream from 'uid'
 
-        var goName = user.Uid.ToString();
-        var displayId = user.DisplayId;
+    //    var goName = user.Uid.ToString();
+    //    var displayId = user.DisplayId;
 
-        GameObject go = GameObject.Find(goName);
+    //    GameObject go = GameObject.Find(goName);
 
-        if (!ReferenceEquals(go, null))
-        {
-            return null; 
-        }
+    //    if (!ReferenceEquals(go, null))
+    //    {
+    //        return null; 
+    //    }
         
-        go = new GameObject { name = goName };
+    //    go = new GameObject { name = goName };
 
-        // To be rendered onto
-        go.AddComponent<RawImage>();
+    //    // To be rendered onto
+    //    go.AddComponent<RawImage>();
 
-        // make the object draggable
-        //go.AddComponent<UIElementDragger>();
-
-
-        var screensContainer = GameObject.Find("Screens");
-        var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
-
-        var videoDisplay = screenObject.transform.Find("VideoDisplay");
-        var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
-
-        videoDisplay.gameObject.SetActive(false);
-        canvasDisplay.gameObject.SetActive(true);
+    //    // make the object draggable
+    //    //go.AddComponent<UIElementDragger>();
 
 
-        //var displayName = $"StreamingScreen{displayId}";
-        //var displayParent = GameObject.Find(displayName);
-        //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
+    //    var screensContainer = GameObject.Find("Screens");
+    //    var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
+
+    //    var videoDisplay = screenObject.transform.Find("VideoDisplay");
+    //    var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+
+    //    videoDisplay.gameObject.SetActive(false);
+    //    canvasDisplay.gameObject.SetActive(true);
+
+
+    //    //var displayName = $"StreamingScreen{displayId}";
+    //    //var displayParent = GameObject.Find(displayName);
+    //    //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
         
-        if (canvasDisplay != null)
-        {
-            foreach (GameObject child in canvasDisplay.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
+    //    if (canvasDisplay != null)
+    //    {
+    //        foreach (GameObject child in canvasDisplay.transform)
+    //        {
+    //            GameObject.Destroy(child.gameObject);
+    //        }
 
-            go.transform.parent = canvasDisplay.transform;
-        }
+    //        go.transform.parent = canvasDisplay.transform;
+    //    }
         
-        go.transform.localEulerAngles = Vector3.zero;
-        go.transform.localPosition = Vector3.zero;
-        go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
+    //    go.transform.localEulerAngles = Vector3.zero;
+    //    go.transform.localPosition = Vector3.zero;
+    //    go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
 
-        // Configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+    //    // Configure videoSurface
+    //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
 
-        return videoSurface;
-    }
+    //    return videoSurface;
+    ////}
 
-    public VideoSurface MakePlaneSurface(string goName)
-    {
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
+    //public VideoSurface MakePlaneSurface(string goName)
+    //{
+    //    GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
-        if (go == null)
-        {
-            return null;
-        }
+    //    if (go == null)
+    //    {
+    //        return null;
+    //    }
 
-        go.name = goName;
-        // set up transform
-        go.transform.Rotate(-90.0f, 0.0f, 0.0f);
-        float yPos = Random.Range(3.0f, 5.0f);
-        float xPos = Random.Range(-2.0f, 2.0f);
-        go.transform.position = new Vector3(xPos, yPos, 0f);
-        go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
+    //    go.name = goName;
+    //    // set up transform
+    //    go.transform.Rotate(-90.0f, 0.0f, 0.0f);
+    //    float yPos = Random.Range(3.0f, 5.0f);
+    //    float xPos = Random.Range(-2.0f, 2.0f);
+    //    go.transform.position = new Vector3(xPos, yPos, 0f);
+    //    go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
 
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
-    }
+    //    // configure videoSurface
+    //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+    //    return videoSurface;
+    //}
 
     // When remote user is offline, this delegate will be called. Typically
     // delete the GameObject for this user
@@ -301,11 +250,15 @@ public class AgoraInterface
     {
         // remove video stream
         Debug.Log("onUserOffline: uid = " + uid + " reason = " + reason);
+
         // this is called in main thread
-        GameObject go = GameObject.Find(uid.ToString());
-        if (!ReferenceEquals(go, null))
-        {
-            Object.Destroy(go);
-        }
+        
+        //GameObject go = GameObject.Find(uid.ToString());
+        //if (!ReferenceEquals(go, null))
+        //{
+        //    Object.Destroy(go);
+        //}
+
+        AgoraController.instance.UserLeavesRoom(uid);
     }
 }

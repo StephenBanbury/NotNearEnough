@@ -14,19 +14,19 @@ public class ButtonHandler : MonoBehaviour
         GameObject go = GameObject.Find("RoomController");
         if (go != null)
         {
-            AgoraController roomController = go.GetComponent<AgoraController>();
-            if (roomController == null)
+            AgoraController agoraController = go.GetComponent<AgoraController>();
+            if (agoraController == null)
             {
                 Debug.LogError("Missing game controller...");
                 return;
             }
             if (button.name == "JoinButton")
             {
-                roomController.OnJoinButtonClicked();
+                agoraController.OnJoinButtonClicked();
             }
             else if (button.name == "LeaveButton")
             {
-                roomController.OnLeaveButtonClicked();
+                agoraController.OnLeaveButtonClicked();
             }
         }
     }
