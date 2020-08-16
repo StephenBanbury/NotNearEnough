@@ -5,8 +5,8 @@ using UnityEngine.UI;
 using agora_gaming_rtc;
 using System.Collections.Generic;
 using Assets.Scripts.Models;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
+using Object = UnityEngine.Object; // not sure how/why this appeared when it was not in original script
+using Random = UnityEngine.Random; // not sure how/why this appeared when it was not in original script
 
 public class AgoraInterface
 {
@@ -15,6 +15,8 @@ public class AgoraInterface
     //private uint _localPlayerUid;
 
     private List<AgoraUser> _joinedUsers = new List<AgoraUser>();
+
+    public List<AgoraUser> AgoraUsers => _joinedUsers;
 
     // load agora engine
     public void LoadEngine(string appId)

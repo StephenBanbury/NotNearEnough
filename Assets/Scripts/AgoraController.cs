@@ -1,6 +1,9 @@
-﻿using UnityEngine.SceneManagement;
+﻿using Assets.Scripts.Models;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Collections.Generic;
+
 #if (UNITY_ANDROID)
 using System.Collections;
 using UnityEngine.Android;
@@ -14,14 +17,20 @@ public class AgoraController : MonoBehaviour
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
 #endif
-    
-    static AgoraInterface app = null;
-    private string HomeSceneName = "JoinRoom";
-    private string PlaySceneName = "MainRoom";
 
-    [SerializeField] private string AppID = "your_appid";
+    private static AgoraInterface _app = null;
+    private static List<AgoraUser> _agoraUsers;
+    private string _homeSceneName = "JoinRoom";
+    private string _playSceneName = "MainRoom";
+
+    [SerializeField] private string _appID = "your_appid";
     [SerializeField] private string _roomName;
     [SerializeField] private Text _testText;
+
+    public List<AgoraUser> AgoraUsers
+    {
+        get { return _app.AgoraUsers; }
+    }
 
     void Awake()
     {
@@ -57,7 +66,7 @@ public class AgoraController : MonoBehaviour
 
     private void CheckAppId()
     {
-        Debug.Assert(AppID.Length > 10, "Please fill in your AppId first on Game Controller object.");
+        Debug.Assert(_appID.Length > 10, "Please fill in your AppId first on Game Controller object.");
     }
 
     /// <summary>
@@ -78,16 +87,16 @@ public class AgoraController : MonoBehaviour
 
     public void JoinRoom()
     {
-        Debug.Log($"JoinRoom: {app}");
+        Debug.Log($"JoinRoom: {_app}");
 
         // create app if nonexistent
-        if (ReferenceEquals(app, null))
+        if (ReferenceEquals(_app, null))
         {
-            app = new AgoraInterface(); // create app
-            app.LoadEngine(AppID); // load engine
+            _app = new AgoraInterface(); // create app
+            _app.LoadEngine(_appID); // load engine
         }
 
-        var joined = app.Join(_roomName);
+        var joined = _app.Join(_roomName);
 
         if (joined)
         {
@@ -108,17 +117,17 @@ public class AgoraController : MonoBehaviour
         JoinRoom();
 
         // jump to next scene
-        SceneManager.LoadScene(PlaySceneName, LoadSceneMode.Single);
+        SceneManager.LoadScene(_playSceneName, LoadSceneMode.Single);
     }
 
     public void OnLeaveButtonClicked()
     {
-        if (!ReferenceEquals(app, null))
+        if (!ReferenceEquals(_app, null))
         {
-            app.Leave(); // leave channel
-            app.UnloadEngine(); // delete engine
-            app = null; // delete app
-            SceneManager.LoadScene(HomeSceneName, LoadSceneMode.Single);
+            _app.Leave(); // leave channel
+            _app.UnloadEngine(); // delete engine
+            _app = null; // delete app
+            SceneManager.LoadScene(_homeSceneName, LoadSceneMode.Single);
         }
         Destroy(gameObject);
     }
@@ -127,15 +136,15 @@ public class AgoraController : MonoBehaviour
     {
         Debug.Log("in OnLevelFinishedLoading");
 
-        if (scene.name != PlaySceneName)
+        if (scene.name != _playSceneName)
         {
             Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
         }
         else
         {
-            if (!ReferenceEquals(app, null))
+            if (!ReferenceEquals(_app, null))
             {
-                app.OnSceneLoaded(); // call this after scene is loaded
+                _app.OnSceneLoaded(); // call this after scene is loaded
             }
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }
@@ -143,17 +152,17 @@ public class AgoraController : MonoBehaviour
 
     void OnApplicationPause(bool paused)
     {
-        if (!ReferenceEquals(app, null))
+        if (!ReferenceEquals(_app, null))
         {
-            app.EnableVideo(paused);
+            _app.EnableVideo(paused);
         }
     }
 
     void OnApplicationQuit()
     {
-        if (!ReferenceEquals(app, null))
+        if (!ReferenceEquals(_app, null))
         {
-            app.UnloadEngine();
+            _app.UnloadEngine();
         }
     }
 }

@@ -74,9 +74,11 @@ namespace Assets.Scripts
             switch (_lastSelectedMediaType)
             {
                 case MediaType.VideoClip:
+                    Debug.Log($"Assign video clip {_lastSelectedVideoId} to display {_lastSelectedDisplayId}");
                     AssignVideoToDisplay();
                     break;
                 case MediaType.VideoStream:
+                    Debug.Log($"Assign video stream {_lastSelectedStreamId} to display {_lastSelectedDisplayId}");
                     AssignStreamToDisplay();
                     break;
             }
