@@ -23,7 +23,7 @@ public class AgoraController : MonoBehaviour
     private string _homeSceneName = "JoinRoom";
     private string _playSceneName = "MainRoom";
 
-    [SerializeField] private string _appID = "your_appid";
+    [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
     [SerializeField] private string _roomName;
     [SerializeField] private Text _testText;
 

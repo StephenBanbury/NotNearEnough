@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d29a4faa29e114882be42f949b5f8a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AppID: 54f15673a8fd43318b10d4e42f8dd781
+  _appID: 54f15673a8fd43318b10d4e42f8dd781
   _roomName: unity3d
   _testText: {fileID: 2137803268}
 --- !u!4 &180937808
@@ -4941,11 +4941,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _videoClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 32900000, guid: 41ece85a8f658c349b4e79ba1ecbef04, type: 3}
+  - {fileID: 32900000, guid: b6f6acb04e26c4c498bed3e37070ea36, type: 3}
+  - {fileID: 32900000, guid: a427f6c1b638b9042bb6e3b19c39aeaa, type: 3}
+  - {fileID: 32900000, guid: 8070d7c17360d954a8d31d48abc50c2a, type: 3}
+  - {fileID: 32900000, guid: 208f566bec2654146a1c7dcecaefe963, type: 3}
 --- !u!1 &1589963376
 GameObject:
   m_ObjectHideFlags: 0

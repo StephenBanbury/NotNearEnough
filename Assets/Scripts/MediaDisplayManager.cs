@@ -24,8 +24,6 @@ namespace Assets.Scripts
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
 
-        private VideoPlayer _videoPlayer;
-
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
 
 
@@ -97,11 +95,18 @@ namespace Assets.Scripts
                 Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {_lastSelectedDisplayId}");
 
                 var screensContainer = GameObject.Find("Screens");
+                var screenObject = screensContainer.transform.Find($"StreamingScreen{_lastSelectedDisplayId}");
+
+                var videoDisplay = screenObject.transform.Find("VideoDisplay");
+                var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+
+                videoDisplay.gameObject.SetActive(true);
+                canvasDisplay.gameObject.SetActive(false);
+
+                var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
                 var vc = _videoClips[_lastSelectedVideoId - 1];
-                var screenObject = screensContainer.transform.Find($"VideoScreen{_lastSelectedDisplayId}");
-                _videoPlayer = screenObject.GetComponentInChildren<VideoPlayer>();
-                _videoPlayer.clip = vc;
-                _videoPlayer.Play();
+                videoPlayer.clip = vc;
+                videoPlayer.Play();
             }
         }
 

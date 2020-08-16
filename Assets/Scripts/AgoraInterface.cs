@@ -238,18 +238,29 @@ public class AgoraInterface
         // make the object draggable
         //go.AddComponent<UIElementDragger>();
 
-        var displayName = $"StreamingScreen{displayId}";
-        var displayParent = GameObject.Find(displayName);
-        var displayCanvas = displayParent.transform.Find("CanvasDisplay");
+
+        var screensContainer = GameObject.Find("Screens");
+        var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
+
+        var videoDisplay = screenObject.transform.Find("VideoDisplay");
+        var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+
+        videoDisplay.gameObject.SetActive(false);
+        canvasDisplay.gameObject.SetActive(true);
+
+
+        //var displayName = $"StreamingScreen{displayId}";
+        //var displayParent = GameObject.Find(displayName);
+        //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
         
-        if (displayCanvas != null)
+        if (canvasDisplay != null)
         {
-            foreach (GameObject child in displayCanvas.transform)
+            foreach (GameObject child in canvasDisplay.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
 
-            go.transform.parent = displayCanvas.transform;
+            go.transform.parent = canvasDisplay.transform;
         }
         
         go.transform.localEulerAngles = Vector3.zero;
