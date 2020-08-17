@@ -188,9 +188,9 @@ public class AgoraController : MonoBehaviour
 
         if (canvasDisplay != null)
         {
-            foreach (GameObject child in canvasDisplay.transform)
+            foreach (Transform child in canvasDisplay.transform)
             {
-                GameObject.Destroy(child.gameObject);
+                Destroy(child.gameObject);
             }
 
             //go.transform.parent = canvasDisplay.transform;
