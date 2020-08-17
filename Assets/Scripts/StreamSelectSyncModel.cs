@@ -134,7 +134,7 @@ namespace Assets.Scripts
             {
                 switch (propertyID)
                 {
-                    case (uint) PropertyID.StreamId:
+                    case (int) PropertyID.StreamId:
                     {
                         int previousValue = _streamId;
 

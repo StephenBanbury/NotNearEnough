@@ -28,7 +28,6 @@ namespace Assets.Scripts
                 _streamIdText.text = _streamId.ToString();
                 MediaDisplayManager.instance.SelectedStream = _streamId;
                 MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoStream;
-
             }
         }
 

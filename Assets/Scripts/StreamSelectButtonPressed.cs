@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log($"Selected StreamId: {StreamId}");
             if (other.CompareTag("Hand"))
             {
                 _streamSelectDisplay.SetStreamId(StreamId);

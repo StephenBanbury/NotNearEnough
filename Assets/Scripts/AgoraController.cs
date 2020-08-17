@@ -95,9 +95,11 @@ public class AgoraController : MonoBehaviour
             // TODO: displayId to be set by local user 
             //var displayId = _joinedUsers.Count + 1;
 
+            var newId = _joinedUsers.Max(u => u.Id) + 1;
+
             var agoraUser = new AgoraUser
             {
-                Id = _joinedUsers.Count + 1,
+                Id = newId,
                 Uid = uid,
                 DateJoined = DateTime.UtcNow,
                 Display = false
@@ -106,25 +108,12 @@ public class AgoraController : MonoBehaviour
             _joinedUsers.Add(agoraUser);
 
             Debug.Log($"Number joined: {_joinedUsers.Count}");
-            Debug.Log("Joined users: -");
             foreach (var user in _joinedUsers)
             {
-                Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}");
+                Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
             }
 
             MediaDisplayManager.instance.CreateStreamSelectButtons();
-
-            // Create a GameObject and assign to this new user
-            //VideoSurface videoSurface = MakeImageSurface(agoraUser);
-
-            //if (!ReferenceEquals(videoSurface, null))
-            //{
-            //    // configure videoSurface
-            //    videoSurface.SetForUser(uid);
-            //    videoSurface.SetEnable(true);
-            //    videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-            //    videoSurface.SetGameFps(30);
-            //}
         }
     }
 
@@ -144,46 +133,58 @@ public class AgoraController : MonoBehaviour
             MediaDisplayManager.instance.CreateStreamSelectButtons();
         }
     }
-    
-    public VideoSurface MakeImageSurface(AgoraUser user)
+
+    public void AssignStreamToDisplay(AgoraUser agoraUser)
     {
+        // Create a GameObject and assign to this new user
+        VideoSurface videoSurface = MakeImageSurface(agoraUser);
+
+        if (!ReferenceEquals(videoSurface, null))
+        {
+            // configure videoSurface
+            videoSurface.SetForUser(agoraUser.Uid);
+            videoSurface.SetEnable(true);
+            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
+            videoSurface.SetGameFps(30);
+        }
+    }
+    
+    private VideoSurface MakeImageSurface(AgoraUser user)
+    {
+
         // find a game object to render video stream from 'uid'
 
         var goName = user.Uid.ToString();
         var displayId = user.DisplayId;
 
-        GameObject go = GameObject.Find(goName);
+        var displayName = $"{goName}_{displayId}";
 
+        Debug.Log($"In MakeImageSurface. displayName: {displayName}");
+
+        GameObject go = GameObject.Find(displayName);
+        
         if (!ReferenceEquals(go, null))
         {
             return null;
         }
 
-        go = new GameObject { name = goName };
+        go = new GameObject { name = displayName };
 
         // To be rendered onto
         go.AddComponent<RawImage>();
 
-        // make the object draggable
-        //go.AddComponent<UIElementDragger>();
-
-
         var screensContainer = GameObject.Find("Screens");
-
         var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
 
-        Debug.Log($"StreamingScreen{displayId}");
-
+        Debug.Log($"screenObject: {screenObject.name}");
+        
         var videoDisplay = screenObject.transform.Find("VideoDisplay");
         var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
 
         videoDisplay.gameObject.SetActive(false);
         canvasDisplay.gameObject.SetActive(true);
 
-
-        //var displayName = $"StreamingScreen{displayId}";
-        //var displayParent = GameObject.Find(displayName);
-        //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
+        Debug.Log($"canvasDisplay: {canvasDisplay.name}");
 
         if (canvasDisplay != null)
         {
@@ -192,7 +193,8 @@ public class AgoraController : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
             }
 
-            go.transform.parent = canvasDisplay.transform;
+            //go.transform.parent = canvasDisplay.transform;
+            go.transform.SetParent(canvasDisplay.transform);
         }
 
         go.transform.localEulerAngles = Vector3.zero;
