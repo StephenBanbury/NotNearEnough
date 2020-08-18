@@ -186,24 +186,42 @@ public class AgoraController : MonoBehaviour
 
         Debug.Log($"canvasDisplay: {canvasDisplay.name}");
 
-        if (canvasDisplay != null)
-        {
-            foreach (Transform child in canvasDisplay.transform)
-            {
-                Destroy(child.gameObject);
-            }
+        //if (canvasDisplay != null)
+        //{
+        //    foreach (Transform child in canvasDisplay.transform)
+        //    {
+        //        Destroy(child.gameObject);
+        //    }
 
-            //go.transform.parent = canvasDisplay.transform;
-            go.transform.SetParent(canvasDisplay.transform);
-        }
+        //    //go.transform.parent = canvasDisplay.transform;
+        //    go.transform.SetParent(canvasDisplay.transform);
+        //}
 
-        go.transform.localEulerAngles = Vector3.zero;
-        go.transform.localPosition = Vector3.zero;
-        go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
+        //go.transform.localEulerAngles = Vector3.zero;
+        //go.transform.localPosition = Vector3.zero;
+        //go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
 
         // Configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+        //VideoSurface videoSurface = go.AddComponent<VideoSurface>();
 
+        VideoSurface videoSurface;
+
+        if (canvasDisplay.transform.childCount > 0)
+        {
+            go = canvasDisplay.transform.GetChild(0).gameObject;
+
+            videoSurface = go.GetComponent<VideoSurface>();
+        }
+        else
+        {
+            go.transform.SetParent(canvasDisplay.transform);
+            go.transform.localEulerAngles = Vector3.zero;
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
+
+            videoSurface = go.AddComponent<VideoSurface>();
+        }
+        
         return videoSurface;
     }
 
