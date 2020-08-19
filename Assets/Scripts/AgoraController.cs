@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using agora_gaming_rtc;
 using Assets.Scripts;
-using Object = UnityEngine.Object; // not sure how/why this appeared when it was not in original script
-using Random = UnityEngine.Random; // not sure how/why this appeared when it was not in original script
 
 #if (UNITY_ANDROID)
 using System.Collections;
@@ -74,16 +72,11 @@ public class AgoraController : MonoBehaviour
 
     public void UserJoined(AgoraUser agoraUser)
     {
-        // TODO check if user already has joined
         _joinedUsers.Add(agoraUser);
     }
 
     public void UserJoinsRoom(uint uid)
     {
-        //var displayId = UserDisplayId(uid);
-
-        //var userAlreadyJoined = displayId != -1;
-
         var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
 
         if (userAlreadyJoined)
@@ -92,9 +85,6 @@ public class AgoraController : MonoBehaviour
         }
         else
         {
-            // TODO: displayId to be set by local user 
-            //var displayId = _joinedUsers.Count + 1;
-
             var newId = _joinedUsers.Max(u => u.Id) + 1;
 
             var agoraUser = new AgoraUser
@@ -127,7 +117,7 @@ public class AgoraController : MonoBehaviour
             GameObject go = GameObject.Find(uid.ToString());
             if (!ReferenceEquals(go, null))
             {
-                Object.Destroy(go);
+                UnityEngine.Object.Destroy(go);
             }
 
             MediaDisplayManager.instance.CreateStreamSelectButtons();
@@ -151,15 +141,13 @@ public class AgoraController : MonoBehaviour
     
     private VideoSurface MakeImageSurface(AgoraUser user)
     {
-
         // find a game object to render video stream from 'uid'
 
         var goName = user.Uid.ToString();
         var displayId = user.DisplayId;
-
         var displayName = $"{goName}_{displayId}";
 
-        Debug.Log($"In MakeImageSurface. displayName: {displayName}");
+        //Debug.Log($"In MakeImageSurface. displayName: {displayName}");
 
         GameObject go = GameObject.Find(displayName);
         
@@ -176,7 +164,7 @@ public class AgoraController : MonoBehaviour
         var screensContainer = GameObject.Find("Screens");
         var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
 
-        Debug.Log($"screenObject: {screenObject.name}");
+        //Debug.Log($"screenObject: {screenObject.name}");
         
         var videoDisplay = screenObject.transform.Find("VideoDisplay");
         var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
@@ -184,32 +172,15 @@ public class AgoraController : MonoBehaviour
         videoDisplay.gameObject.SetActive(false);
         canvasDisplay.gameObject.SetActive(true);
 
-        Debug.Log($"canvasDisplay: {canvasDisplay.name}");
-
-        //if (canvasDisplay != null)
-        //{
-        //    foreach (Transform child in canvasDisplay.transform)
-        //    {
-        //        Destroy(child.gameObject);
-        //    }
-
-        //    //go.transform.parent = canvasDisplay.transform;
-        //    go.transform.SetParent(canvasDisplay.transform);
-        //}
-
-        //go.transform.localEulerAngles = Vector3.zero;
-        //go.transform.localPosition = Vector3.zero;
-        //go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
-
-        // Configure videoSurface
-        //VideoSurface videoSurface = go.AddComponent<VideoSurface>();
+        //Debug.Log($"canvasDisplay: {canvasDisplay.name}");
 
         VideoSurface videoSurface;
 
+        // If display canvas already has an agora video surface it will be re-used
+        // otherwise, a new surface will be created
         if (canvasDisplay.transform.childCount > 0)
         {
             go = canvasDisplay.transform.GetChild(0).gameObject;
-
             videoSurface = go.GetComponent<VideoSurface>();
         }
         else
@@ -223,41 +194,6 @@ public class AgoraController : MonoBehaviour
         }
         
         return videoSurface;
-    }
-
-    public VideoSurface MakePlaneSurface(string goName)
-    {
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-
-        if (go == null)
-        {
-            return null;
-        }
-
-        go.name = goName;
-        // set up transform
-        go.transform.Rotate(-90.0f, 0.0f, 0.0f);
-        float yPos = Random.Range(3.0f, 5.0f);
-        float xPos = Random.Range(-2.0f, 2.0f);
-        go.transform.position = new Vector3(xPos, yPos, 0f);
-        go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
-
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
-    }
-
-    private int UserDisplayId(uint uid)
-    {
-        Debug.Log($"UserDisplay for user {uid}");
-
-        var agoraUser = _joinedUsers.FirstOrDefault(u => u.Uid == uid);
-        if (agoraUser != null)
-        {
-            return agoraUser.DisplayId;
-        }
-
-        return -1;
     }
 
     private void CheckAppId()
@@ -330,8 +266,6 @@ public class AgoraController : MonoBehaviour
 
     public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("in OnLevelFinishedLoading");
-
         if (scene.name != _playSceneName)
         {
             Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
