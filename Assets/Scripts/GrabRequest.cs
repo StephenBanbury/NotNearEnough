@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using Normal.Realtime;
-public class GrabRequest : MonoBehaviour
+
+namespace Assets.Scripts
 {
-    private RealtimeView _realtimeView;
-    private RealtimeTransform _realtimeTransform;
-
-    private void Awake()
+    public class GrabRequest : MonoBehaviour
     {
-        _realtimeView = GetComponent<RealtimeView>();
-        _realtimeTransform = GetComponent<RealtimeTransform>();
-    }
+        private RealtimeView _realtimeView;
+        private RealtimeTransform _realtimeTransform;
 
-    private void Update()
-    {
-        if (gameObject.GetComponent<OVRGrabbable>().isGrabbed)
+        private void Awake()
         {
-            //potentially clear ownership first - if owned
-            _realtimeTransform.RequestOwnership();
+            _realtimeView = GetComponent<RealtimeView>();
+            _realtimeTransform = GetComponent<RealtimeTransform>();
+        }
+
+        private void Update()
+        {
+            if (gameObject.GetComponent<OVRGrabbable>().isGrabbed)
+            {
+                //potentially clear ownership first - if owned
+                _realtimeTransform.RequestOwnership();
+            }
         }
     }
 }
