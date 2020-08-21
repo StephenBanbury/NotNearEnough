@@ -5,6 +5,7 @@ using System.Linq;
 using agora_gaming_rtc;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 namespace Assets.Scripts
@@ -135,8 +136,9 @@ namespace Assets.Scripts
                 _displayVideo[_lastSelectedDisplayId] = video;
                 Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {_lastSelectedDisplayId}");
 
-                var screensContainer = GameObject.Find("Screens");
-                var screenObject = screensContainer.transform.Find($"StreamingScreen{_lastSelectedDisplayId}");
+                var screensContainer = GameObject.Find("Screens A");
+                var screenObject = screensContainer.transform.Find($"Screen A {_lastSelectedDisplayId}");
+                if (screenObject == null) screenObject = screensContainer.transform.Find($"Screen A Variant {_lastSelectedDisplayId}");
 
                 var videoDisplay = screenObject.transform.Find("VideoDisplay");
                 var canvasDisplay = screenObject.transform.Find("CanvasDisplay");

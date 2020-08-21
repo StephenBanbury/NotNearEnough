@@ -161,11 +161,12 @@ public class AgoraController : MonoBehaviour
         // To be rendered onto
         go.AddComponent<RawImage>();
 
-        var screensContainer = GameObject.Find("Screens");
-        var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
+        var screensContainer = GameObject.Find("Screens A");
+        var screenObject = screensContainer.transform.Find($"Screen A {displayId}");
+        if (screenObject == null) screenObject = screensContainer.transform.Find($"Screen A Variant {displayId}");
 
         //Debug.Log($"screenObject: {screenObject.name}");
-        
+
         var videoDisplay = screenObject.transform.Find("VideoDisplay");
         var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
 
