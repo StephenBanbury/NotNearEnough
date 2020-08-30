@@ -136,7 +136,7 @@ namespace Assets.Scripts
                 _displayVideo[_lastSelectedDisplayId] = video;
                 Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {_lastSelectedDisplayId}");
 
-                var screensContainer = GameObject.Find("Screens A");
+                var screensContainer = GameObject.Find("Screens A Cross");
                 var screenObject = screensContainer.transform.Find($"Screen A {_lastSelectedDisplayId}");
                 if (screenObject == null) screenObject = screensContainer.transform.Find($"Screen A Variant {_lastSelectedDisplayId}");
 

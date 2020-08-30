@@ -161,7 +161,7 @@ public class AgoraController : MonoBehaviour
         // To be rendered onto
         go.AddComponent<RawImage>();
 
-        var screensContainer = GameObject.Find("Screens A");
+        var screensContainer = GameObject.Find("Screens A Cross");
         var screenObject = screensContainer.transform.Find($"Screen A {displayId}");
         if (screenObject == null) screenObject = screensContainer.transform.Find($"Screen A Variant {displayId}");
 
