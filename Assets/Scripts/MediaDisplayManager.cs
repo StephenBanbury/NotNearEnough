@@ -28,6 +28,8 @@ namespace Assets.Scripts
         
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
+        [SerializeField] private GameObject _screen;
+        [SerializeField] private GameObject _screenVariant;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -52,6 +54,8 @@ namespace Assets.Scripts
         {
             GetVideosFromService();
             CreateStreamSelectButtons();
+
+            SpawnScreens();
         }
 
         public void CreateStreamSelectButtons()
@@ -126,19 +130,29 @@ namespace Assets.Scripts
 
         private void AssignVideoToDisplay()
         {
+            Debug.Log("In AssignVideoToDisplay");
+            Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
+            Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
+
             if (_lastSelectedVideoId > 0 && _lastSelectedDisplayId > 0 &&
                 _displayVideo[_lastSelectedDisplayId].Id != _lastSelectedVideoId)
             {
                 var video = _videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
                 video.Show = true;
 
+                var screensContainerName = "Screens";
+                var screenName = $"Screen {_lastSelectedDisplayId}";
+                var screenVariantName = $"Screen Variant {_lastSelectedDisplayId}";
+
                 // Using _displayVideo should be necessary only for URL based content
                 _displayVideo[_lastSelectedDisplayId] = video;
-                Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {_lastSelectedDisplayId}");
 
-                var screensContainer = GameObject.Find("Screens A Cross");
-                var screenObject = screensContainer.transform.Find($"Screen A {_lastSelectedDisplayId}");
-                if (screenObject == null) screenObject = screensContainer.transform.Find($"Screen A Variant {_lastSelectedDisplayId}");
+                var screensContainer = GameObject.Find(screensContainerName);
+                var screenObject = screensContainer.transform.Find(screenName);
+                if (screenObject == null) screenObject = screensContainer.transform.Find(screenVariantName);
+
+
+                Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {screenObject.name}");
 
                 var videoDisplay = screenObject.transform.Find("VideoDisplay");
                 var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
@@ -199,6 +213,55 @@ namespace Assets.Scripts
                     }
                 }
             }
+        }
+
+        public void SpawnScreens()
+        {
+            /*
+            float width = 1.53f;
+
+            for (int i = 0; i < 16; i++)
+            {
+                GameObject screen = (GameObject) Instantiate(_screen, new Vector3(i*width, 0, 0), Quaternion.identity);
+                screen.transform.Rotate(0, i * 45, 0);
+            }
+            */
+
+            GameObject screenContainer = new GameObject();
+            screenContainer.name = "Screens";
+
+            var screenFormation = new ScreenFormation();
+            var formation = screenFormation.Cross();
+
+            var floorAdjust = 1.27f;
+
+            var screenNumber = 1;
+
+            foreach (var screenPosition in formation)
+            {
+                var vector3 = screenPosition.Vector3;
+                vector3.y += floorAdjust;
+
+                GameObject screen;
+
+                if (screenNumber % 2 != 0)
+                {
+                    screen = (GameObject)Instantiate(_screen, vector3, Quaternion.identity);
+                    screen.name = $"Screen {screenNumber}";
+                }
+                else
+                {
+                    screen = (GameObject)Instantiate(_screenVariant, vector3, Quaternion.identity);
+                    screen.name = $"Screen Variant {screenNumber}";
+                }
+
+                screen.transform.Rotate(0, screenPosition.Rotation, 0);
+
+                screen.transform.SetParent(screenContainer.transform);
+
+                screenNumber++;
+            }
+
         }
     }
 }
