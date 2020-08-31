@@ -7,6 +7,7 @@ using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using ScreenFormation = Assets.Scripts.Enums.ScreenFormation;
 
 namespace Assets.Scripts
 {
@@ -55,7 +56,7 @@ namespace Assets.Scripts
             GetVideosFromService();
             CreateStreamSelectButtons();
 
-            SpawnScreens();
+            SpawnScreens(ScreenFormation.LargeSquare);
         }
 
         public void CreateStreamSelectButtons()
@@ -202,20 +203,20 @@ namespace Assets.Scripts
             }
         }
 
-        public void SpawnScreens(Formation formation)
+        public void SpawnScreens(ScreenFormation formation)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new ScreenFormation();
+            var screenFormation = new Services.ScreenFormation();
 
             switch (formation)
             {
-                case Formation.LargeSquare: 
+                case ScreenFormation.LargeSquare: 
                     thisFormation = screenFormation.LargeSquare();
                     break;
-                case Formation.SmallSquare:
+                case ScreenFormation.SmallSquare:
                     thisFormation = screenFormation.SmallSquare();
                     break;
-                case Formation.Cross:
+                case ScreenFormation.Cross:
                     thisFormation = screenFormation.Cross();
                     break;
             }

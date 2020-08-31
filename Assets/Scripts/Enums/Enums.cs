@@ -15,7 +15,7 @@ namespace Assets.Scripts.Enums
         Url
     }
 
-    public enum Formation
+    public enum ScreenFormation
     {
         None = 0,
         LargeSquare,
