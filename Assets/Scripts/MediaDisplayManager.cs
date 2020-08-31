@@ -76,21 +76,20 @@ namespace Assets.Scripts
                 Debug.Log($"joinedUsers: {joinedUsers.Count}");
 
                 var xPos = selectPanel.transform.position.x;
-                var yStart = 1.666f;
+                var yStart = 0.42f;
                 var zPos = selectPanel.transform.position.z - 0.04f;
 
                 var i = 1;
 
                 foreach (var joinedUser in joinedUsers)
                 {
-                    var id = joinedUser.Id;
                     var buttonName = $"Button{i}";
                     var yPos = yStart - (i - 1) * 0.117f;
                     var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos),
                         _selectButton.transform.rotation);
                     button.name = buttonName;
                     var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
-                    buttonScript.StreamId = id;
+                    buttonScript.StreamId = joinedUser.Id;
                     button.transform.SetParent(selectPanel.transform);
                     i++;
                 }
@@ -221,8 +220,9 @@ namespace Assets.Scripts
                     break;
             }
 
-            var floorAdjust = 1.26f;
+            var screensContainer = new GameObject {name = "Screens"};
 
+            var floorAdjust = 1.26f;
             var screenNumber = 1;
 
             foreach (var screenPosition in thisFormation)
@@ -246,12 +246,11 @@ namespace Assets.Scripts
                     }
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                    screen.transform.SetParent(new GameObject { name = "Screens" }.transform);
+                    screen.transform.SetParent(screensContainer.transform);
                 }
 
                 screenNumber++;
             }
-
         }
     }
 }

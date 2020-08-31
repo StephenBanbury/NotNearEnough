@@ -7,11 +7,6 @@ public class AgoraInterface
 {
     // instance of agora engine
     private IRtcEngine mRtcEngine;
-    //private uint _localPlayerUid;
-    
-    //private List<AgoraUser> _joinedUsers = new List<AgoraUser>();
-
-    //public List<AgoraUser> AgoraUsers => _joinedUsers;
 
     // load agora engine
     public void LoadEngine(string appId)
