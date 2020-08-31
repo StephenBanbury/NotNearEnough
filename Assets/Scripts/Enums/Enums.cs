@@ -14,4 +14,12 @@ namespace Assets.Scripts.Enums
         VideoClip,
         Url
     }
+
+    public enum Formation
+    {
+        None = 0,
+        LargeSquare,
+        SmallSquare,
+        Cross
+    }
 }

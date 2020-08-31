@@ -187,19 +187,6 @@ namespace Assets.Scripts
 
                     if (agoraUser != null)
                     {
-                        //var screensContainer = GameObject.Find("Screens");
-                        //var screenObject = screensContainer.transform.Find($"StreamingScreen{_lastSelectedDisplayId}");
-
-                        //Debug.Log($"screenObject: {screenObject.name}");
-
-                        //var videoDisplay = screenObject.transform.Find("VideoDisplay");
-                        //var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
-
-                        //videoDisplay.gameObject.SetActive(false);
-                        //canvasDisplay.gameObject.SetActive(true);
-
-                        //Debug.Log($"canvasDisplay: {canvasDisplay.name}");
-
                         if (agoraUser.IsLocal || agoraUser.LeftRoom)
                         {
                             Debug.Log(
@@ -215,49 +202,51 @@ namespace Assets.Scripts
             }
         }
 
-        public void SpawnScreens()
+        public void SpawnScreens(Formation formation)
         {
-            /*
-            float width = 1.53f;
-
-            for (int i = 0; i < 16; i++)
-            {
-                GameObject screen = (GameObject) Instantiate(_screen, new Vector3(i*width, 0, 0), Quaternion.identity);
-                screen.transform.Rotate(0, i * 45, 0);
-            }
-            */
-
-            GameObject screenContainer = new GameObject();
-            screenContainer.name = "Screens";
-
+            var thisFormation = new List<ScreenPosition>();
             var screenFormation = new ScreenFormation();
-            var formation = screenFormation.Square();
+
+            switch (formation)
+            {
+                case Formation.LargeSquare: 
+                    thisFormation = screenFormation.LargeSquare();
+                    break;
+                case Formation.SmallSquare:
+                    thisFormation = screenFormation.SmallSquare();
+                    break;
+                case Formation.Cross:
+                    thisFormation = screenFormation.Cross();
+                    break;
+            }
 
             var floorAdjust = 1.26f;
 
             var screenNumber = 1;
 
-            foreach (var screenPosition in formation)
+            foreach (var screenPosition in thisFormation)
             {
-                var vector3 = screenPosition.Vector3;
-                vector3.y += floorAdjust;
-
-                GameObject screen;
-
-                if (screenNumber % 2 != 0)
+                if (!screenPosition.Hide)
                 {
-                    screen = (GameObject)Instantiate(_screen, vector3, Quaternion.identity);
-                    screen.name = $"Screen {screenNumber}";
-                }
-                else
-                {
-                    screen = (GameObject)Instantiate(_screenVariant, vector3, Quaternion.identity);
-                    screen.name = $"Screen Variant {screenNumber}";
-                }
+                    var vector3 = screenPosition.Vector3;
+                    vector3.y += floorAdjust;
 
-                screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                    GameObject screen;
 
-                screen.transform.SetParent(screenContainer.transform);
+                    if (screenNumber % 2 != 0)
+                    {
+                        screen = (GameObject) Instantiate(_screen, vector3, Quaternion.identity);
+                        screen.name = $"Screen {screenNumber}";
+                    }
+                    else
+                    {
+                        screen = (GameObject) Instantiate(_screenVariant, vector3, Quaternion.identity);
+                        screen.name = $"Screen Variant {screenNumber}";
+                    }
+
+                    screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                    screen.transform.SetParent(new GameObject { name = "Screens" }.transform);
+                }
 
                 screenNumber++;
             }
