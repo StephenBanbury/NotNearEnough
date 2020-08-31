@@ -231,7 +231,7 @@ namespace Assets.Scripts
             screenContainer.name = "Screens";
 
             var screenFormation = new ScreenFormation();
-            var formation = screenFormation.Cross();
+            var formation = screenFormation.Square();
 
             var floorAdjust = 1.26f;
 
