@@ -233,7 +233,7 @@ namespace Assets.Scripts
             var screenFormation = new ScreenFormation();
             var formation = screenFormation.Cross();
 
-            var floorAdjust = 1.27f;
+            var floorAdjust = 1.26f;
 
             var screenNumber = 1;
 
