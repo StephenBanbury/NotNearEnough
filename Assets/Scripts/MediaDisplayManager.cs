@@ -2,10 +2,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using agora_gaming_rtc;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
-using UnityEngine.UI;
 using UnityEngine.Video;
 using ScreenFormation = Assets.Scripts.Enums.ScreenFormation;
 
@@ -26,8 +24,10 @@ namespace Assets.Scripts
 
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
-        private ScreenFormation _lastSelectedScreenFormation;
-        
+        //private ScreenFormation _lastSelectedScreenFormation;
+
+        private List<GameObject> currentScreens = new List<GameObject>();
+
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
         [SerializeField] private GameObject _screen;
@@ -38,7 +38,7 @@ namespace Assets.Scripts
         public int SelectedStream { set => _lastSelectedStreamId = value; }
         public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
-        public ScreenFormation SelectedScreenFormation { set => _lastSelectedScreenFormation = value; }
+        //public ScreenFormation SelectedScreenFormation { set => _lastSelectedScreenFormation = value; }
 
         void Awake()
         {
@@ -203,7 +203,7 @@ namespace Assets.Scripts
                 }
             }
         }
-
+        
         public void SpawnScreens(ScreenFormation formation)
         {
             var thisFormation = new List<ScreenPosition>();
@@ -224,9 +224,16 @@ namespace Assets.Scripts
 
             var screensContainer = GameObject.Find("Screens");
 
-            if (screensContainer) GameObject.Destroy(screensContainer);
+            if (screensContainer == null)
+            {
+                screensContainer = new GameObject { name = "Screens" };
+            }
 
-            screensContainer = new GameObject {name = "Screens"};
+            // Destroy references to instantiated GameObjects
+            foreach (var currentScreen in currentScreens)
+            {
+                GameObject.Destroy(currentScreen);
+            }
 
             var floorAdjust = 1.26f;
             var screenNumber = 1;
@@ -253,6 +260,9 @@ namespace Assets.Scripts
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
                     screen.transform.SetParent(screensContainer.transform);
+
+                    // Add to references for instantiated GameObjects to collection so they can be destroyed
+                    currentScreens.Add(screen);
                 }
 
                 screenNumber++;

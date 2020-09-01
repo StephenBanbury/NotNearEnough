@@ -56,7 +56,7 @@ namespace Assets.Scripts
             //Debug.Log($"in UpdateFormationId: {_model.formationId}");
 
             // TODO: this may not be needed, but if it is, maybe move it to its own manager class
-            MediaDisplayManager.instance.SelectedScreenFormation = (ScreenFormation) _model.formationId;
+            //MediaDisplayManager.instance.SelectedScreenFormation = (ScreenFormation) _model.formationId;
         }
 
         public void SetId(int id)
