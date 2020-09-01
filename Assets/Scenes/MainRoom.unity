@@ -808,10 +808,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 302499010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32f0e6acd623bd428dfb3e5425f21f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 871c9c0bb7d536742adc6fdb26c61328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _videoId: 2
+  _formationId: 2
 --- !u!65 &302499013
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4049,7 +4049,7 @@ GameObject:
   - component: {fileID: 1409423658}
   - component: {fileID: 1409423657}
   m_Layer: 5
-  m_Name: SelectedVideoText
+  m_Name: SelectedFormationText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5334,10 +5334,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1681571792}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32f0e6acd623bd428dfb3e5425f21f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 871c9c0bb7d536742adc6fdb26c61328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _videoId: 1
+  _formationId: 1
 --- !u!65 &1681571795
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6151,10 +6151,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1943848648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174fb8bd72ce7cb4c9fb8f645a2f7e95, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ae61141b8f27bc4b97a29eeadf5e0bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _videoIdText: {fileID: 1409423657}
+  _formationIdText: {fileID: 1409423657}
 --- !u!114 &1943848651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6164,7 +6164,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1943848648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd05586d0291bc48a3dab55d0ebb9e4, type: 3}
+  m_Script: {fileID: 11500000, guid: cd4e79b7b2041764bb76efbca5815f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1943848652
@@ -6190,6 +6190,9 @@ MonoBehaviour:
     component: {fileID: 0}
     componentIDHasBeenUsed: 1
   - componentID: 2
+    component: {fileID: 0}
+    componentIDHasBeenUsed: 1
+  - componentID: 3
     component: {fileID: 1943848651}
     componentIDHasBeenUsed: 1
   _parentView: {fileID: 0}
@@ -6627,10 +6630,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2011374239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32f0e6acd623bd428dfb3e5425f21f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 871c9c0bb7d536742adc6fdb26c61328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _videoId: 3
+  _formationId: 3
 --- !u!65 &2011374242
 BoxCollider:
   m_ObjectHideFlags: 0

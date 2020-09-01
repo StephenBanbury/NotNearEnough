@@ -26,6 +26,7 @@ namespace Assets.Scripts
 
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
+        private ScreenFormation _lastSelectedScreenFormation;
         
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
@@ -37,6 +38,7 @@ namespace Assets.Scripts
         public int SelectedStream { set => _lastSelectedStreamId = value; }
         public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
+        public ScreenFormation SelectedScreenFormation { set => _lastSelectedScreenFormation = value; }
 
         void Awake()
         {
@@ -220,7 +222,11 @@ namespace Assets.Scripts
                     break;
             }
 
-            var screensContainer = new GameObject {name = "Screens"};
+            var screensContainer = GameObject.Find("Screens");
+
+            if (screensContainer) GameObject.Destroy(screensContainer);
+
+            screensContainer = new GameObject {name = "Screens"};
 
             var floorAdjust = 1.26f;
             var screenNumber = 1;
