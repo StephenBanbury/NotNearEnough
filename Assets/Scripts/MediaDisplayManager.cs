@@ -240,8 +240,8 @@ namespace Assets.Scripts
 
             foreach (var screenPosition in thisFormation)
             {
-                if (!screenPosition.Hide)
-                {
+                //if (!screenPosition.Hide)
+                //{
                     var vector3 = screenPosition.Vector3;
                     vector3.y += floorAdjust;
 
@@ -266,7 +266,7 @@ namespace Assets.Scripts
 
                     // Add to references for instantiated GameObjects to collection so they can be destroyed
                     currentScreens.Add(screen);
-                }
+                //}
 
                 //screenNumber++;
             }
