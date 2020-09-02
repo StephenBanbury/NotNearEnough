@@ -20,6 +20,7 @@ namespace Assets.Scripts.Enums
         None = 0,
         LargeSquare,
         SmallSquare,
-        Cross
+        Cross,
+        Star
     }
 }

@@ -32,7 +32,8 @@ namespace Assets.Scripts
                 //MediaDisplayManager.instance.SelectedVideo = _formationId;
                 //MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoClip;
 
-                MediaDisplayManager.instance.SpawnScreens((ScreenFormation) _formationId);
+                //MediaDisplayManager.instance.SpawnScreens((ScreenFormation) _formationId);
+                MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId);
             }
         }
 

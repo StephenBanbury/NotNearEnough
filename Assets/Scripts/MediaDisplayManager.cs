@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
+using DG.Tweening;
 using UnityEngine.Video;
 using ScreenFormation = Assets.Scripts.Enums.ScreenFormation;
 
@@ -206,6 +207,8 @@ namespace Assets.Scripts
         
         public void SpawnScreens(ScreenFormation formation)
         {
+            Debug.Log("SpawnScreens");
+
             var thisFormation = new List<ScreenPosition>();
             var screenFormation = new Services.ScreenFormation();
 
@@ -219,6 +222,9 @@ namespace Assets.Scripts
                     break;
                 case ScreenFormation.Cross:
                     thisFormation = screenFormation.Cross();
+                    break;
+                case ScreenFormation.Star:
+                    thisFormation = screenFormation.Star();
                     break;
             }
 
@@ -267,6 +273,84 @@ namespace Assets.Scripts
                     // Add to references for instantiated GameObjects to collection so they can be destroyed
                     currentScreens.Add(screen);
                 //}
+
+                //screenNumber++;
+            }
+        }
+
+        public void TweenScreens(ScreenFormation formation)
+        {
+            Debug.Log("TweenScreens");
+
+            var thisFormation = new List<ScreenPosition>();
+            var screenFormation = new Services.ScreenFormation();
+
+            switch (formation)
+            {
+                case ScreenFormation.LargeSquare:
+                    thisFormation = screenFormation.LargeSquare();
+                    break;
+                case ScreenFormation.SmallSquare:
+                    thisFormation = screenFormation.SmallSquare();
+                    break;
+                case ScreenFormation.Cross:
+                    thisFormation = screenFormation.Cross();
+                    break;
+                case ScreenFormation.Star:
+                    thisFormation = screenFormation.Star();
+                    break;
+            }
+
+            var screensContainer = GameObject.Find("Screens");
+
+            if (screensContainer == null)
+            {
+                screensContainer = new GameObject { name = "Screens" };
+                SpawnScreens(formation);
+                return;
+            }
+
+            // Destroy references to instantiated GameObjects
+            //foreach (var currentScreen in currentScreens)
+            //{
+            //    GameObject.Destroy(currentScreen);
+            //}
+
+            var floorAdjust = 1.26f;
+            //var screenNumber = 1;
+
+            foreach (var screenPosition in thisFormation)
+            {
+                var screenPositionPrev = currentScreens[screenPosition.Id - 1];
+                var vector3From = screenPositionPrev.transform.position;
+                var quaternionPrev = screenPositionPrev.transform.rotation;
+
+                var vector3To = screenPosition.Vector3;
+                vector3To.y += floorAdjust;
+
+                //DOTween.To(()=> vector3From, x => vector3From = x, vector3To, 2);
+                screenPositionPrev.transform.DOMove(vector3To, 3);
+                screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3);
+
+                //GameObject screen;
+
+                //if (screenPosition.Id % 2 != 0)
+                //{
+                //    screen = (GameObject)Instantiate(_screen, vector3From, Quaternion.identity);
+                //    screen.name = $"Screen {screenPosition.Id}";
+                //}
+                //else
+                //{
+                //    screen = (GameObject)Instantiate(_screenVariant, vector3From, Quaternion.identity);
+                //    screen.name = $"Screen Variant {screenPosition.Id}";
+                //}
+
+                //screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                //screen.transform.SetParent(screensContainer.transform);
+
+                // Add to references for instantiated GameObjects to collection so they can be destroyed
+                //currentScreens.Add(screen);
+
 
                 //screenNumber++;
             }
