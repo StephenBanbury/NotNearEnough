@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         private List<GameObject> currentScreens = new List<GameObject>();
 
+        private float _floorAdjust = 1.25f;
+
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
         [SerializeField] private GameObject _screen;
@@ -226,6 +228,18 @@ namespace Assets.Scripts
                 case ScreenFormation.Star:
                     thisFormation = screenFormation.Star();
                     break;
+                case ScreenFormation.Circle:
+                    thisFormation = screenFormation.Circle();
+                    break;
+                case ScreenFormation.Triangle:
+                    thisFormation = screenFormation.Triangle();
+                    break;
+                case ScreenFormation.ShortRectangle:
+                    thisFormation = screenFormation.ShortRectangle();
+                    break;
+                case ScreenFormation.LongRectangle:
+                    thisFormation = screenFormation.LongRectangle();
+                    break;
             }
 
             var screensContainer = GameObject.Find("Screens");
@@ -241,7 +255,6 @@ namespace Assets.Scripts
                 GameObject.Destroy(currentScreen);
             }
 
-            var floorAdjust = 1.26f;
             //var screenNumber = 1;
 
             foreach (var screenPosition in thisFormation)
@@ -249,7 +262,7 @@ namespace Assets.Scripts
                 //if (!screenPosition.Hide)
                 //{
                     var vector3 = screenPosition.Vector3;
-                    vector3.y += floorAdjust;
+                    vector3.y += _floorAdjust;
 
                     GameObject screen;
 
@@ -299,6 +312,18 @@ namespace Assets.Scripts
                 case ScreenFormation.Star:
                     thisFormation = screenFormation.Star();
                     break;
+                case ScreenFormation.Circle:
+                    thisFormation = screenFormation.Circle();
+                    break;
+                case ScreenFormation.Triangle:
+                    thisFormation = screenFormation.Triangle();
+                    break;
+                case ScreenFormation.ShortRectangle:
+                    thisFormation = screenFormation.ShortRectangle();
+                    break;
+                case ScreenFormation.LongRectangle:
+                    thisFormation = screenFormation.LongRectangle();
+                    break;
             }
 
             var screensContainer = GameObject.Find("Screens");
@@ -310,14 +335,6 @@ namespace Assets.Scripts
                 return;
             }
 
-            // Destroy references to instantiated GameObjects
-            //foreach (var currentScreen in currentScreens)
-            //{
-            //    GameObject.Destroy(currentScreen);
-            //}
-
-            var floorAdjust = 1.26f;
-            //var screenNumber = 1;
 
             foreach (var screenPosition in thisFormation)
             {
@@ -326,33 +343,10 @@ namespace Assets.Scripts
                 var quaternionPrev = screenPositionPrev.transform.rotation;
 
                 var vector3To = screenPosition.Vector3;
-                vector3To.y += floorAdjust;
+                vector3To.y += _floorAdjust;
 
-                //DOTween.To(()=> vector3From, x => vector3From = x, vector3To, 2);
                 screenPositionPrev.transform.DOMove(vector3To, 3);
                 screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3);
-
-                //GameObject screen;
-
-                //if (screenPosition.Id % 2 != 0)
-                //{
-                //    screen = (GameObject)Instantiate(_screen, vector3From, Quaternion.identity);
-                //    screen.name = $"Screen {screenPosition.Id}";
-                //}
-                //else
-                //{
-                //    screen = (GameObject)Instantiate(_screenVariant, vector3From, Quaternion.identity);
-                //    screen.name = $"Screen Variant {screenPosition.Id}";
-                //}
-
-                //screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                //screen.transform.SetParent(screensContainer.transform);
-
-                // Add to references for instantiated GameObjects to collection so they can be destroyed
-                //currentScreens.Add(screen);
-
-
-                //screenNumber++;
             }
         }
     }

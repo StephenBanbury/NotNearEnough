@@ -21,6 +21,10 @@ namespace Assets.Scripts.Enums
         LargeSquare,
         SmallSquare,
         Cross,
-        Star
+        Star,
+        Circle,
+        Triangle,
+        ShortRectangle,
+        LongRectangle
     }
 }
