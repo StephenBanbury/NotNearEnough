@@ -236,7 +236,7 @@ namespace Assets.Scripts
             }
 
             var floorAdjust = 1.26f;
-            var screenNumber = 1;
+            //var screenNumber = 1;
 
             foreach (var screenPosition in thisFormation)
             {
@@ -247,25 +247,28 @@ namespace Assets.Scripts
 
                     GameObject screen;
 
-                    if (screenNumber % 2 != 0)
+                    if (screenPosition.Id % 2 != 0)
                     {
                         screen = (GameObject) Instantiate(_screen, vector3, Quaternion.identity);
-                        screen.name = $"Screen {screenNumber}";
+                        screen.name = $"Screen {screenPosition.Id}";
                     }
                     else
                     {
                         screen = (GameObject) Instantiate(_screenVariant, vector3, Quaternion.identity);
-                        screen.name = $"Screen Variant {screenNumber}";
+                        screen.name = $"Screen Variant {screenPosition.Id}";
                     }
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
                     screen.transform.SetParent(screensContainer.transform);
 
+                    //var rend = screen.GetComponent<MeshRenderer>();
+                    //rend.enabled = screenPosition.Hide;
+
                     // Add to references for instantiated GameObjects to collection so they can be destroyed
                     currentScreens.Add(screen);
                 }
 
-                screenNumber++;
+                //screenNumber++;
             }
         }
     }
