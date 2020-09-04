@@ -115,18 +115,6 @@ public class AgoraInterface
     public void OnSceneLoaded()
     {
         Debug.Log("OnSceneLoaded");
-
-        // Attach the SDK Script VideoSurface for video rendering
-        //GameObject quad = GameObject.Find("Quad");
-        //if (ReferenceEquals(quad, null))
-        //{
-        //    Debug.Log("BBBB: failed to find Quad");
-        //    return;
-        //}
-        //else
-        //{
-        //    quad.AddComponent<VideoSurface>();
-        //}
     }
 
 
@@ -159,86 +147,7 @@ public class AgoraInterface
         AgoraController.instance.UserJoinsRoom(uid);
        
     }
-
-    //public VideoSurface MakeImageSurface(AgoraUser user)
-    //{
-    //    // find a game object to render video stream from 'uid'
-
-    //    var goName = user.Uid.ToString();
-    //    var displayId = user.DisplayId;
-
-    //    GameObject go = GameObject.Find(goName);
-
-    //    if (!ReferenceEquals(go, null))
-    //    {
-    //        return null; 
-    //    }
-        
-    //    go = new GameObject { name = goName };
-
-    //    // To be rendered onto
-    //    go.AddComponent<RawImage>();
-
-    //    // make the object draggable
-    //    //go.AddComponent<UIElementDragger>();
-
-
-    //    var screensContainer = GameObject.Find("Screens");
-    //    var screenObject = screensContainer.transform.Find($"StreamingScreen{displayId}");
-
-    //    var videoDisplay = screenObject.transform.Find("VideoDisplay");
-    //    var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
-
-    //    videoDisplay.gameObject.SetActive(false);
-    //    canvasDisplay.gameObject.SetActive(true);
-
-
-    //    //var displayName = $"StreamingScreen{displayId}";
-    //    //var displayParent = GameObject.Find(displayName);
-    //    //var displayCanvas = displayParent.transform.Find("CanvasDisplay");
-        
-    //    if (canvasDisplay != null)
-    //    {
-    //        foreach (GameObject child in canvasDisplay.transform)
-    //        {
-    //            GameObject.Destroy(child.gameObject);
-    //        }
-
-    //        go.transform.parent = canvasDisplay.transform;
-    //    }
-        
-    //    go.transform.localEulerAngles = Vector3.zero;
-    //    go.transform.localPosition = Vector3.zero;
-    //    go.transform.localScale = new Vector3(0.19f, 0.39f, 0.1f);
-
-    //    // Configure videoSurface
-    //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-
-    //    return videoSurface;
-    ////}
-
-    //public VideoSurface MakePlaneSurface(string goName)
-    //{
-    //    GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-
-    //    if (go == null)
-    //    {
-    //        return null;
-    //    }
-
-    //    go.name = goName;
-    //    // set up transform
-    //    go.transform.Rotate(-90.0f, 0.0f, 0.0f);
-    //    float yPos = Random.Range(3.0f, 5.0f);
-    //    float xPos = Random.Range(-2.0f, 2.0f);
-    //    go.transform.position = new Vector3(xPos, yPos, 0f);
-    //    go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
-
-    //    // configure videoSurface
-    //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-    //    return videoSurface;
-    //}
-
+    
     // When remote user is offline, this delegate will be called. Typically
     // delete the GameObject for this user
     private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
