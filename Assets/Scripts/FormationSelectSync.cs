@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.Enums;
-using Normal.Realtime;
-using UnityEngine;
+﻿using Normal.Realtime;
 
 namespace Assets.Scripts
 {

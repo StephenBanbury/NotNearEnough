@@ -4060,6 +4060,69 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1101042649}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1315804613
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1315804615}
+  - component: {fileID: 1315804614}
+  m_Layer: 0
+  m_Name: OSC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1315804614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315804613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b64988e220a2942f9856e0017b596ba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _openOnAwake: 1
+  _udpBufferSize: 8192
+  _port: 8000
+  _mode: 0
+  _multicastAddress: 
+  _filterDuplicates: 0
+  _addTimeTagsToBundledMessages: 0
+  _mappings:
+  - _address: /test/float
+    _type: 1
+    _entries:
+    - targetGameObject: {fileID: 1868294218}
+      serializedTargetObject: {fileID: 1868294219}
+      nonSerializedTargetObjectName: 
+      targetMethodName: OnReceiveFloat
+      targetParamAssemblyQualifiedName: System.Single, mscorlib, Version=4.0.0.0,
+        Culture=neutral, PublicKeyToken=b77a5c561934e089
+  _settingsFoldout: 0
+  _mappingsFoldout: 1
+  _messagesFoldout: 0
+--- !u!4 &1315804615
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315804613}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.31781834, y: 0.33810607, z: -1.1400613}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1378656093
 GameObject:
   m_ObjectHideFlags: 0
@@ -6287,6 +6350,102 @@ Transform:
   m_Father: {fileID: 296116518}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1868294218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1868294220}
+  - component: {fileID: 1868294219}
+  m_Layer: 0
+  m_Name: OSCManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1868294219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab7492fd600e669418496900623f00de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oscIn: {fileID: 1315804614}
+  oscOut: {fileID: 0}
+  outputHeaderLabel: {fileID: 0}
+  inputHeaderLabel: {fileID: 0}
+  floatOutputLabel: {fileID: 0}
+  doubleOutputLabel: {fileID: 0}
+  intOutputLabel: {fileID: 0}
+  longOutputLabel: {fileID: 0}
+  boolOutputLabel: {fileID: 0}
+  colorOutputImage: {fileID: 0}
+  stringOutputField: {fileID: 0}
+  charOutputField: {fileID: 0}
+  timetagYearOutputField: {fileID: 0}
+  timetagMonthOutputField: {fileID: 0}
+  timetagDayOutputField: {fileID: 0}
+  timetagHourOutputField: {fileID: 0}
+  timetagMinuteOutputField: {fileID: 0}
+  timetagSecondOutputField: {fileID: 0}
+  timetagMillisecondOutputField: {fileID: 0}
+  blobOutputRawImage: {fileID: 0}
+  midiPortOutputField: {fileID: 0}
+  midiStatusOutputField: {fileID: 0}
+  midiData1OutputField: {fileID: 0}
+  midiData2OutputField: {fileID: 0}
+  floatInputSlider: {fileID: 0}
+  doubleInputSlider: {fileID: 0}
+  intInputSlider: {fileID: 0}
+  longInputSlider: {fileID: 0}
+  stringInputField: {fileID: 0}
+  charInputField: {fileID: 0}
+  boolInputToggle: {fileID: 0}
+  colorInputImage: {fileID: 0}
+  blobInputRawImage: {fileID: 0}
+  timetagYearInputField: {fileID: 0}
+  timetagMonthInputField: {fileID: 0}
+  timetagDayInputField: {fileID: 0}
+  timetagHourInputField: {fileID: 0}
+  timetagMinuteInputField: {fileID: 0}
+  timetagSecondInputField: {fileID: 0}
+  timetagMillisecondInputField: {fileID: 0}
+  timetagImmediateIinputToggle: {fileID: 0}
+  impulseInputImage: {fileID: 0}
+  nullInputImage: {fileID: 0}
+  emptyInputImage: {fileID: 0}
+  midiPortInputField: {fileID: 0}
+  midiStatusInputField: {fileID: 0}
+  midiData1InputField: {fileID: 0}
+  midiData2InputField: {fileID: 0}
+  floatInputLabel: {fileID: 0}
+  doubleInputLabel: {fileID: 0}
+  intInputLabel: {fileID: 0}
+  longInputLabel: {fileID: 0}
+  boolInputLabel: {fileID: 0}
+--- !u!4 &1868294220
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.31781834, y: 0.33810607, z: -1.1400613}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1911942670
 GameObject:
   m_ObjectHideFlags: 0

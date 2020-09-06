@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JoinRoomTrigger : MonoBehaviour
+namespace Assets.Scripts
 {
-    private void OnTriggerEnter(Collider other)
+
+    public class JoinRoomTrigger : MonoBehaviour
     {
-        if (other.CompareTag("Hand"))
+        private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("JoinRoomTrigger");
-            AgoraController.instance.JoinRoom();
+            if (other.CompareTag("Hand"))
+            {
+                Debug.Log("JoinRoomTrigger");
+                AgoraController.instance.JoinRoom();
+            }
         }
     }
+
 }

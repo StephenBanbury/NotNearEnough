@@ -1,32 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonHandler : MonoBehaviour
+namespace Assets.Scripts
 {
-
-    /// <summary>
-    ///   React to a button click event.  Used in the UI Button action definition.
-    /// </summary>
-    /// <param name="button"></param>
-    public void OnButtonClicked(Button button)
+    public class ButtonHandler : MonoBehaviour
     {
-        // which GameObject?
-        GameObject go = GameObject.Find("RoomController");
-        if (go != null)
+
+        /// <summary>
+        ///   React to a button click event.  Used in the UI Button action definition.
+        /// </summary>
+        /// <param name="button"></param>
+        public void OnButtonClicked(Button button)
         {
-            AgoraController agoraController = go.GetComponent<AgoraController>();
-            if (agoraController == null)
+            // which GameObject?
+            GameObject go = GameObject.Find("RoomController");
+            if (go != null)
             {
-                Debug.LogError("Missing game controller...");
-                return;
-            }
-            if (button.name == "JoinButton")
-            {
-                agoraController.OnJoinButtonClicked();
-            }
-            else if (button.name == "LeaveButton")
-            {
-                agoraController.OnLeaveButtonClicked();
+                AgoraController agoraController = go.GetComponent<AgoraController>();
+                if (agoraController == null)
+                {
+                    Debug.LogError("Missing game controller...");
+                    return;
+                }
+
+                if (button.name == "JoinButton")
+                {
+                    agoraController.OnJoinButtonClicked();
+                }
+                else if (button.name == "LeaveButton")
+                {
+                    agoraController.OnLeaveButtonClicked();
+                }
             }
         }
     }
