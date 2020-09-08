@@ -2978,7 +2978,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &940495428
 Transform:
   m_ObjectHideFlags: 0
@@ -4097,14 +4097,32 @@ MonoBehaviour:
   _filterDuplicates: 0
   _addTimeTagsToBundledMessages: 0
   _mappings:
-  - _address: /test/float
-    _type: 1
+  - _address: /select/video
+    _type: 3
     _entries:
     - targetGameObject: {fileID: 1868294218}
       serializedTargetObject: {fileID: 1868294219}
       nonSerializedTargetObjectName: 
-      targetMethodName: OnReceiveFloat
-      targetParamAssemblyQualifiedName: System.Single, mscorlib, Version=4.0.0.0,
+      targetMethodName: OnReceiveVideoId
+      targetParamAssemblyQualifiedName: System.Int32, mscorlib, Version=4.0.0.0,
+        Culture=neutral, PublicKeyToken=b77a5c561934e089
+  - _address: /select/display
+    _type: 3
+    _entries:
+    - targetGameObject: {fileID: 1868294218}
+      serializedTargetObject: {fileID: 1868294219}
+      nonSerializedTargetObjectName: 
+      targetMethodName: OnReceiveDisplayId
+      targetParamAssemblyQualifiedName: System.Int32, mscorlib, Version=4.0.0.0,
+        Culture=neutral, PublicKeyToken=b77a5c561934e089
+  - _address: /select/stream
+    _type: 3
+    _entries:
+    - targetGameObject: {fileID: 1868294218}
+      serializedTargetObject: {fileID: 1868294219}
+      nonSerializedTargetObjectName: 
+      targetMethodName: OnReceiveStreamId
+      targetParamAssemblyQualifiedName: System.Int32, mscorlib, Version=4.0.0.0,
         Culture=neutral, PublicKeyToken=b77a5c561934e089
   _settingsFoldout: 0
   _mappingsFoldout: 1
@@ -6360,6 +6378,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1868294220}
   - component: {fileID: 1868294219}
+  - component: {fileID: 1868294225}
+  - component: {fileID: 1868294224}
+  - component: {fileID: 1868294223}
+  - component: {fileID: 1868294222}
+  - component: {fileID: 1868294221}
+  - component: {fileID: 1868294227}
+  - component: {fileID: 1868294226}
   m_Layer: 0
   m_Name: OSCManager
   m_TagString: Untagged
@@ -6379,59 +6404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab7492fd600e669418496900623f00de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oscIn: {fileID: 1315804614}
-  oscOut: {fileID: 0}
-  outputHeaderLabel: {fileID: 0}
-  inputHeaderLabel: {fileID: 0}
-  floatOutputLabel: {fileID: 0}
-  doubleOutputLabel: {fileID: 0}
-  intOutputLabel: {fileID: 0}
-  longOutputLabel: {fileID: 0}
-  boolOutputLabel: {fileID: 0}
-  colorOutputImage: {fileID: 0}
-  stringOutputField: {fileID: 0}
-  charOutputField: {fileID: 0}
-  timetagYearOutputField: {fileID: 0}
-  timetagMonthOutputField: {fileID: 0}
-  timetagDayOutputField: {fileID: 0}
-  timetagHourOutputField: {fileID: 0}
-  timetagMinuteOutputField: {fileID: 0}
-  timetagSecondOutputField: {fileID: 0}
-  timetagMillisecondOutputField: {fileID: 0}
-  blobOutputRawImage: {fileID: 0}
-  midiPortOutputField: {fileID: 0}
-  midiStatusOutputField: {fileID: 0}
-  midiData1OutputField: {fileID: 0}
-  midiData2OutputField: {fileID: 0}
-  floatInputSlider: {fileID: 0}
-  doubleInputSlider: {fileID: 0}
-  intInputSlider: {fileID: 0}
-  longInputSlider: {fileID: 0}
-  stringInputField: {fileID: 0}
-  charInputField: {fileID: 0}
-  boolInputToggle: {fileID: 0}
-  colorInputImage: {fileID: 0}
-  blobInputRawImage: {fileID: 0}
-  timetagYearInputField: {fileID: 0}
-  timetagMonthInputField: {fileID: 0}
-  timetagDayInputField: {fileID: 0}
-  timetagHourInputField: {fileID: 0}
-  timetagMinuteInputField: {fileID: 0}
-  timetagSecondInputField: {fileID: 0}
-  timetagMillisecondInputField: {fileID: 0}
-  timetagImmediateIinputToggle: {fileID: 0}
-  impulseInputImage: {fileID: 0}
-  nullInputImage: {fileID: 0}
-  emptyInputImage: {fileID: 0}
-  midiPortInputField: {fileID: 0}
-  midiStatusInputField: {fileID: 0}
-  midiData1InputField: {fileID: 0}
-  midiData2InputField: {fileID: 0}
-  floatInputLabel: {fileID: 0}
-  doubleInputLabel: {fileID: 0}
-  intInputLabel: {fileID: 0}
-  longInputLabel: {fileID: 0}
-  boolInputLabel: {fileID: 0}
 --- !u!4 &1868294220
 Transform:
   m_ObjectHideFlags: 0
@@ -6439,13 +6411,118 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868294218}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.31781834, y: 0.33810607, z: -1.1400613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1868294221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d89a38bacc1faab4e84a181d35a664a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _displayIdText: {fileID: 157471720}
+--- !u!114 &1868294222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32e0eb908db5c2047a7a3d313f8e0e7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1868294223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174fb8bd72ce7cb4c9fb8f645a2f7e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _videoIdText: {fileID: 774810564}
+--- !u!114 &1868294224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd05586d0291bc48a3dab55d0ebb9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1868294225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1011e140c5c34458f64fd8ad5095b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 518279406}
+  _sceneViewUUID: 458d408e6582304e9c8c08e7a87ac52a
+  _sceneViewOwnedByCreatingClient: 1
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _isRootPrefabView: 0
+  _components:
+  - componentID: 1
+    component: {fileID: 1868294224}
+    componentIDHasBeenUsed: 1
+  - componentID: 2
+    component: {fileID: 1868294222}
+    componentIDHasBeenUsed: 1
+  - componentID: 3
+    component: {fileID: 1868294227}
+    componentIDHasBeenUsed: 1
+  _parentView: {fileID: 0}
+  _childViews: []
+--- !u!114 &1868294226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aed6e0b6573e9d04194eb75f3cac7d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _streamIdText: {fileID: 779304999}
+--- !u!114 &1868294227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868294218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65aea28497c0b7a47bc882f72e08dfc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1911942670
 GameObject:
   m_ObjectHideFlags: 0

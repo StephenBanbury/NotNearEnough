@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -18,13 +19,37 @@ namespace Assets.Scripts
         //{
         //    Debug.Log($"OSC received: {value}");
         //}
+        
+        private VideoSelect _videoSelectDisplay;
+        private StreamSelect _streamSelectDisplay;
+        private DisplaySelect _displaySelectDisplay;
 
-
-        public void OnReceiveFloat(float value)
+        void Start()
         {
-            var test = value * 0.5f + 0.5f;
-            Debug.Log(value.ToString());
+            _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelect>();
+            _streamSelectDisplay = gameObject.GetComponentInParent<StreamSelect>();
+            _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
+        }
+        
+        public void OnReceiveVideoId(int value)
+        {
+            Debug.Log($"VideoId: {value}");
+            _videoSelectDisplay.SetVideoId(value);
+            _videoSelectDisplay.KeepInSync();
         }
 
+        public void OnReceiveStreamId(int value)
+        {
+            Debug.Log($"StreamId: {value}");
+            _streamSelectDisplay.SetStreamId(value);
+            _streamSelectDisplay.KeepInSync();
+        }
+
+        public void OnReceiveDisplayId(int value)
+        {
+            Debug.Log($"DisplayId: {value}");
+            _displaySelectDisplay.SetDisplayId(value);
+            _displaySelectDisplay.KeepInSync();
+        }
     }
 }
