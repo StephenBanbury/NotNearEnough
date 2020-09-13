@@ -4139,13 +4139,14 @@ MonoBehaviour:
       targetParamAssemblyQualifiedName: System.Int32, mscorlib, Version=4.0.0.0,
         Culture=neutral, PublicKeyToken=b77a5c561934e089
   - _address: /select/formation
-    _type: 0
+    _type: 3
     _entries:
     - targetGameObject: {fileID: 1868294218}
-      serializedTargetObject: {fileID: 0}
+      serializedTargetObject: {fileID: 1868294219}
       nonSerializedTargetObjectName: 
-      targetMethodName: 
-      targetParamAssemblyQualifiedName: 
+      targetMethodName: OnReceiveFormationId
+      targetParamAssemblyQualifiedName: System.Int32, mscorlib, Version=4.0.0.0,
+        Culture=neutral, PublicKeyToken=b77a5c561934e089
   _settingsFoldout: 0
   _mappingsFoldout: 1
   _messagesFoldout: 0
