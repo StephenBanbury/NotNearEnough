@@ -138,8 +138,10 @@ namespace Assets.Scripts
                 videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
                 videoSurface.SetGameFps(30);
             }
-        }
 
+            
+        }
+        
         private VideoSurface MakeImageSurface(AgoraUser user)
         {
             // find a game object to render video stream from 'uid'

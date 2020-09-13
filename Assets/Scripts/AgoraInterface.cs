@@ -30,6 +30,14 @@ namespace Assets.Scripts
                                     LOG_FILTER.CRITICAL);
         }
 
+        public void GetAudioDevice()
+        {
+            var d = "";
+            var audioPlaybackDeviceManager = AudioPlaybackDeviceManager.GetInstance(mRtcEngine);
+            var playebackDeviceId = audioPlaybackDeviceManager.GetCurrentPlaybackDevice(ref d);
+            Debug.Log($"playbackDevice: {playebackDeviceId}");
+        }
+
         public bool Join(string channel)
         {
             Debug.Log($"In Join (channel = {channel})");
@@ -53,7 +61,7 @@ namespace Assets.Scripts
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);
             Debug.Log("initializeEngine done, data stream id = " + streamID);
-
+            
             return true;
         }
 
@@ -147,6 +155,9 @@ namespace Assets.Scripts
             // this is called in main thread
 
             Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
+
+
+            GetAudioDevice();
 
             AgoraController.instance.UserJoinsRoom(uid);
 
