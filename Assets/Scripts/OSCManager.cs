@@ -5,30 +5,17 @@ namespace Assets.Scripts
 {
     public class OSCManager : MonoBehaviour
     {
-        //private OscIn _oscIn;
-
-        //void Start()
-        //{
-        //    _oscIn = gameObject.AddComponent<OscIn>();
-        //    _oscIn.Open(7000);
-        //    _oscIn.MapFloat("/test", OnTest);
-
-        //}
-
-        //void OnTest(float value)
-        //{
-        //    Debug.Log($"OSC received: {value}");
-        //}
-        
         private VideoSelect _videoSelectDisplay;
         private StreamSelect _streamSelectDisplay;
         private DisplaySelect _displaySelectDisplay;
+        private FormationSelect _formationSelectDisplay;
 
         void Start()
         {
             _videoSelectDisplay = gameObject.GetComponentInParent<VideoSelect>();
             _streamSelectDisplay = gameObject.GetComponentInParent<StreamSelect>();
             _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
+            _formationSelectDisplay = gameObject.GetComponentInParent<FormationSelect>();
         }
         
         public void OnReceiveVideoId(int value)
@@ -50,6 +37,13 @@ namespace Assets.Scripts
             Debug.Log($"DisplayId: {value}");
             _displaySelectDisplay.SetDisplayId(value);
             _displaySelectDisplay.KeepInSync();
+        }
+
+        public void OnReceiveFormationId(int value)
+        {
+            Debug.Log($"FormationId: {value}");
+            _formationSelectDisplay.SetFormationId(value);
+            _formationSelectDisplay.KeepInSync();
         }
     }
 }

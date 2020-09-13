@@ -194,7 +194,7 @@ namespace agora_gaming_rtc
         * The SDK triggers this callback when the local audio route switches to an earpiece, speakerphone, headset, or Bluetooth device.
         * 
         * @note This callback is for Android and iOS only.
-        * 
+        *  
         * @param route Audio output routing. See: AUDIO_ROUTE.
         */
         public delegate void OnAudioRouteChangedHandler(AUDIO_ROUTE route);

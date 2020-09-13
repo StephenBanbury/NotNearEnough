@@ -67,16 +67,16 @@ namespace Assets.Scripts
         public void CreateStreamSelectButtons()
         {
             var agoraUsers = AgoraController.instance.AgoraUsers;
+            var selectPanel = GameObject.Find("StreamSelectorPanel");
 
-            if (agoraUsers != null)
+            if (agoraUsers != null && selectPanel != null)
             {
-                var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
-
-                var selectPanel = GameObject.Find("StreamSelectorPanel");
                 foreach (Transform child in selectPanel.transform)
                 {
                     Destroy(child.gameObject);
                 }
+
+                var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
 
                 Debug.Log($"joinedUsers: {joinedUsers.Count}");
 
@@ -335,12 +335,9 @@ namespace Assets.Scripts
                 return;
             }
 
-
             foreach (var screenPosition in thisFormation)
             {
                 var screenPositionPrev = currentScreens[screenPosition.Id - 1];
-                var vector3From = screenPositionPrev.transform.position;
-                var quaternionPrev = screenPositionPrev.transform.rotation;
 
                 var vector3To = screenPosition.Vector3;
                 vector3To.y += _floorAdjust;
