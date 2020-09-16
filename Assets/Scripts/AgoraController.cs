@@ -29,7 +29,7 @@ namespace Assets.Scripts
         private string _playSceneName = "MainRoom";
 
         [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
-        [SerializeField] private string _roomName = "unity3d";
+        [SerializeField] private string _roomName = "NotNearEnough";
         [SerializeField] private Text _testText;
 
         public List<AgoraUser> AgoraUsers
@@ -138,8 +138,6 @@ namespace Assets.Scripts
                 videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
                 videoSurface.SetGameFps(30);
             }
-
-            
         }
         
         private VideoSurface MakeImageSurface(AgoraUser user)

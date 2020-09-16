@@ -30,7 +30,10 @@ namespace Assets.Scripts
                                     LOG_FILTER.CRITICAL);
         }
 
-        public void GetAudioDevice()
+        // Added by me.
+        // TODO: this may be where we start when attempting to control audio
+        // but it may also not be! 
+        private void GetAudioDevice()
         {
             var d = "";
             var audioPlaybackDeviceManager = AudioPlaybackDeviceManager.GetInstance(mRtcEngine);
@@ -50,6 +53,9 @@ namespace Assets.Scripts
             mRtcEngine.OnUserJoined = OnUserJoined;
             mRtcEngine.OnUserOffline = OnUserOffline;
 
+            // Added by Me
+            mRtcEngine.OnStreamMessage = OnStreamMessage;
+
             // enable video
             mRtcEngine.EnableVideo();
             // allow camera output callback
@@ -59,8 +65,8 @@ namespace Assets.Scripts
             mRtcEngine.JoinChannel(channel, null, 0);
 
             // Optional: if a data stream is required, here is a good place to create it
-            int streamID = mRtcEngine.CreateDataStream(true, true);
-            Debug.Log("initializeEngine done, data stream id = " + streamID);
+            //int streamID = mRtcEngine.CreateDataStream(true, true);
+            //Debug.Log("initializeEngine done, data stream id = " + streamID);
             
             return true;
         }
@@ -156,11 +162,23 @@ namespace Assets.Scripts
 
             Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
 
-
+            // Added by me. 
+            // TODO: consider continuing this process. This may be where we start gaining control over our audio devices
             GetAudioDevice();
 
             AgoraController.instance.UserJoinsRoom(uid);
 
+            // Optional: if a data stream is required, here is a good place to create it
+            int streamID = mRtcEngine.CreateDataStream(true, true);
+            Debug.Log("initializeEngine done, data stream id = " + streamID);
+
+            mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-6!");
+
+        }
+
+        void OnStreamMessage(uint userId, int streamId, string data, int length)
+        {
+            Debug.Log($"Message from {userId}: {data}");
         }
 
         // When remote user is offline, this delegate will be called. Typically
