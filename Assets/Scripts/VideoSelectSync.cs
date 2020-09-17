@@ -46,12 +46,15 @@ namespace Assets.Scripts
 
         private void UpdateVideoId()
         {
-            // Get the value from the model, display it 
-            _videoSelectDisplay.SetVideoId(_model.videoId);
+            if (_model != null && _model.videoId > 0)
+            {
+                // Get the value from the model, display it 
+                _videoSelectDisplay.SetVideoId(_model.videoId);
 
-            //Debug.Log($"in UpdateVideoId: {_model.videoId}");
+                //Debug.Log($"in UpdateVideoId: {_model.videoId}");
 
-            MediaDisplayManager.instance.SelectedVideo = _model.videoId;
+                MediaDisplayManager.instance.SelectedVideo = _model.videoId;
+            }
         }
 
         public void SetId(int id)

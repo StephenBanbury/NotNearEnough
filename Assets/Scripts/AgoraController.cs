@@ -29,7 +29,7 @@ namespace Assets.Scripts
         private string _playSceneName = "MainRoom";
 
         [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
-        [SerializeField] private string _roomName = "NotNearEnough";
+        [SerializeField] private string _roomName = "Main Room";
         [SerializeField] private Text _testText;
 
         public List<AgoraUser> AgoraUsers

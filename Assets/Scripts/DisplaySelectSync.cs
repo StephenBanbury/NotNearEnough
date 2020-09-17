@@ -1,4 +1,5 @@
 ﻿using Normal.Realtime;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -43,11 +44,14 @@ namespace Assets.Scripts
 
         private void UpdateDisplayId()
         {
-            // Get the value from the model, display it and update the video display manager
-            _displaySelect.SetDisplayId(_model.displayId);
+            if (_model != null && _model.displayId > 0)
+            {
+                // Get the value from the model, display it and update the video display manager
+                _displaySelect.SetDisplayId(_model.displayId);
 
-            MediaDisplayManager.instance.SelectedDisplay = _model.displayId;
-            MediaDisplayManager.instance.AssignMediaToDisplay();
+                MediaDisplayManager.instance.SelectedDisplay = _model.displayId;
+                MediaDisplayManager.instance.AssignMediaToDisplay();
+            }
         }
         
         public void SetId(int id)

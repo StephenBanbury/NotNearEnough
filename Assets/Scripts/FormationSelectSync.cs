@@ -1,4 +1,5 @@
 ﻿using Normal.Realtime;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -46,13 +47,16 @@ namespace Assets.Scripts
 
         private void UpdateFormationId()
         {
-            // Get the value from the model, display it 
-            _formationSelectDisplay.SetFormationId(_model.formationId);
+            if (_model != null && _model.formationId > 0)
+            {
+                // Get the value from the model, display it 
+                _formationSelectDisplay.SetFormationId(_model.formationId);
 
-            //Debug.Log($"in UpdateFormationId: {_model.formationId}");
+                //Debug.Log($"in UpdateFormationId: {_model.formationId}");
 
-            // TODO: this may not be needed, but if it is, maybe move it to its own manager class
-            //MediaDisplayManager.instance.SelectedScreenFormation = (ScreenFormation) _model.formationId;
+                // TODO: this may not be needed, but if it is, maybe move it to its own manager class
+                //MediaDisplayManager.instance.SelectedScreenFormation = (ScreenFormation) _model.formationId;
+            }
         }
 
         public void SetId(int id)

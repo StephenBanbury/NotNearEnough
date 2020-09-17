@@ -48,9 +48,12 @@ namespace Assets.Scripts
 
         private void UpdateSlidingScaleValue()
         {
-            // Get the value from the model and set it on the sliding scale
-            //Debug.Log("In UpdateSlidingScaleValue");
-            _boxEntered.SetScaleValue(_model.scaleValue);
+            if (_model != null && _model.scaleValue > 0)
+            {
+                // Get the value from the model and set it on the sliding scale
+                //Debug.Log("In UpdateSlidingScaleValue");
+                _boxEntered.SetScaleValue(_model.scaleValue);
+            }
         }
 
         public void SetValue(float value)
