@@ -4,6 +4,8 @@ using System.Linq;
 using Assets.Scripts.Enums;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace Assets.Scripts
 {
@@ -48,7 +50,16 @@ namespace Assets.Scripts
                 ? OVRInput.Controller.LTouch
                 : OVRInput.Controller.RTouch);
 
-            ChangeScreenFormation();
+            // Randomly select to change formation or change video
+            var rand = Random.value * 100;
+            if (rand <= 50)
+            {
+                ChangeScreenFormation();
+            }
+            else
+            {
+                ToggleVideoOn();
+            }
 
             yield return new WaitForSeconds(_waitForSeconds);
 
@@ -59,19 +70,50 @@ namespace Assets.Scripts
         private void ChangeScreenFormation()
         {
             var numberOfFormations = Enum.GetValues(typeof(ScreenFormation)).Cast<int>().Max();
-            //Debug.Log($"Number of formations: {numberOfFormations}");
-            //Debug.Log($"Current screen formation: {_currentScreenFormation}");
 
             ScreenFormation randomFormation;
             do
             {
                 randomFormation = (ScreenFormation) Math.Floor(Random.value * numberOfFormations);
-                //Debug.Log($"Trying new formation: {randomFormation}");
             } while (randomFormation == _currentScreenFormation || randomFormation == ScreenFormation.None);
 
             _currentScreenFormation = randomFormation;
-            //Debug.Log($"New screen formation: {_currentScreenFormation}");
+
             MediaDisplayManager.instance.TweenScreens(_currentScreenFormation);
+        }
+
+        private void ToggleVideoOn()
+        {
+            var parent = gameObject.transform.parent;
+            var videoDisplay = parent.Find("VideoDisplay");
+            var canvasDisplay = parent.Find("CanvasDisplay");
+
+            // For now I am going to select a random video to display. We will probably want a different action
+
+            var videoId = (int) Math.Floor(Random.value * 5);
+            var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
+
+            var mediaDisplayManager = GameObject.Find("MediaDisplayManager");
+            var videoSelect = mediaDisplayManager.GetComponent<VideoSelect>();
+            var displaySelect = mediaDisplayManager.GetComponent<DisplaySelect>();
+
+            videoSelect.SetVideoId(videoId);
+            videoSelect.KeepInSync();
+
+            displaySelect.SetDisplayId(screenId);
+            displaySelect.KeepInSync();
+
+
+            if (videoDisplay)
+            {
+                Debug.Log($"VideoDisplay in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
+            }
+
+            if (canvasDisplay)
+            {
+                Debug.Log($"CanvasDisplay in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
+            }
+
         }
     }
 }

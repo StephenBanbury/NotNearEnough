@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Enums;
+﻿using System;
+using Assets.Scripts.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,6 @@ namespace Assets.Scripts
         private int _previousId;
         
         private VideoSelectSync _videoSelectSync;
-
 
         void Start()
         {
@@ -36,6 +36,7 @@ namespace Assets.Scripts
             // If the id has changed, call SetId on the sync component
             if (_videoId != _previousId)
             {
+                Debug.Log($"videoId: {_videoId}");
                 _videoSelectSync.SetId(_videoId);
                 _previousId = _videoId;
             }
