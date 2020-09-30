@@ -15,7 +15,8 @@ namespace Assets.Scripts
 
         void Start()
         {
-            _displaySelectSync = gameObject.GetComponentInParent<DisplaySelectSync>();
+            //_displaySelectSync = gameObject.GetComponentInParent<DisplaySelectSync>();
+            _displaySelectSync = gameObject.GetComponent<DisplaySelectSync>();
         }
 
         public void SetDisplayId(int id)
@@ -34,6 +35,7 @@ namespace Assets.Scripts
             // If the id has changed, call SetId on the sync component
             if (_displayId != _previousId)
             {
+                Debug.Log($"displayId: {_displayId}");
                 _displaySelectSync.SetId(_displayId);
                 _previousId = _displayId;
             }

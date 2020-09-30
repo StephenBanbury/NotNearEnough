@@ -26,13 +26,6 @@ namespace Assets.Scripts
             if (_formationId > 0 && _formationId != _previousId)
             {
                 _formationIdText.text = _formationId.ToString();
-
-                // TODO: change formation
-
-                //MediaDisplayManager.instance.SelectedVideo = _formationId;
-                //MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoClip;
-
-                //MediaDisplayManager.instance.SpawnScreens((ScreenFormation) _formationId);
                 MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId);
             }
         }

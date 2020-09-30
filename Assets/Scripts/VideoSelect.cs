@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Scripts.Enums;
+﻿using Assets.Scripts.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +15,8 @@ namespace Assets.Scripts
 
         void Start()
         {
-            _videoSelectSync = gameObject.GetComponentInParent<VideoSelectSync>();
+            //_videoSelectSync = gameObject.GetComponentInParent<VideoSelectSync>();
+            _videoSelectSync = gameObject.GetComponent<VideoSelectSync>();
         }
 
         public void SetVideoId(int id)

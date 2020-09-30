@@ -52,7 +52,7 @@ namespace Assets.Scripts
 
             // Randomly select to change formation or change video
             var rand = Random.value * 100;
-            if (rand <= 50)
+            if (rand <= 40)
             {
                 ChangeScreenFormation();
             }
@@ -71,15 +71,21 @@ namespace Assets.Scripts
         {
             var numberOfFormations = Enum.GetValues(typeof(ScreenFormation)).Cast<int>().Max();
 
+
             ScreenFormation randomFormation;
             do
             {
-                randomFormation = (ScreenFormation) Math.Floor(Random.value * numberOfFormations);
+                randomFormation = (ScreenFormation) Math.Ceiling(Random.value * numberOfFormations);
             } while (randomFormation == _currentScreenFormation || randomFormation == ScreenFormation.None);
 
             _currentScreenFormation = randomFormation;
 
-            MediaDisplayManager.instance.TweenScreens(_currentScreenFormation);
+            var mediaDisplayManager = GameObject.Find("MediaDisplayManager");
+
+            var formationSelect = mediaDisplayManager.GetComponent<FormationSelect>();
+
+            formationSelect.SetFormationId((int) _currentScreenFormation);
+            formationSelect.KeepInSync();
         }
 
         private void ToggleVideoOn()
@@ -90,20 +96,20 @@ namespace Assets.Scripts
 
             // For now I am going to select a random video to display. We will probably want a different action
 
-            var videoId = (int) Math.Floor(Random.value * 5);
+            var videoId = (int) Math.Ceiling(Random.value * 5);
             var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
             var mediaDisplayManager = GameObject.Find("MediaDisplayManager");
-            var videoSelect = mediaDisplayManager.GetComponent<VideoSelect>();
-            var displaySelect = mediaDisplayManager.GetComponent<DisplaySelect>();
 
+            var videoSelect = mediaDisplayManager.GetComponent<VideoSelect>();
             videoSelect.SetVideoId(videoId);
             videoSelect.KeepInSync();
 
+            var displaySelect = mediaDisplayManager.GetComponent<DisplaySelect>();
             displaySelect.SetDisplayId(screenId);
             displaySelect.KeepInSync();
 
-
+            // Will use this later...
             if (videoDisplay)
             {
                 Debug.Log($"VideoDisplay in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
