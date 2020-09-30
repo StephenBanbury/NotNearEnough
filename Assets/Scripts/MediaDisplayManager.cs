@@ -293,8 +293,6 @@ namespace Assets.Scripts
 
         public void TweenScreens(ScreenFormation formation)
         {
-            Debug.Log("TweenScreens");
-
             var thisFormation = new List<ScreenPosition>();
             var screenFormation = new Services.ScreenFormation();
 

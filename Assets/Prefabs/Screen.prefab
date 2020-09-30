@@ -242,8 +242,9 @@ GameObject:
   - component: {fileID: 937161518131625353}
   - component: {fileID: 937161518131625352}
   - component: {fileID: 937161518131625367}
+  - component: {fileID: 406088320130593121}
   m_Layer: 0
-  m_Name: Screen
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -320,11 +321,23 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937161518131625365}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &406088320130593121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937161518131625365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12c94a96eaf101d489cf09fed44afc75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &937161518170235668
 GameObject:
   m_ObjectHideFlags: 0
