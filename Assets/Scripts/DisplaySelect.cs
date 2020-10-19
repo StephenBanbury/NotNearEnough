@@ -23,7 +23,7 @@ namespace Assets.Scripts
         {
             _displayId = id;
             
-            if (_displayId > 0 && _displayId != _previousId)
+            if (_displayId > 0) // && _displayId != _previousId)
             {
                 _displayIdText.text = _displayId.ToString();
                 MediaDisplayManager.instance.SelectedDisplay = _displayId;

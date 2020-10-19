@@ -42,7 +42,7 @@ namespace Assets.Scripts
         public void OnReceiveFormationId(int value)
         {
             Debug.Log($"FormationId: {value}");
-            _formationSelectDisplay.SetFormationId(value);
+            _formationSelectDisplay.SetFormationId(value, 5);
             _formationSelectDisplay.KeepInSync();
         }
     }

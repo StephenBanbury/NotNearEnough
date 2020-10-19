@@ -98,7 +98,11 @@ namespace Normal.Realtime {
 
                         // TODO: If there's no spatializer, we need to do this, but if there is a spatializer, we can just copy the value.
                         // TODO: Why is the input signal we're getting not 1.0 when spatialization is turned off??
-                        data[sOut] = !_mute ? audioData[sIn] : 0.0f;
+                        //data[sOut] = !_mute ? audioData[sIn] : 0.0f;
+
+                        // SB: Added to try out spatial audio.
+                        // See discord/genera/01/05/2019 (Max)
+                        data[sOut] *= !_mute ? audioData[sIn] : 0.0f;
                     }
                 }
 

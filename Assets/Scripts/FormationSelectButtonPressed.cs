@@ -17,7 +17,7 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                _formationSelectDisplay.SetFormationId(_formationId);
+                _formationSelectDisplay.SetFormationId(_formationId, 5);
                 _formationSelectDisplay.KeepInSync();
             }
         }

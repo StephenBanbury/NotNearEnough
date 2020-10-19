@@ -135,7 +135,7 @@ namespace Assets.Scripts
 
         private void AssignVideoToDisplay()
         {
-            Debug.Log("In AssignVideoToDisplay");
+            //Debug.Log("In AssignVideoToDisplay");
             Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
             Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
 
@@ -291,7 +291,7 @@ namespace Assets.Scripts
             }
         }
 
-        public void TweenScreens(ScreenFormation formation)
+        public void TweenScreens(ScreenFormation formation, int tweenTimeSeconds)
         {
             var thisFormation = new List<ScreenPosition>();
             var screenFormation = new Services.ScreenFormation();
@@ -340,7 +340,7 @@ namespace Assets.Scripts
                 var vector3To = screenPosition.Vector3;
                 vector3To.y += _floorAdjust;
 
-                screenPositionPrev.transform.DOMove(vector3To, 3);
+                screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds);
                 screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3);
             }
         }

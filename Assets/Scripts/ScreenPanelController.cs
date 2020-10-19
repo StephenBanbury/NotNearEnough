@@ -84,7 +84,7 @@ namespace Assets.Scripts
 
             var formationSelect = mediaDisplayManager.GetComponent<FormationSelect>();
 
-            formationSelect.SetFormationId((int) _currentScreenFormation);
+            formationSelect.SetFormationId((int) _currentScreenFormation, 5);
             formationSelect.KeepInSync();
         }
 

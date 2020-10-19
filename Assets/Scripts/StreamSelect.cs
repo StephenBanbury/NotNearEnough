@@ -23,7 +23,7 @@ namespace Assets.Scripts
         {
             _streamId = id;
 
-            if (_streamId > 0 && _streamId != _previousId)
+            if (_streamId > 0) // && _streamId != _previousId)
             {
                 _streamIdText.text = _streamId.ToString();
                 MediaDisplayManager.instance.SelectedStream = _streamId;

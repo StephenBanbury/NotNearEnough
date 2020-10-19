@@ -23,7 +23,7 @@ namespace Assets.Scripts
         {
             _videoId = id;
 
-            if (_videoId > 0 && _videoId != _previousId)
+            if (_videoId > 0) // && _videoId != _previousId)
             {
                 _videoIdText.text = _videoId.ToString();
                 MediaDisplayManager.instance.SelectedVideo = _videoId;

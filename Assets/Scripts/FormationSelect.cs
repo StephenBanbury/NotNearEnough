@@ -19,14 +19,14 @@ namespace Assets.Scripts
             _formationSelectSync = gameObject.GetComponentInParent<FormationSelectSync>();
         }
 
-        public void SetFormationId(int id)
+        public void SetFormationId(int id, int animationSeconds)
         {
             _formationId = id;
 
-            if (_formationId > 0 && _formationId != _previousId)
+            if (_formationId > 0) // && _formationId != _previousId)
             {
                 _formationIdText.text = _formationId.ToString();
-                MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId);
+                MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId, animationSeconds);
             }
         }
 
