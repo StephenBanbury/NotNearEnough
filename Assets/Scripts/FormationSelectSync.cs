@@ -50,7 +50,7 @@ namespace Assets.Scripts
             if (_model != null && _model.formationId > 0)
             {
                 // Get the value from the model, display it 
-                _formationSelectDisplay.SetFormationId(_model.formationId, 5);
+                _formationSelectDisplay.SetFormationId(_model.formationId, 10);
 
                 //Debug.Log($"in UpdateFormationId: {_model.formationId}");
 

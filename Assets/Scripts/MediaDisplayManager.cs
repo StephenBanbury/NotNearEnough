@@ -25,7 +25,6 @@ namespace Assets.Scripts
 
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
-        //private ScreenFormation _lastSelectedScreenFormation;
 
         private List<GameObject> currentScreens = new List<GameObject>();
 
@@ -339,8 +338,9 @@ namespace Assets.Scripts
                 var vector3To = screenPosition.Vector3;
                 vector3To.y += _floorAdjust;
 
-                screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds);
-                screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3);
+
+                screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
+                screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3).SetEase(Ease.Linear);
             }
         }
     }
