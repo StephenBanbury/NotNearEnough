@@ -34,6 +34,7 @@ namespace Assets.Scripts
         [SerializeField] private Transform _selectButton;
         [SerializeField] private GameObject _screen;
         [SerializeField] private GameObject _screenVariant;
+        [SerializeField] private AudioSource _screenAnimationAudio;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -338,6 +339,7 @@ namespace Assets.Scripts
                 var vector3To = screenPosition.Vector3;
                 vector3To.y += _floorAdjust;
 
+                _screenAnimationAudio.Play();
 
                 screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
                 screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3).SetEase(Ease.Linear);
