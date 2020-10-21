@@ -73,13 +73,13 @@ namespace Assets.Scripts
 
         public void UserJoined(AgoraUser agoraUser)
         {
-            Debug.Log($"UserJoined: {agoraUser}");
+            Debug.Log($"Agora UserJoined: {agoraUser}");
             _joinedUsers.Add(agoraUser);
         }
 
         public void UserJoinsRoom(uint uid)
         {
-            Debug.Log("UserJoinsRoom");
+            Debug.Log("Agora UserJoinsRoom");
 
             var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
 
@@ -101,7 +101,7 @@ namespace Assets.Scripts
 
                 _joinedUsers.Add(agoraUser);
 
-                Debug.Log($"Number joined: {_joinedUsers.Count}");
+                Debug.Log($"Agora Number joined: {_joinedUsers.Count}");
                 foreach (var user in _joinedUsers)
                 {
                     Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
@@ -130,7 +130,7 @@ namespace Assets.Scripts
 
         public void AssignStreamToDisplay(AgoraUser agoraUser)
         {
-            Debug.Log("AssignStreamToDisplay");
+            Debug.Log("Agora AssignStreamToDisplay");
 
             // Create a GameObject and assign to this new user
             VideoSurface videoSurface = MakeImageSurface(agoraUser);
@@ -147,7 +147,7 @@ namespace Assets.Scripts
         
         private VideoSurface MakeImageSurface(AgoraUser user)
         {
-            Debug.Log("MakeImageSurface");
+            Debug.Log("Agora MakeImageSurface");
 
             // find a game object to render video stream from 'uid'
 
@@ -232,7 +232,7 @@ namespace Assets.Scripts
 
         public void JoinRoom()
         {
-            Debug.Log($"JoinRoom: {_app}");
+            Debug.Log($"Agora JoinRoom: {_app}");
 
             // create app if nonexistent
             if (ReferenceEquals(_app, null))
@@ -245,7 +245,7 @@ namespace Assets.Scripts
 
             if (joined)
             {
-                SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+                //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
                 _testText.text = $"Joined {_roomName}";
             }
         }
@@ -278,22 +278,22 @@ namespace Assets.Scripts
         //    Destroy(gameObject);
         //}
 
-        public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-        {
-            //if (scene.name != _playSceneName)
-            //{
-            //    Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
-            //}
-            //else
-            //{
-                if (!ReferenceEquals(_app, null))
-                {
-                    _app.OnSceneLoaded(); // call this after scene is loaded
-                }
+        //public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+        //{
+        //    //if (scene.name != _playSceneName)
+        //    //{
+        //    //    Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
+        //    //}
+        //    //else
+        //    //{
+        //        if (!ReferenceEquals(_app, null))
+        //        {
+        //            _app.OnSceneLoaded(); // call this after scene is loaded
+        //        }
 
-                //SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-            //}
-        }
+        //        //SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        //    //}
+        //}
 
         //void OnApplicationPause(bool paused)
         //{

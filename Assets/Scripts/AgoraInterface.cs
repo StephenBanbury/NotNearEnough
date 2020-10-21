@@ -14,7 +14,7 @@ namespace Assets.Scripts
         public void LoadEngine(string appId)
         {
             // start sdk
-            Debug.Log("initializeEngine");
+            Debug.Log("Agora InitializeEngine");
 
             if (mRtcEngine != null)
             {
@@ -43,7 +43,7 @@ namespace Assets.Scripts
 
         public bool Join(string channel)
         {
-            Debug.Log($"In Join (channel = {channel})");
+            Debug.Log($"Agora Join (channel = {channel})");
 
             if (mRtcEngine == null)
                 return false;
@@ -66,7 +66,7 @@ namespace Assets.Scripts
 
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);
-            Debug.Log("initializeEngine done, data stream id = " + streamID);
+            Debug.Log("Agora InitializeEngine done, data stream id = " + streamID);
 
             return true;
         }
@@ -102,7 +102,7 @@ namespace Assets.Scripts
         // unload agora engine
         public void UnloadEngine()
         {
-            Debug.Log("In UnloadEngine");
+            Debug.Log("Agora UnloadEngine");
 
             // delete
             if (mRtcEngine != null)
@@ -132,7 +132,7 @@ namespace Assets.Scripts
         // set video transform delegate for statically created GameObject
         public void OnSceneLoaded()
         {
-            Debug.Log("OnSceneLoaded");
+            Debug.Log("Agora OnSceneLoaded");
         }
 
 
@@ -141,7 +141,7 @@ namespace Assets.Scripts
         {
             // TODO: not sure this is required
 
-            Debug.Log("OnJoinChannelSuccess: uid = " + uid);
+            Debug.Log("Agora OnJoinChannelSuccess: uid = " + uid);
 
             AgoraController.instance.UserJoined(new AgoraUser
             {
@@ -160,7 +160,7 @@ namespace Assets.Scripts
         {
             // this is called in main thread
 
-            Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
+            Debug.Log("Agora onUserJoined: uid = " + uid + " elapsed = " + elapsed);
 
             // Added by me. 
             // TODO: consider continuing this process. This may be where we start gaining control over our audio devices
@@ -178,7 +178,7 @@ namespace Assets.Scripts
 
         void OnStreamMessage(uint userId, int streamId, string data, int length)
         {
-            Debug.Log($"Message from {userId}: {data}");
+            Debug.Log($"Agora Message from {userId}: {data}");
         }
 
         // When remote user is offline, this delegate will be called. Typically
@@ -186,7 +186,7 @@ namespace Assets.Scripts
         private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
         {
             // remove video stream
-            Debug.Log("onUserOffline: uid = " + uid + " reason = " + reason);
+            Debug.Log("Agora onUserOffline: uid = " + uid + " reason = " + reason);
 
             // this is called in main thread
 

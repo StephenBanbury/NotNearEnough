@@ -81,8 +81,8 @@ namespace Assets.Scripts
                 Debug.Log($"Non-local agora users: {joinedUsers.Count}");
 
                 var xPos = selectPanel.transform.position.x;
-                var yStart = 0.42f;
-                var zPos = selectPanel.transform.position.z - 0.04f;
+                var yStart = 0.55f;
+                var zPos = selectPanel.transform.position.z;
 
                 var i = 1;
 
@@ -90,8 +90,7 @@ namespace Assets.Scripts
                 {
                     var buttonName = $"Button{i}";
                     var yPos = yStart - (i - 1) * 0.117f;
-                    var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos),
-                        _selectButton.transform.rotation);
+                    var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos), Quaternion.identity);
                     button.name = buttonName;
                     var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
                     buttonScript.StreamId = joinedUser.Id;
