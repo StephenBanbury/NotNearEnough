@@ -406,7 +406,7 @@ namespace Normal.Realtime {
         
                     RealtimeViewModel viewModel = childViewsModel[viewID] as RealtimeViewModel;
                     if (viewModel == null) {
-                        Debug.LogError("RealtimeView attempting to connect child view to its models, but cannot find model for view: (" + viewID + ":" + view + "). This is a bug!", view);
+                        //Debug.LogError("RealtimeView attempting to connect child view to its models, but cannot find model for view: (" + viewID + ":" + view + "). This is a bug!", view);
                         continue;
                     }
     

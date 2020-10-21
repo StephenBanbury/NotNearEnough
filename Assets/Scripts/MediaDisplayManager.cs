@@ -78,7 +78,7 @@ namespace Assets.Scripts
 
                 var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
 
-                Debug.Log($"joinedUsers: {joinedUsers.Count}");
+                Debug.Log($"Non-local agora users: {joinedUsers.Count}");
 
                 var xPos = selectPanel.transform.position.x;
                 var yStart = 0.42f;
@@ -268,12 +268,12 @@ namespace Assets.Scripts
 
                     if (screenPosition.Id % 2 != 0)
                     {
-                        screen = (GameObject) Instantiate(_screen, vector3, Quaternion.identity);
+                        screen = Instantiate(_screen, vector3, Quaternion.identity);
                         screen.name = $"Screen {screenPosition.Id}";
                     }
                     else
                     {
-                        screen = (GameObject) Instantiate(_screenVariant, vector3, Quaternion.identity);
+                        screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
                         screen.name = $"Screen Variant {screenPosition.Id}";
                     }
 

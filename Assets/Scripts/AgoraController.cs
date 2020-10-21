@@ -29,7 +29,7 @@ namespace Assets.Scripts
         private string _playSceneName = "MainRoom";
 
         [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
-        [SerializeField] private string _roomName = "Main Room";
+        [SerializeField] private string _roomName;
         [SerializeField] private Text _testText;
 
         public List<AgoraUser> AgoraUsers
@@ -42,8 +42,8 @@ namespace Assets.Scripts
         void Awake()
         {
 #if (UNITY_ANDROID)
-            permissionList.Add(Permission.Microphone);
-            permissionList.Add(Permission.Camera);
+            //permissionList.Add(Permission.Microphone);
+            //permissionList.Add(Permission.Camera);
 #endif
 
             if (instance == null)
@@ -61,10 +61,10 @@ namespace Assets.Scripts
             JoinRoom();
         }
 
-        void Start()
-        {
-            CheckAppId();
-        }
+        //void Start()
+        //{
+        //    CheckAppId();
+        //}
 
         void Update()
         {
@@ -73,11 +73,14 @@ namespace Assets.Scripts
 
         public void UserJoined(AgoraUser agoraUser)
         {
+            Debug.Log($"UserJoined: {agoraUser}");
             _joinedUsers.Add(agoraUser);
         }
 
         public void UserJoinsRoom(uint uid)
         {
+            Debug.Log("UserJoinsRoom");
+
             var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
 
             if (userAlreadyJoined)
@@ -127,6 +130,8 @@ namespace Assets.Scripts
 
         public void AssignStreamToDisplay(AgoraUser agoraUser)
         {
+            Debug.Log("AssignStreamToDisplay");
+
             // Create a GameObject and assign to this new user
             VideoSurface videoSurface = MakeImageSurface(agoraUser);
 
@@ -142,6 +147,8 @@ namespace Assets.Scripts
         
         private VideoSurface MakeImageSurface(AgoraUser user)
         {
+            Debug.Log("MakeImageSurface");
+
             // find a game object to render video stream from 'uid'
 
             var goName = user.Uid.ToString();
@@ -243,58 +250,58 @@ namespace Assets.Scripts
             }
         }
 
-        public void OnJoinButtonClicked()
-        {
-            // get parameters(channel name, channel profile, etc.)
-            GameObject go = GameObject.Find("ChannelName");
-            InputField field = go.GetComponent<InputField>();
+        //public void OnJoinButtonClicked()
+        //{
+        //    // get parameters(channel name, channel profile, etc.)
+        //    GameObject go = GameObject.Find("ChannelName");
+        //    InputField field = go.GetComponent<InputField>();
 
-            _roomName = field.text;
+        //    _roomName = field.text;
 
-            // join channel 
-            JoinRoom();
+        //    // join channel 
+        //    JoinRoom();
 
-            // jump to next scene
-            SceneManager.LoadScene(_playSceneName, LoadSceneMode.Single);
-        }
+        //    // jump to next scene
+        //    SceneManager.LoadScene(_playSceneName, LoadSceneMode.Single);
+        //}
 
-        public void OnLeaveButtonClicked()
-        {
-            if (!ReferenceEquals(_app, null))
-            {
-                _app.Leave(); // leave channel
-                _app.UnloadEngine(); // delete engine
-                _app = null; // delete app
-                SceneManager.LoadScene(_homeSceneName, LoadSceneMode.Single);
-            }
+        //public void OnLeaveButtonClicked()
+        //{
+        //    if (!ReferenceEquals(_app, null))
+        //    {
+        //        _app.Leave(); // leave channel
+        //        _app.UnloadEngine(); // delete engine
+        //        _app = null; // delete app
+        //        SceneManager.LoadScene(_homeSceneName, LoadSceneMode.Single);
+        //    }
 
-            Destroy(gameObject);
-        }
+        //    Destroy(gameObject);
+        //}
 
         public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name != _playSceneName)
-            {
-                Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
-            }
-            else
-            {
+            //if (scene.name != _playSceneName)
+            //{
+            //    Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
+            //}
+            //else
+            //{
                 if (!ReferenceEquals(_app, null))
                 {
                     _app.OnSceneLoaded(); // call this after scene is loaded
                 }
 
-                SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-            }
+                //SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+            //}
         }
 
-        void OnApplicationPause(bool paused)
-        {
-            if (!ReferenceEquals(_app, null))
-            {
-                _app.EnableVideo(paused);
-            }
-        }
+        //void OnApplicationPause(bool paused)
+        //{
+        //    if (!ReferenceEquals(_app, null))
+        //    {
+        //        _app.EnableVideo(paused);
+        //    }
+        //}
 
         void OnApplicationQuit()
         {

@@ -65,9 +65,9 @@ namespace Assets.Scripts
             mRtcEngine.JoinChannel(channel, null, 0);
 
             // Optional: if a data stream is required, here is a good place to create it
-            //int streamID = mRtcEngine.CreateDataStream(true, true);
-            //Debug.Log("initializeEngine done, data stream id = " + streamID);
-            
+            int streamID = mRtcEngine.CreateDataStream(true, true);
+            Debug.Log("initializeEngine done, data stream id = " + streamID);
+
             return true;
         }
 
@@ -172,7 +172,7 @@ namespace Assets.Scripts
             int streamID = mRtcEngine.CreateDataStream(true, true);
             Debug.Log("initializeEngine done, data stream id = " + streamID);
 
-            mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-6!");
+           // mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-6!");
 
         }
 
