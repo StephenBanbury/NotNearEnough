@@ -482,7 +482,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3b41e84f730466e45814f564e34e0721, type: 2}
+  - {fileID: 2100000, guid: f61a4e563b4ad8045ac28bc6dc853c52, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1294,6 +1294,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Height
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656844927490694838, guid: 1dcf210b4cd620142a789788e121efb9,
+        type: 3}
+      propertyPath: MoveScaleMultiplier
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656844927490694838, guid: 1dcf210b4cd620142a789788e121efb9,
+        type: 3}
+      propertyPath: RotationRatchet
+      value: 22.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656844927490694838, guid: 1dcf210b4cd620142a789788e121efb9,
+        type: 3}
+      propertyPath: SnapRotation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656844927490694838, guid: 1dcf210b4cd620142a789788e121efb9,
+        type: 3}
+      propertyPath: RotationAmount
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3656844928097716390, guid: 1dcf210b4cd620142a789788e121efb9,
         type: 3}
