@@ -41,7 +41,6 @@ namespace Assets.Scripts
         public int SelectedStream { set => _lastSelectedStreamId = value; }
         public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
-        //public ScreenFormation SelectedScreenFormation { set => _lastSelectedScreenFormation = value; }
 
         void Awake()
         {
@@ -61,7 +60,14 @@ namespace Assets.Scripts
             GetVideosFromService();
             CreateStreamSelectButtons();
 
-            SpawnScreens(ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene1, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene2, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene3, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene4, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene5, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene6, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene7, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene8, ScreenFormation.LargeSquare);
         }
 
         public void CreateStreamSelectButtons()
@@ -206,12 +212,10 @@ namespace Assets.Scripts
             }
         }
         
-        public void SpawnScreens(ScreenFormation formation)
+        public void SpawnScreens(Scene scene, ScreenFormation formation)
         {
-            Debug.Log("SpawnScreens");
-
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new Services.ScreenFormation();
+            var screenFormation = new Services.ScreenFormation(scene);
 
             switch (formation)
             {
@@ -290,10 +294,10 @@ namespace Assets.Scripts
             }
         }
 
-        public void TweenScreens(ScreenFormation formation, int tweenTimeSeconds)
+        public void TweenScreens(Scene scene, ScreenFormation formation, int tweenTimeSeconds)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new Services.ScreenFormation();
+            var screenFormation = new Services.ScreenFormation(scene);
 
             switch (formation)
             {
@@ -327,8 +331,8 @@ namespace Assets.Scripts
 
             if (screensContainer == null)
             {
-                screensContainer = new GameObject { name = "Screens" };
-                SpawnScreens(formation);
+                //screensContainer = new GameObject { name = "Screens" };
+                SpawnScreens(scene, formation);
                 return;
             }
 

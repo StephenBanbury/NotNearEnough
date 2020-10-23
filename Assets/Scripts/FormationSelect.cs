@@ -26,7 +26,7 @@ namespace Assets.Scripts
             if (_formationId > 0) // && _formationId != _previousId)
             {
                 _formationIdText.text = _formationId.ToString();
-                MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId, animationSeconds);
+                MediaDisplayManager.instance.TweenScreens(Scene.Scene1, (ScreenFormation)_formationId, animationSeconds);
             }
         }
 
