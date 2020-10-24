@@ -6,8 +6,6 @@ using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
 using UnityEngine.Video;
-using ScreenFormation = Assets.Scripts.Enums.ScreenFormation;
-
 namespace Assets.Scripts
 {
     public class MediaDisplayManager: MonoBehaviour
@@ -16,6 +14,9 @@ namespace Assets.Scripts
         
         private List<MediaDetail> _videos;
         private List<MediaDetail> _streams;
+
+        private List<SceneDetail> _scenes;
+        private int _sceneIndex;
 
         private Dictionary<int, MediaDetail> _displayVideo;
         private Dictionary<int, MediaDetail> _displayStream;
@@ -60,14 +61,24 @@ namespace Assets.Scripts
             GetVideosFromService();
             CreateStreamSelectButtons();
 
+            _scenes = new List<SceneDetail>();
+            _sceneIndex = 1;
+
             SpawnScreens(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene2, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene3, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene4, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene5, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene6, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene7, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene8, ScreenFormation.LargeSquare);
+            SpawnScreens(Scene.Scene2, ScreenFormation.ShortRectangle);
+            SpawnScreens(Scene.Scene3, ScreenFormation.Circle);
+            SpawnScreens(Scene.Scene4, ScreenFormation.Cross);
+            SpawnScreens(Scene.Scene5, ScreenFormation.SmallSquare);
+            SpawnScreens(Scene.Scene6, ScreenFormation.LongRectangle);
+            SpawnScreens(Scene.Scene7, ScreenFormation.Star);
+            SpawnScreens(Scene.Scene8, ScreenFormation.Triangle);
+
+            Debug.Log("Scenes: -");
+            foreach (var sceneDetail in _scenes)
+            {
+                Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
+            }
+
         }
 
         public void CreateStreamSelectButtons()
@@ -215,8 +226,8 @@ namespace Assets.Scripts
         public void SpawnScreens(Scene scene, ScreenFormation formation)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new Services.ScreenFormation(scene);
-
+            var screenFormation = new ScreenFormationService(scene);
+            
             switch (formation)
             {
                 case ScreenFormation.LargeSquare: 
@@ -245,18 +256,34 @@ namespace Assets.Scripts
                     break;
             }
 
-            var screensContainer = GameObject.Find("Screens");
+            var sceneName = $"Scene{_sceneIndex}";
 
-            if (screensContainer == null)
+            var sceneObject = GameObject.Find(sceneName);
+
+            if (sceneObject == null)
             {
-                screensContainer = new GameObject { name = "Screens" };
+                Debug.Log($"{sceneName} does not exist: creating {sceneName}");
+
+                var scenePosition = screenFormation.ScenePosition;
+
+                sceneObject = Instantiate(new GameObject {name = sceneName}, scenePosition, Quaternion.identity);
+
+                _scenes.Add(new SceneDetail
+                {
+                    Id = _sceneIndex,
+                    Name = sceneName,
+                    ScreenFormation = formation,
+                    ScenePosition = scenePosition,
+                });
+
+                _sceneIndex++;
             }
 
             // Destroy references to instantiated GameObjects
-            foreach (var currentScreen in currentScreens)
-            {
-                GameObject.Destroy(currentScreen);
-            }
+            //foreach (var currentScreen in currentScreens)
+            //{
+            //    GameObject.Destroy(currentScreen);
+            //}
 
             //var screenNumber = 1;
 
@@ -281,7 +308,7 @@ namespace Assets.Scripts
                     }
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                    screen.transform.SetParent(screensContainer.transform);
+                    screen.transform.SetParent(sceneObject.transform);
 
                     //var rend = screen.GetComponent<MeshRenderer>();
                     //rend.enabled = screenPosition.Hide;
@@ -297,7 +324,7 @@ namespace Assets.Scripts
         public void TweenScreens(Scene scene, ScreenFormation formation, int tweenTimeSeconds)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new Services.ScreenFormation(scene);
+            var screenFormation = new ScreenFormationService(scene);
 
             switch (formation)
             {

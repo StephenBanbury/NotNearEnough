@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.Services
 {
-    public class ScreenFormation
+    public class ScreenFormationService
     {
         private readonly float _xPos;
         private readonly float _yPos;
         private readonly float _zPos;
 
-        public ScreenFormation(Scene scene)
+        public ScreenFormationService(Scene scene)
         {
             var sceneService = new SceneService();
 
