@@ -27,7 +27,7 @@ namespace Assets.Scripts
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
 
-        private List<GameObject> currentScreens = new List<GameObject>();
+        private List<GameObject> _currentScreens = new List<GameObject>();
 
         private float _floorAdjust = 1.25f;
 
@@ -226,33 +226,33 @@ namespace Assets.Scripts
         public void SpawnScreens(Scene scene, ScreenFormation formation)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new ScreenFormationService(scene);
+            var screenFormationService = new ScreenFormationService(scene);
             
             switch (formation)
             {
                 case ScreenFormation.LargeSquare: 
-                    thisFormation = screenFormation.LargeSquare();
+                    thisFormation = screenFormationService.LargeSquare();
                     break;
                 case ScreenFormation.SmallSquare:
-                    thisFormation = screenFormation.SmallSquare();
+                    thisFormation = screenFormationService.SmallSquare();
                     break;
                 case ScreenFormation.Cross:
-                    thisFormation = screenFormation.Cross();
+                    thisFormation = screenFormationService.Cross();
                     break;
                 case ScreenFormation.Star:
-                    thisFormation = screenFormation.Star();
+                    thisFormation = screenFormationService.Star();
                     break;
                 case ScreenFormation.Circle:
-                    thisFormation = screenFormation.Circle();
+                    thisFormation = screenFormationService.Circle();
                     break;
                 case ScreenFormation.Triangle:
-                    thisFormation = screenFormation.Triangle();
+                    thisFormation = screenFormationService.Triangle();
                     break;
                 case ScreenFormation.ShortRectangle:
-                    thisFormation = screenFormation.ShortRectangle();
+                    thisFormation = screenFormationService.ShortRectangle();
                     break;
                 case ScreenFormation.LongRectangle:
-                    thisFormation = screenFormation.LongRectangle();
+                    thisFormation = screenFormationService.LongRectangle();
                     break;
             }
 
@@ -260,37 +260,29 @@ namespace Assets.Scripts
 
             var sceneObject = GameObject.Find(sceneName);
 
-            if (sceneObject == null)
+            if (sceneObject != null)
             {
-                Debug.Log($"{sceneName} does not exist: creating {sceneName}");
-
-                var scenePosition = screenFormation.ScenePosition;
-
-                sceneObject = Instantiate(new GameObject {name = sceneName}, scenePosition, Quaternion.identity);
-
-                _scenes.Add(new SceneDetail
-                {
-                    Id = _sceneIndex,
-                    Name = sceneName,
-                    ScreenFormation = formation,
-                    ScenePosition = scenePosition,
-                });
-
-                _sceneIndex++;
+                GameObject.Destroy(sceneObject);
             }
 
-            // Destroy references to instantiated GameObjects
-            //foreach (var currentScreen in currentScreens)
-            //{
-            //    GameObject.Destroy(currentScreen);
-            //}
+            Debug.Log($"{sceneName} does not exist: creating {sceneName}");
 
-            //var screenNumber = 1;
+            var scenePosition = screenFormationService.ScenePosition;
+
+            sceneObject = Instantiate(new GameObject { name = sceneName }, scenePosition, Quaternion.identity);
+
+            _scenes.Add(new SceneDetail
+            {
+                Id = _sceneIndex,
+                Scene = scene,
+                Name = sceneName,
+                ScreenFormation = formation,
+                ScenePosition = scenePosition,
+                CurrentScreens = new List<GameObject>()
+            });
 
             foreach (var screenPosition in thisFormation)
             {
-                //if (!screenPosition.Hide)
-                //{
                     var vector3 = screenPosition.Vector3;
                     vector3.y += _floorAdjust;
 
@@ -310,70 +302,64 @@ namespace Assets.Scripts
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
                     screen.transform.SetParent(sceneObject.transform);
 
-                    //var rend = screen.GetComponent<MeshRenderer>();
-                    //rend.enabled = screenPosition.Hide;
-
-                    // Add to references for instantiated GameObjects to collection so they can be destroyed
-                    currentScreens.Add(screen);
-                //}
-
-                //screenNumber++;
+                    var currentScene = _scenes.First(s => s.Id == _sceneIndex);
+                    currentScene.CurrentScreens.Add(screen);
             }
+
+            _sceneIndex++;
         }
 
-        public void TweenScreens(Scene scene, ScreenFormation formation, int tweenTimeSeconds)
+        public void TweenScreens(Scene scene, ScreenFormation newFormation, int tweenTimeSeconds)
         {
             var thisFormation = new List<ScreenPosition>();
-            var screenFormation = new ScreenFormationService(scene);
+            var screenFormationService = new ScreenFormationService(scene);
 
-            switch (formation)
+            switch (newFormation)
             {
                 case ScreenFormation.LargeSquare:
-                    thisFormation = screenFormation.LargeSquare();
+                    thisFormation = screenFormationService.LargeSquare();
                     break;
                 case ScreenFormation.SmallSquare:
-                    thisFormation = screenFormation.SmallSquare();
+                    thisFormation = screenFormationService.SmallSquare();
                     break;
                 case ScreenFormation.Cross:
-                    thisFormation = screenFormation.Cross();
+                    thisFormation = screenFormationService.Cross();
                     break;
                 case ScreenFormation.Star:
-                    thisFormation = screenFormation.Star();
+                    thisFormation = screenFormationService.Star();
                     break;
                 case ScreenFormation.Circle:
-                    thisFormation = screenFormation.Circle();
+                    thisFormation = screenFormationService.Circle();
                     break;
                 case ScreenFormation.Triangle:
-                    thisFormation = screenFormation.Triangle();
+                    thisFormation = screenFormationService.Triangle();
                     break;
                 case ScreenFormation.ShortRectangle:
-                    thisFormation = screenFormation.ShortRectangle();
+                    thisFormation = screenFormationService.ShortRectangle();
                     break;
                 case ScreenFormation.LongRectangle:
-                    thisFormation = screenFormation.LongRectangle();
+                    thisFormation = screenFormationService.LongRectangle();
                     break;
             }
 
-            var screensContainer = GameObject.Find("Screens");
+            var thisScene = _scenes.FirstOrDefault(s => s.Scene == scene);
 
-            if (screensContainer == null)
+            if (thisScene != null)
             {
-                //screensContainer = new GameObject { name = "Screens" };
-                SpawnScreens(scene, formation);
-                return;
-            }
 
-            foreach (var screenPosition in thisFormation)
-            {
-                var screenPositionPrev = currentScreens[screenPosition.Id - 1];
+                foreach (var screenPosition in thisFormation)
+                {
+                    var screenPositionPrev = thisScene.CurrentScreens[screenPosition.Id - 1];
 
-                var vector3To = screenPosition.Vector3;
-                vector3To.y += _floorAdjust;
+                    var vector3To = screenPosition.Vector3;
+                    vector3To.y += _floorAdjust;
 
-                _screenAnimationAudio.Play();
+                    _screenAnimationAudio.Play();
 
-                screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
-                screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3).SetEase(Ease.Linear);
+                    screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
+                    screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3)
+                        .SetEase(Ease.Linear);
+                }
             }
         }
     }
