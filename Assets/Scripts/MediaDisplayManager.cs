@@ -79,7 +79,7 @@ namespace Assets.Scripts
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
             //}
 
-            MyCurrentScene = Scene.Scene4;
+            MyCurrentScene = Scene.Scene2;
             OffsetPlayerPositionWithinScene();
         }
 
@@ -87,10 +87,20 @@ namespace Assets.Scripts
 
         public void OffsetPlayerPositionWithinScene()
         {
+            Debug.Log("OffsetPlayerPositionWithinScene");
+
             var sceneService = new SceneService(MyCurrentScene);
             var offset = sceneService.GetScenePosition();
+
             var player = GameObject.Find("PlayerAudience");
+            //Debug.Log($"player position before: {player.transform.position}");
             player.transform.position = player.transform.position + offset;
+           // Debug.Log($"player position after: {player.transform.position}");
+
+            var panel = GameObject.Find("Selection Panels");
+            //Debug.Log($"panel position before: {panel.transform.position}");
+            panel.transform.position = panel.transform.position + offset;
+            //Debug.Log($"panel position after: {panel.transform.position}");
         }
 
         public void CreateStreamSelectButtons()
