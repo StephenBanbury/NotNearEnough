@@ -73,12 +73,24 @@ namespace Assets.Scripts
             SpawnScreens(Scene.Scene7, ScreenFormation.Star);
             SpawnScreens(Scene.Scene8, ScreenFormation.Triangle);
 
-            Debug.Log("Scenes: -");
-            foreach (var sceneDetail in _scenes)
-            {
-                Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
-            }
+            //Debug.Log("Scenes: -");
+            //foreach (var sceneDetail in _scenes)
+            //{
+            //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
+            //}
 
+            MyCurrentScene = Scene.Scene4;
+            OffsetPlayerPositionWithinScene();
+        }
+
+        public Scene MyCurrentScene { get; set; }
+
+        public void OffsetPlayerPositionWithinScene()
+        {
+            var sceneService = new SceneService(MyCurrentScene);
+            var offset = sceneService.GetScenePosition();
+            var player = GameObject.Find("PlayerAudience");
+            player.transform.position = player.transform.position + offset;
         }
 
         public void CreateStreamSelectButtons()

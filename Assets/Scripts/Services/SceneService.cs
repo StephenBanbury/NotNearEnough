@@ -1,40 +1,49 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Enums;
+using UnityEngine;
 
 namespace Assets.Scripts.Services
 {
     public class SceneService
     {
-        public Vector3 Scene1Position()
+        private Scene _scene;
+        public SceneService(Scene scene)
         {
-            return new Vector3(0f, 0f, 0f);
+            _scene = scene;
         }
-        public Vector3 Scene2Position()
+
+        public Vector3 GetScenePosition()
         {
-            return new Vector3(20f, 0f, 0f);
-        }
-        public Vector3 Scene3Position()
-        {
-            return new Vector3(20f, 0f, 20f);
-        }
-        public Vector3 Scene4Position()
-        {
-            return new Vector3(00f, 0f, 20f);
-        }
-        public Vector3 Scene5Position()
-        {
-            return new Vector3(-20f, 0f, 0f);
-        }
-        public Vector3 Scene6Position()
-        {
-            return new Vector3(-20f, 0f, 20f);
-        }
-        public Vector3 Scene7Position()
-        {
-            return new Vector3(0f, 0f, -20f);
-        }
-        public Vector3 Scene8Position()
-        {
-            return new Vector3(-20f, 0f, -20f);
+            Vector3 position = new Vector3();
+
+            switch (_scene)
+            {
+                case Scene.Scene1:
+                    position = new Vector3(0f, 0f, 0f);
+                    break;
+                case Scene.Scene2:
+                    position = new Vector3(20f, 0f, 0f);
+                    break;
+                case Scene.Scene3:
+                    position = new Vector3(20f, 0f, 20f);
+                    break;
+                case Scene.Scene4:
+                    position = new Vector3(0f, 0f, 20f);
+                    break;
+                case Scene.Scene5:
+                    position = new Vector3(-20f, 0f, 0f);
+                    break;
+                case Scene.Scene6:
+                    position = new Vector3(-20f, 0f, 20f);
+                    break;
+                case Scene.Scene7:
+                    position = new Vector3(0f, 0f, -20f);
+                    break;
+                case Scene.Scene8:
+                    position = new Vector3(-20f, 0f, -20f);
+                    break;
+            }
+
+            return position;
         }
     }
 }

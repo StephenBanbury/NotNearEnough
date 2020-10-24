@@ -13,35 +13,8 @@ namespace Assets.Scripts.Services
 
         public ScreenFormationService(Scene scene)
         {
-            var sceneService = new SceneService();
-
-            switch (scene)
-            {
-                case Scene.Scene1:
-                    ScenePosition = sceneService.Scene1Position();
-                    break;
-                case Scene.Scene2:
-                    ScenePosition = sceneService.Scene2Position();
-                    break;
-                case Scene.Scene3:
-                    ScenePosition = sceneService.Scene3Position();
-                    break;
-                case Scene.Scene4:
-                    ScenePosition = sceneService.Scene4Position();
-                    break;
-                case Scene.Scene5:
-                    ScenePosition = sceneService.Scene5Position();
-                    break;
-                case Scene.Scene6:
-                    ScenePosition = sceneService.Scene6Position();
-                    break;
-                case Scene.Scene7:
-                    ScenePosition = sceneService.Scene7Position();
-                    break;
-                case Scene.Scene8:
-                    ScenePosition = sceneService.Scene8Position();
-                    break;
-            }
+            var sceneService = new SceneService(scene);
+            ScenePosition = sceneService.GetScenePosition();
 
             _xPos = ScenePosition.x;
             _yPos = ScenePosition.y;
