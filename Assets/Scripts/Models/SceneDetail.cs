@@ -13,6 +13,5 @@ namespace Assets.Scripts.Models
         public Vector3 ScenePosition { get; set; }
         public bool IsCurrent { get; set; }
         public List<GameObject> CurrentScreens { get; set; }
-
     }
 }

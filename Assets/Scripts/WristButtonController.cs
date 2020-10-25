@@ -28,7 +28,7 @@ namespace Assets.Scripts
         {
             _messageText.text = _messages[_show ? 1 : 0];
 
-            GameObject panels = GameObject.Find("Selection Panels");
+            GameObject panels = GameObject.Find("SelectionPanels");
 
             foreach (Transform child in panels.transform)
             {

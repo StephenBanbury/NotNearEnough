@@ -23,10 +23,11 @@ namespace Assets.Scripts
         {
             _formationId = id;
 
-            if (_formationId > 0) // && _formationId != _previousId)
+            if (_formationId > 0 && _formationId != _previousId)
             {
                 _formationIdText.text = _formationId.ToString();
-                MediaDisplayManager.instance.TweenScreens(Scene.Scene1, (ScreenFormation)_formationId, animationSeconds);
+
+                MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId, animationSeconds);
             }
         }
 

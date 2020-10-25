@@ -27,15 +27,16 @@ namespace Assets.Scripts
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
 
-        private List<GameObject> _currentScreens = new List<GameObject>();
-
         private float _floorAdjust = 1.25f;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
+        [SerializeField] private Transform _sceneObject;
         [SerializeField] private GameObject _screen;
         [SerializeField] private GameObject _screenVariant;
-        [SerializeField] private AudioSource _screenAnimationAudio;
+        [SerializeField] private AudioSource _sceneAudio;
+        [SerializeField] private GameObject _sceneLights;
+        [SerializeField] private GameObject _selectionPanels;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -64,14 +65,14 @@ namespace Assets.Scripts
             _scenes = new List<SceneDetail>();
             _sceneIndex = 1;
 
-            SpawnScreens(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScreens(Scene.Scene2, ScreenFormation.ShortRectangle);
-            SpawnScreens(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScreens(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScreens(Scene.Scene5, ScreenFormation.SmallSquare);
-            SpawnScreens(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScreens(Scene.Scene7, ScreenFormation.Star);
-            SpawnScreens(Scene.Scene8, ScreenFormation.Triangle);
+            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
+            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
+            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
+            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
+            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
+            SpawnScene(Scene.Scene7, ScreenFormation.Star);
+            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
 
             //Debug.Log("Scenes: -");
             //foreach (var sceneDetail in _scenes)
@@ -87,20 +88,14 @@ namespace Assets.Scripts
 
         public void OffsetPlayerPositionWithinScene()
         {
-            Debug.Log("OffsetPlayerPositionWithinScene");
-
             var sceneService = new SceneService(MyCurrentScene);
             var offset = sceneService.GetScenePosition();
 
             var player = GameObject.Find("PlayerAudience");
-            //Debug.Log($"player position before: {player.transform.position}");
             player.transform.position = player.transform.position + offset;
-           // Debug.Log($"player position after: {player.transform.position}");
 
-            var panel = GameObject.Find("Selection Panels");
-            //Debug.Log($"panel position before: {panel.transform.position}");
-            panel.transform.position = panel.transform.position + offset;
-            //Debug.Log($"panel position after: {panel.transform.position}");
+            //var panels = GameObject.Find("SelectionPanels");
+            //panels.transform.position = panels.transform.position + offset;
         }
 
         public void CreateStreamSelectButtons()
@@ -173,7 +168,7 @@ namespace Assets.Scripts
 
         private void AssignVideoToDisplay()
         {
-            //Debug.Log("In AssignVideoToDisplay");
+            //Debug.Log("AssignVideoToDisplay");
             Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
             Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
 
@@ -244,8 +239,8 @@ namespace Assets.Scripts
                 }
             }
         }
-        
-        public void SpawnScreens(Scene scene, ScreenFormation formation)
+
+        private void SpawnScene(Scene scene, ScreenFormation formation)
         {
             var thisFormation = new List<ScreenPosition>();
             var screenFormationService = new ScreenFormationService(scene);
@@ -280,18 +275,20 @@ namespace Assets.Scripts
 
             var sceneName = $"Scene{_sceneIndex}";
 
-            var sceneObject = GameObject.Find(sceneName);
-
-            if (sceneObject != null)
-            {
-                GameObject.Destroy(sceneObject);
-            }
-
-            Debug.Log($"{sceneName} does not exist: creating {sceneName}");
-
             var scenePosition = screenFormationService.ScenePosition;
+            var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
+            sceneObject.name = sceneName;
 
-            sceneObject = Instantiate(new GameObject { name = sceneName }, scenePosition, Quaternion.identity);
+            
+
+            // Also instantiate selection panels, audio source and lighting as part of scene object
+            var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
+            var sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
+            var sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
+            
+            selectionPanels.transform.SetParent(sceneObject.transform);
+            sceneAudio.transform.SetParent(sceneObject.transform);
+            sceneLights.transform.SetParent(sceneObject.transform);
 
             _scenes.Add(new SceneDetail
             {
@@ -331,6 +328,11 @@ namespace Assets.Scripts
             _sceneIndex++;
         }
 
+        public void TweenScreens(ScreenFormation newFormation, int tweenTimeSeconds)
+        {
+            TweenScreens(MyCurrentScene, newFormation, tweenTimeSeconds);
+        }
+
         public void TweenScreens(Scene scene, ScreenFormation newFormation, int tweenTimeSeconds)
         {
             var thisFormation = new List<ScreenPosition>();
@@ -368,6 +370,12 @@ namespace Assets.Scripts
 
             if (thisScene != null)
             {
+                var audioSource =
+                    GameObject.Find(thisScene.Name)
+                        .transform.Find("SceneAudio(Clone)")
+                        .GetComponent<AudioSource>();
+
+                audioSource.Play();
 
                 foreach (var screenPosition in thisFormation)
                 {
@@ -375,13 +383,12 @@ namespace Assets.Scripts
 
                     var vector3To = screenPosition.Vector3;
                     vector3To.y += _floorAdjust;
-
-                    _screenAnimationAudio.Play();
-
+                    
                     screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
                     screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3)
                         .SetEase(Ease.Linear);
                 }
+
             }
         }
     }

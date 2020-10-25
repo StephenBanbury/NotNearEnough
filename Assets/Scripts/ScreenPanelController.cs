@@ -51,15 +51,17 @@ namespace Assets.Scripts
                 : OVRInput.Controller.RTouch);
 
             // Randomly select to change formation or change video
-            var rand = Random.value * 100;
-            if (rand <= 40)
-            {
-                ChangeScreenFormation();
-            }
-            else
-            {
-                ToggleVideoOn();
-            }
+            //var rand = Random.value * 100;
+            //if (rand <= 40)
+            //{
+            //    ChangeScreenFormation();
+            //}
+            //else
+            //{
+            //    ToggleVideoOn();
+            //}
+
+            ChangeScreenFormation();
 
             yield return new WaitForSeconds(_waitForSeconds);
 
@@ -70,7 +72,6 @@ namespace Assets.Scripts
         private void ChangeScreenFormation()
         {
             var numberOfFormations = Enum.GetValues(typeof(ScreenFormation)).Cast<int>().Max();
-
 
             ScreenFormation randomFormation;
             do
