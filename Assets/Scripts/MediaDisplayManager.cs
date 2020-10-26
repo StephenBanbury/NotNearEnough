@@ -275,7 +275,11 @@ namespace Assets.Scripts
 
 
             var scenePosition = screenFormationService.ScenePosition;
-            var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
+            //var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
+
+            var sceneName = $"Scene {_sceneIndex}";
+            GameObject sceneObject = new GameObject(sceneName);
+            //sceneObject.name = sceneName;
 
             // Also instantiate selection panels, audio source and lighting as part of scene object
             var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
@@ -286,8 +290,6 @@ namespace Assets.Scripts
             sceneAudio.transform.SetParent(sceneObject.transform);
             sceneLights.transform.SetParent(sceneObject.transform);
 
-            var sceneName = $"Scene {_sceneIndex}";
-            sceneObject.name = sceneName;
             //selectionPanels.name = $"Selection Panel {_sceneIndex}";
             //sceneAudio.name = $"Scene Audio {_sceneIndex}";
             //sceneLights.name = $"Scene Lights {_sceneIndex}";
@@ -302,8 +304,14 @@ namespace Assets.Scripts
                 CurrentScreens = new List<GameObject>()
             });
 
+            GameObject screens = new GameObject("Screens");
+
+            var currentScene = Scenes.First(s => s.Id == _sceneIndex);
+
             foreach (var screenPosition in thisFormation)
             {
+                //if (!screenPosition.Hide)
+                //{
                     var vector3 = screenPosition.Vector3;
                     vector3.y += _floorAdjust;
 
@@ -321,10 +329,12 @@ namespace Assets.Scripts
                     }
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                    screen.transform.SetParent(sceneObject.transform);
 
-                    var currentScene = Scenes.First(s => s.Id == _sceneIndex);
+                    screen.transform.SetParent(screens.transform);
+                    screens.transform.SetParent(sceneObject.transform);
+
                     currentScene.CurrentScreens.Add(screen);
+                //}
             }
 
             _sceneIndex++;
