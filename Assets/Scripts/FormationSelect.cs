@@ -31,6 +31,18 @@ namespace Assets.Scripts
             }
         }
 
+        public void SetFormationId(Scene scene, int id, int animationSeconds)
+        {
+            _formationId = id;
+
+            if (_formationId > 0 && _formationId != _previousId)
+            {
+                _formationIdText.text = _formationId.ToString();
+
+                MediaDisplayManager.instance.TweenScreens(scene, (ScreenFormation)_formationId, animationSeconds);
+            }
+        }
+
         public void KeepInSync()
         {
             // If the id has changed, call SetId on the sync component

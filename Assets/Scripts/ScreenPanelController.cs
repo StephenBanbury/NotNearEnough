@@ -81,9 +81,9 @@ namespace Assets.Scripts
 
             _currentScreenFormation = randomFormation;
 
-            var mediaDisplayManager = GameObject.Find("MediaDisplayManager");
+            var gameManager = GameObject.Find("GameManager");
 
-            var formationSelect = mediaDisplayManager.GetComponent<FormationSelect>();
+            var formationSelect = gameManager.GetComponent<FormationSelect>();
 
             formationSelect.SetFormationId((int) _currentScreenFormation, 10);
             formationSelect.KeepInSync();
@@ -100,13 +100,13 @@ namespace Assets.Scripts
             var videoId = (int) Math.Ceiling(Random.value * 5);
             var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-            var mediaDisplayManager = GameObject.Find("MediaDisplayManager");
+            var gameManager = GameObject.Find("GameManager");
 
-            var videoSelect = mediaDisplayManager.GetComponent<VideoSelect>();
+            var videoSelect = gameManager.GetComponent<VideoSelect>();
             videoSelect.SetVideoId(videoId);
             videoSelect.KeepInSync();
 
-            var displaySelect = mediaDisplayManager.GetComponent<DisplaySelect>();
+            var displaySelect = gameManager.GetComponent<DisplaySelect>();
             displaySelect.SetDisplayId(screenId);
             displaySelect.KeepInSync();
 

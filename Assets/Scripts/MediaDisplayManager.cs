@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
@@ -15,7 +16,6 @@ namespace Assets.Scripts
         private List<MediaDetail> _videos;
         private List<MediaDetail> _streams;
 
-        private List<SceneDetail> _scenes;
         private int _sceneIndex;
 
         private Dictionary<int, MediaDetail> _displayVideo;
@@ -43,6 +43,8 @@ namespace Assets.Scripts
         public int SelectedStream { set => _lastSelectedStreamId = value; }
         public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
+        public List<SceneDetail> Scenes { get; private set; }
+        public Scene MyCurrentScene { get; set; }
 
         void Awake()
         {
@@ -62,7 +64,7 @@ namespace Assets.Scripts
             GetVideosFromService();
             CreateStreamSelectButtons();
 
-            _scenes = new List<SceneDetail>();
+            Scenes = new List<SceneDetail>();
             _sceneIndex = 1;
 
             SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
@@ -80,12 +82,10 @@ namespace Assets.Scripts
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
             //}
 
-            MyCurrentScene = Scene.Scene2;
+            MyCurrentScene = Scene.Scene1;
             OffsetPlayerPositionWithinScene();
         }
-
-        public Scene MyCurrentScene { get; set; }
-
+        
         public void OffsetPlayerPositionWithinScene()
         {
             var sceneService = new SceneService(MyCurrentScene);
@@ -273,13 +273,9 @@ namespace Assets.Scripts
                     break;
             }
 
-            var sceneName = $"Scene{_sceneIndex}";
 
             var scenePosition = screenFormationService.ScenePosition;
             var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
-            sceneObject.name = sceneName;
-
-            
 
             // Also instantiate selection panels, audio source and lighting as part of scene object
             var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
@@ -290,7 +286,13 @@ namespace Assets.Scripts
             sceneAudio.transform.SetParent(sceneObject.transform);
             sceneLights.transform.SetParent(sceneObject.transform);
 
-            _scenes.Add(new SceneDetail
+            var sceneName = $"Scene {_sceneIndex}";
+            sceneObject.name = sceneName;
+            //selectionPanels.name = $"Selection Panel {_sceneIndex}";
+            //sceneAudio.name = $"Scene Audio {_sceneIndex}";
+            //sceneLights.name = $"Scene Lights {_sceneIndex}";
+
+            Scenes.Add(new SceneDetail
             {
                 Id = _sceneIndex,
                 Scene = scene,
@@ -321,7 +323,7 @@ namespace Assets.Scripts
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
                     screen.transform.SetParent(sceneObject.transform);
 
-                    var currentScene = _scenes.First(s => s.Id == _sceneIndex);
+                    var currentScene = Scenes.First(s => s.Id == _sceneIndex);
                     currentScene.CurrentScreens.Add(screen);
             }
 
@@ -366,7 +368,7 @@ namespace Assets.Scripts
                     break;
             }
 
-            var thisScene = _scenes.FirstOrDefault(s => s.Scene == scene);
+            var thisScene = Scenes.FirstOrDefault(s => s.Scene == scene);
 
             if (thisScene != null)
             {
