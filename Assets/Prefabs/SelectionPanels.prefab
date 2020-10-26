@@ -984,11 +984,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: 810c1c4ef272b8408e8f3af794ee1f3c
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 0}
@@ -3686,11 +3686,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: 9e21dc9e9e94dd408e096fbf6c3bcf61
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 2827652249279975216}
@@ -6506,11 +6506,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: ae254a0f7253274c8ba30116177c18ae
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 0}
@@ -7968,11 +7968,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: 355055386712a74385abe6266afc429f
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 2827652250236692395}
@@ -8393,11 +8393,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: 0d53b5ebf923d447897bf3f4aa8222fa
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 0}
@@ -8670,11 +8670,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 0}
-  _sceneViewUUID: a456066a6df3824496b3eb958640e9c2
+  _sceneViewUUID: 
   _sceneViewOwnedByCreatingClient: 0
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 0
+  _isRootPrefabView: 1
   _components:
   - componentID: 1
     component: {fileID: 0}
