@@ -37,10 +37,10 @@ namespace Assets.Scripts
 
                 var formationSelect = gameManager.GetComponent<FormationSelect>();
                 formationSelect.SetFormationId(scene, _formationId, 10);
-                formationSelect.KeepInSync();
+                //formationSelect.KeepInSync();
 
-                _formationSelectDisplay.SetFormationId(_formationId, 10);
-                _formationSelectDisplay.KeepInSync();
+                //_formationSelectDisplay.SetFormationId(_formationId, 10);
+                //_formationSelectDisplay.KeepInSync();
             }
         }
 

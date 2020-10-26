@@ -82,11 +82,24 @@ namespace Assets.Scripts
             _currentScreenFormation = randomFormation;
 
             var gameManager = GameObject.Find("GameManager");
+            var scenes = MediaDisplayManager.instance.Scenes;
 
             var formationSelect = gameManager.GetComponent<FormationSelect>();
 
-            formationSelect.SetFormationId((int) _currentScreenFormation, 10);
-            formationSelect.KeepInSync();
+            var sceneName = GetCurrentSceneFromParent();
+
+            Debug.Log($"Scene name: {sceneName}");
+
+            var scene = scenes.First(s => s.Name == sceneName).Scene;
+
+            formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
+            //formationSelect.KeepInSync();
+        }
+
+        private string GetCurrentSceneFromParent()
+        {
+            var parentScene = transform.parent.parent.parent.gameObject;
+            return parentScene.name;
         }
 
         private void ToggleVideoOn()
