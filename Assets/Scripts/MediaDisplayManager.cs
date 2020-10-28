@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         private float _floorAdjust = 1.25f;
 
-        private Vector3 _playerStartingPosition = new Vector3(-0.6f, 0.5f, -0.7f);
+        //private Vector3 _playerStartingPosition = new Vector3(-0.6f, 0.5f, -0.7f);
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
@@ -49,7 +49,8 @@ namespace Assets.Scripts
         [SerializeField] private Transform _spawnPoint7;
         [SerializeField] private Transform _spawnPoint8;
 
-        public Transform Player;
+        [SerializeField] private Transform Player;
+        [SerializeField] private Transform Marker;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -106,36 +107,44 @@ namespace Assets.Scripts
             switch (sceneId)
             {
                 case 1:
+                    Debug.Log($"Spawn position: {_spawnPoint1.position}");
                     Player.position = _spawnPoint1.position;
-                   // Player.position = new Vector3(0+_spawnPoint1.position.x, 0 + _spawnPoint1.position.y, 0 + _spawnPoint1.position.z);
+                    //Marker.position = _spawnPoint1.position;
                     break;
                 case 2:
+                    Debug.Log($"Spawn position: {_spawnPoint2.position}");
                     Player.position = _spawnPoint2.position;
-                   // Player.position = new Vector3(_spawnPoint2.position.x, 0 + _spawnPoint2.position.y, 0 + _spawnPoint2.position.z);
+                    //Marker.position = _spawnPoint2.position;
                     break;
                 case 3:
+                    Debug.Log($"Spawn position: {_spawnPoint3.position}");
                     Player.position = _spawnPoint3.position;
-                    //Player.position = new Vector3(0 + _spawnPoint3.position.x, 0 + _spawnPoint3.position.y, 0 + _spawnPoint3.position.z);
+                    //Marker.position = _spawnPoint3.position;
                     break;
                 case 4:
+                    Debug.Log($"Spawn position: {_spawnPoint4.position}");
                     Player.position = _spawnPoint4.position;
-                    //Player.position = new Vector3(0 + _spawnPoint4.position.x, 0 + _spawnPoint4.position.y, 0 + _spawnPoint4.position.z);
+                    //Marker.position = _spawnPoint4.position;
                     break;
                 case 5:
+                    Debug.Log($"Spawn position: {_spawnPoint5.position}");
                     Player.position = _spawnPoint5.position;
-                    //Player.position = new Vector3(0 + _spawnPoint5.position.x, 0 + _spawnPoint5.position.y, 0 + _spawnPoint5.position.z);
+                    //Marker.position = _spawnPoint5.position;
                     break;                                                 
-                case 6:                                                   
+                case 6:
+                    Debug.Log($"Spawn position: {_spawnPoint6.position}");
                     Player.position = _spawnPoint6.position;             
-                    //Player.position = new Vector3(0 + _spawnPoint6.position.x, 0 + _spawnPoint6.position.y, 0 + _spawnPoint6.position.z);
+                    //Marker.position = _spawnPoint6.position;             
                     break;                                                 
-                case 7:                                                    
+                case 7:
+                    Debug.Log($"Spawn position: {_spawnPoint7.position}");
                     Player.position = _spawnPoint7.position;             
-                    //Player.position = new Vector3(0 + _spawnPoint7.position.x, 0 + _spawnPoint7.position.y, 0 + _spawnPoint7.position.z);
+                    //Marker.position = _spawnPoint7.position;             
                     break;                                                 
-                case 8:                                                    
+                case 8:
+                    Debug.Log($"Spawn position: {_spawnPoint8.position}");
                     Player.position = _spawnPoint8.position;             
-                    //Player.position = new Vector3(0 + _spawnPoint8.position.x, 0 + _spawnPoint8.position.y, 0 + _spawnPoint8.position.z);
+                    //Marker.position = _spawnPoint8.position;             
                     break;
             }
         }
