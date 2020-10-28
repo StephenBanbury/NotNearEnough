@@ -28,12 +28,21 @@ namespace Assets.Scripts
         {
             _messageText.text = _messages[_show ? 1 : 0];
 
-            GameObject panels = GameObject.Find("Selection Panels(Clone)");
-
-            foreach (Transform child in panels.transform)
+            foreach (GameObject panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
-                child.gameObject.SetActive(_show);
+
+                foreach (Transform child in panel.transform)
+                {
+                    child.gameObject.SetActive(_show);
+                }
             }
+
+            //GameObject panels = GameObject.Find("SelectionPanels");
+
+            //foreach (Transform child in panels.transform)
+            //{
+            //    child.gameObject.SetActive(_show);
+            //}
 
             _show = !_show;
         }

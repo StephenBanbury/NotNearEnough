@@ -51,17 +51,19 @@ namespace Assets.Scripts
                 : OVRInput.Controller.RTouch);
 
             // Randomly select to change formation or change video
-            //var rand = Random.value * 100;
-            //if (rand <= 40)
-            //{
-            //    ChangeScreenFormation();
-            //}
-            //else
-            //{
-            //    ToggleVideoOn();
-            //}
+            var rand = Random.value * 100;
+            if (rand <= 40)
+            {
+                ChangeScreenFormation();
+            }
+            else
+            {
+                ToggleVideoOn();
+            }
 
-            ChangeScreenFormation();
+            //ToggleVideoOn();
+
+            //ChangeScreenFormation();
 
             yield return new WaitForSeconds(_waitForSeconds);
 
@@ -83,16 +85,13 @@ namespace Assets.Scripts
 
             var gameManager = GameObject.Find("GameManager");
             var scenes = MediaDisplayManager.instance.Scenes;
+            var sceneName = GetCurrentSceneFromParent();
+            var scene = scenes.First(s => s.Name == sceneName).Scene;
 
             var formationSelect = gameManager.GetComponent<FormationSelect>();
 
-            var sceneName = GetCurrentSceneFromParent();
-
-            Debug.Log($"Scene name: {sceneName}");
-
-            var scene = scenes.First(s => s.Name == sceneName).Scene;
-
             formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
+
             //formationSelect.KeepInSync();
         }
 

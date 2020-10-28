@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         private float _floorAdjust = 1.25f;
 
+        private Vector3 _playerStartingPosition = new Vector3(-0.6f, 0.5f, -0.7f);
+
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
         [SerializeField] private Transform _sceneObject;
@@ -38,6 +40,16 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _sceneLights;
         [SerializeField] private GameObject _selectionPanels;
 
+        [SerializeField] private Transform _spawnPoint1;
+        [SerializeField] private Transform _spawnPoint2;
+        [SerializeField] private Transform _spawnPoint3;
+        [SerializeField] private Transform _spawnPoint4;
+        [SerializeField] private Transform _spawnPoint5;
+        [SerializeField] private Transform _spawnPoint6;
+        [SerializeField] private Transform _spawnPoint7;
+        [SerializeField] private Transform _spawnPoint8;
+
+        public Transform Player;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -67,14 +79,14 @@ namespace Assets.Scripts
             Scenes = new List<SceneDetail>();
             _sceneIndex = 1;
 
-            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
-            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
-            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.Star);
-            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
+            //SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
+            //SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            //SpawnScene(Scene.Scene3, ScreenFormation.Circle);
+            //SpawnScene(Scene.Scene4, ScreenFormation.Cross);
+            //SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
+            //SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
+            //SpawnScene(Scene.Scene7, ScreenFormation.Star);
+            //SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
 
             //Debug.Log("Scenes: -");
             //foreach (var sceneDetail in _scenes)
@@ -82,20 +94,207 @@ namespace Assets.Scripts
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
             //}
 
-            MyCurrentScene = Scene.Scene1;
-            OffsetPlayerPositionWithinScene();
+            MyCurrentScene = Scene.Scene4;
+
+            SetPlayerPositionToScene((int)MyCurrentScene);
         }
-        
-        public void OffsetPlayerPositionWithinScene()
+
+        public void SetPlayerPositionToScene(int sceneId)
         {
-            var sceneService = new SceneService(MyCurrentScene);
-            var offset = sceneService.GetScenePosition();
+            switch (sceneId)
+            {
+                case 1:
+                    Player.position = _spawnPoint1.position;
+                    break;
+                case 2:
+                    Player.position = _spawnPoint2.position;
+                    break;
+                case 3:
+                    Player.position = _spawnPoint3.position;
+                    break;
+                case 4:
+                    Player.position = _spawnPoint4.position;
+                    break;
+                case 5:
+                    Player.position = _spawnPoint5.position;
+                    break;
+                case 6:
+                    Player.position = _spawnPoint6.position;
+                    break;
+                case 7:
+                    Player.position = _spawnPoint7.position;
+                    break;
+                case 8:
+                    Player.position = _spawnPoint8.position;
+                    break;
+            }
+        }
 
-            var player = GameObject.Find("PlayerAudience");
-            player.transform.position = player.transform.position + offset;
+        private void SpawnScene(Scene scene, ScreenFormation formation)
+        {
+            var thisFormation = new List<ScreenPosition>();
+            var screenFormationService = new ScreenFormationService(scene);
 
-            //var panels = GameObject.Find("SelectionPanels");
-            //panels.transform.position = panels.transform.position + offset;
+            switch (formation)
+            {
+                case ScreenFormation.LargeSquare:
+                    thisFormation = screenFormationService.LargeSquare();
+                    break;
+                case ScreenFormation.SmallSquare:
+                    thisFormation = screenFormationService.SmallSquare();
+                    break;
+                case ScreenFormation.Cross:
+                    thisFormation = screenFormationService.Cross();
+                    break;
+                case ScreenFormation.Star:
+                    thisFormation = screenFormationService.Star();
+                    break;
+                case ScreenFormation.Circle:
+                    thisFormation = screenFormationService.Circle();
+                    break;
+                case ScreenFormation.Triangle:
+                    thisFormation = screenFormationService.Triangle();
+                    break;
+                case ScreenFormation.ShortRectangle:
+                    thisFormation = screenFormationService.ShortRectangle();
+                    break;
+                case ScreenFormation.LongRectangle:
+                    thisFormation = screenFormationService.LongRectangle();
+                    break;
+            }
+
+
+            var scenePosition = screenFormationService.ScenePosition;
+            //var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
+
+            var sceneName = $"Scene {_sceneIndex}";
+            GameObject sceneObject = new GameObject(sceneName);
+            //sceneObject.name = sceneName;
+
+            // Also instantiate selection panels, audio source and lighting as part of scene object
+            var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
+            var sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
+            var sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
+
+            selectionPanels.transform.SetParent(sceneObject.transform);
+            sceneAudio.transform.SetParent(sceneObject.transform);
+            sceneLights.transform.SetParent(sceneObject.transform);
+
+            //selectionPanels.name = $"Selection Panel {_sceneIndex}";
+            //sceneAudio.name = $"Scene Audio {_sceneIndex}";
+            //sceneLights.name = $"Scene Lights {_sceneIndex}";
+
+            Scenes.Add(new SceneDetail
+            {
+                Id = _sceneIndex,
+                Scene = scene,
+                Name = sceneName,
+                ScreenFormation = formation,
+                ScenePosition = scenePosition,
+                CurrentScreens = new List<GameObject>()
+            });
+
+            GameObject screens = new GameObject("Screens");
+
+            var currentScene = Scenes.First(s => s.Id == _sceneIndex);
+
+            foreach (var screenPosition in thisFormation)
+            {
+                //if (!screenPosition.Hide)
+                //{
+                var vector3 = screenPosition.Vector3;
+                vector3.y += _floorAdjust;
+
+                GameObject screen;
+
+                if (screenPosition.Id % 2 != 0)
+                {
+                    screen = Instantiate(_screen, vector3, Quaternion.identity);
+                    screen.name = $"Screen {screenPosition.Id}";
+                }
+                else
+                {
+                    screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
+                    screen.name = $"Screen Variant {screenPosition.Id}";
+                }
+
+                screen.transform.Rotate(0, screenPosition.Rotation, 0);
+
+                screen.transform.SetParent(screens.transform);
+                screens.transform.SetParent(sceneObject.transform);
+
+                currentScene.CurrentScreens.Add(screen);
+                //}
+            }
+
+            _sceneIndex++;
+        }
+
+        public void TweenScreens(ScreenFormation newFormation, int tweenTimeSeconds)
+        {
+            TweenScreens(MyCurrentScene, newFormation, tweenTimeSeconds);
+        }
+
+        public void TweenScreens(Scene scene, ScreenFormation newFormation, int tweenTimeSeconds)
+        {
+            var thisFormation = new List<ScreenPosition>();
+            var screenFormationService = new ScreenFormationService(scene);
+
+            switch (newFormation)
+            {
+                case ScreenFormation.LargeSquare:
+                    thisFormation = screenFormationService.LargeSquare();
+                    break;
+                case ScreenFormation.SmallSquare:
+                    thisFormation = screenFormationService.SmallSquare();
+                    break;
+                case ScreenFormation.Cross:
+                    thisFormation = screenFormationService.Cross();
+                    break;
+                case ScreenFormation.Star:
+                    thisFormation = screenFormationService.Star();
+                    break;
+                case ScreenFormation.Circle:
+                    thisFormation = screenFormationService.Circle();
+                    break;
+                case ScreenFormation.Triangle:
+                    thisFormation = screenFormationService.Triangle();
+                    break;
+                case ScreenFormation.ShortRectangle:
+                    thisFormation = screenFormationService.ShortRectangle();
+                    break;
+                case ScreenFormation.LongRectangle:
+                    thisFormation = screenFormationService.LongRectangle();
+                    break;
+            }
+
+            var thisScene = Scenes.FirstOrDefault(s => s.Scene == scene);
+
+            if (thisScene != null)
+            {
+                var audioSource =
+                    GameObject.Find(thisScene.Name)
+                        .transform.Find("SceneAudio(Clone)")
+                        .GetComponent<AudioSource>();
+
+                audioSource.volume = 1f;
+
+                foreach (var screenPosition in thisFormation)
+                {
+                    var screenPositionPrev = thisScene.CurrentScreens[screenPosition.Id - 1];
+
+                    var vector3To = screenPosition.Vector3;
+                    vector3To.y += _floorAdjust;
+
+                    screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
+                    screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3)
+                        .SetEase(Ease.Linear);
+
+                    audioSource.Play();
+                }
+
+
+            }
         }
 
         public void CreateStreamSelectButtons()
@@ -237,170 +436,6 @@ namespace Assets.Scripts
                         }
                     }
                 }
-            }
-        }
-
-        private void SpawnScene(Scene scene, ScreenFormation formation)
-        {
-            var thisFormation = new List<ScreenPosition>();
-            var screenFormationService = new ScreenFormationService(scene);
-            
-            switch (formation)
-            {
-                case ScreenFormation.LargeSquare: 
-                    thisFormation = screenFormationService.LargeSquare();
-                    break;
-                case ScreenFormation.SmallSquare:
-                    thisFormation = screenFormationService.SmallSquare();
-                    break;
-                case ScreenFormation.Cross:
-                    thisFormation = screenFormationService.Cross();
-                    break;
-                case ScreenFormation.Star:
-                    thisFormation = screenFormationService.Star();
-                    break;
-                case ScreenFormation.Circle:
-                    thisFormation = screenFormationService.Circle();
-                    break;
-                case ScreenFormation.Triangle:
-                    thisFormation = screenFormationService.Triangle();
-                    break;
-                case ScreenFormation.ShortRectangle:
-                    thisFormation = screenFormationService.ShortRectangle();
-                    break;
-                case ScreenFormation.LongRectangle:
-                    thisFormation = screenFormationService.LongRectangle();
-                    break;
-            }
-
-
-            var scenePosition = screenFormationService.ScenePosition;
-            //var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
-
-            var sceneName = $"Scene {_sceneIndex}";
-            GameObject sceneObject = new GameObject(sceneName);
-            //sceneObject.name = sceneName;
-
-            // Also instantiate selection panels, audio source and lighting as part of scene object
-            var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
-            var sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
-            var sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
-            
-            selectionPanels.transform.SetParent(sceneObject.transform);
-            sceneAudio.transform.SetParent(sceneObject.transform);
-            sceneLights.transform.SetParent(sceneObject.transform);
-
-            //selectionPanels.name = $"Selection Panel {_sceneIndex}";
-            //sceneAudio.name = $"Scene Audio {_sceneIndex}";
-            //sceneLights.name = $"Scene Lights {_sceneIndex}";
-
-            Scenes.Add(new SceneDetail
-            {
-                Id = _sceneIndex,
-                Scene = scene,
-                Name = sceneName,
-                ScreenFormation = formation,
-                ScenePosition = scenePosition,
-                CurrentScreens = new List<GameObject>()
-            });
-
-            GameObject screens = new GameObject("Screens");
-
-            var currentScene = Scenes.First(s => s.Id == _sceneIndex);
-
-            foreach (var screenPosition in thisFormation)
-            {
-                //if (!screenPosition.Hide)
-                //{
-                    var vector3 = screenPosition.Vector3;
-                    vector3.y += _floorAdjust;
-
-                    GameObject screen;
-
-                    if (screenPosition.Id % 2 != 0)
-                    {
-                        screen = Instantiate(_screen, vector3, Quaternion.identity);
-                        screen.name = $"Screen {screenPosition.Id}";
-                    }
-                    else
-                    {
-                        screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
-                        screen.name = $"Screen Variant {screenPosition.Id}";
-                    }
-
-                    screen.transform.Rotate(0, screenPosition.Rotation, 0);
-
-                    screen.transform.SetParent(screens.transform);
-                    screens.transform.SetParent(sceneObject.transform);
-
-                    currentScene.CurrentScreens.Add(screen);
-                //}
-            }
-
-            _sceneIndex++;
-        }
-
-        public void TweenScreens(ScreenFormation newFormation, int tweenTimeSeconds)
-        {
-            TweenScreens(MyCurrentScene, newFormation, tweenTimeSeconds);
-        }
-
-        public void TweenScreens(Scene scene, ScreenFormation newFormation, int tweenTimeSeconds)
-        {
-            var thisFormation = new List<ScreenPosition>();
-            var screenFormationService = new ScreenFormationService(scene);
-
-            switch (newFormation)
-            {
-                case ScreenFormation.LargeSquare:
-                    thisFormation = screenFormationService.LargeSquare();
-                    break;
-                case ScreenFormation.SmallSquare:
-                    thisFormation = screenFormationService.SmallSquare();
-                    break;
-                case ScreenFormation.Cross:
-                    thisFormation = screenFormationService.Cross();
-                    break;
-                case ScreenFormation.Star:
-                    thisFormation = screenFormationService.Star();
-                    break;
-                case ScreenFormation.Circle:
-                    thisFormation = screenFormationService.Circle();
-                    break;
-                case ScreenFormation.Triangle:
-                    thisFormation = screenFormationService.Triangle();
-                    break;
-                case ScreenFormation.ShortRectangle:
-                    thisFormation = screenFormationService.ShortRectangle();
-                    break;
-                case ScreenFormation.LongRectangle:
-                    thisFormation = screenFormationService.LongRectangle();
-                    break;
-            }
-
-            var thisScene = Scenes.FirstOrDefault(s => s.Scene == scene);
-
-            if (thisScene != null)
-            {
-                var audioSource =
-                    GameObject.Find(thisScene.Name)
-                        .transform.Find("SceneAudio(Clone)")
-                        .GetComponent<AudioSource>();
-
-                audioSource.Play();
-
-                foreach (var screenPosition in thisFormation)
-                {
-                    var screenPositionPrev = thisScene.CurrentScreens[screenPosition.Id - 1];
-
-                    var vector3To = screenPosition.Vector3;
-                    vector3To.y += _floorAdjust;
-                    
-                    screenPositionPrev.transform.DOMove(vector3To, tweenTimeSeconds).SetEase(Ease.Linear);
-                    screenPositionPrev.transform.DORotate(new Vector3(0, screenPosition.Rotation, 0), 3)
-                        .SetEase(Ease.Linear);
-                }
-
             }
         }
     }
