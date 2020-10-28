@@ -94,38 +94,48 @@ namespace Assets.Scripts
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
             //}
 
-            MyCurrentScene = Scene.Scene4;
+            MyCurrentScene = Scene.Scene1;
 
             SetPlayerPositionToScene((int)MyCurrentScene);
         }
 
         public void SetPlayerPositionToScene(int sceneId)
         {
+            Debug.Log($"SpawnPoint: {sceneId}");
+
             switch (sceneId)
             {
                 case 1:
                     Player.position = _spawnPoint1.position;
+                   // Player.position = new Vector3(0+_spawnPoint1.position.x, 0 + _spawnPoint1.position.y, 0 + _spawnPoint1.position.z);
                     break;
                 case 2:
                     Player.position = _spawnPoint2.position;
+                   // Player.position = new Vector3(_spawnPoint2.position.x, 0 + _spawnPoint2.position.y, 0 + _spawnPoint2.position.z);
                     break;
                 case 3:
                     Player.position = _spawnPoint3.position;
+                    //Player.position = new Vector3(0 + _spawnPoint3.position.x, 0 + _spawnPoint3.position.y, 0 + _spawnPoint3.position.z);
                     break;
                 case 4:
                     Player.position = _spawnPoint4.position;
+                    //Player.position = new Vector3(0 + _spawnPoint4.position.x, 0 + _spawnPoint4.position.y, 0 + _spawnPoint4.position.z);
                     break;
                 case 5:
                     Player.position = _spawnPoint5.position;
-                    break;
-                case 6:
-                    Player.position = _spawnPoint6.position;
-                    break;
-                case 7:
-                    Player.position = _spawnPoint7.position;
-                    break;
-                case 8:
-                    Player.position = _spawnPoint8.position;
+                    //Player.position = new Vector3(0 + _spawnPoint5.position.x, 0 + _spawnPoint5.position.y, 0 + _spawnPoint5.position.z);
+                    break;                                                 
+                case 6:                                                   
+                    Player.position = _spawnPoint6.position;             
+                    //Player.position = new Vector3(0 + _spawnPoint6.position.x, 0 + _spawnPoint6.position.y, 0 + _spawnPoint6.position.z);
+                    break;                                                 
+                case 7:                                                    
+                    Player.position = _spawnPoint7.position;             
+                    //Player.position = new Vector3(0 + _spawnPoint7.position.x, 0 + _spawnPoint7.position.y, 0 + _spawnPoint7.position.z);
+                    break;                                                 
+                case 8:                                                    
+                    Player.position = _spawnPoint8.position;             
+                    //Player.position = new Vector3(0 + _spawnPoint8.position.x, 0 + _spawnPoint8.position.y, 0 + _spawnPoint8.position.z);
                     break;
             }
         }
