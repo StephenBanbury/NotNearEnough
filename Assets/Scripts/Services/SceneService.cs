@@ -30,16 +30,16 @@ namespace Assets.Scripts.Services
                     position = new Vector3(0f, 0f, 20f);
                     break;
                 case Scene.Scene5:
-                    position = new Vector3(-20f, 0f, 0f);
-                    break;
-                case Scene.Scene6:
                     position = new Vector3(-20f, 0f, 20f);
                     break;
+                case Scene.Scene6:
+                    position = new Vector3(-20f, 0f, 0f);
+                    break;
                 case Scene.Scene7:
-                    position = new Vector3(0f, 0f, -20f);
+                    position = new Vector3(-20f, 0f, -20f);
                     break;
                 case Scene.Scene8:
-                    position = new Vector3(-20f, 0f, -20f);
+                    position = new Vector3(0f, 0f, -20f);
                     break;
             }
 

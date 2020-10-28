@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         private float _floorAdjust = 1.25f;
 
+        private PlayerMovement _playerMovementScript;
+
         //private Vector3 _playerStartingPosition = new Vector3(-0.6f, 0.5f, -0.7f);
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
@@ -95,8 +97,7 @@ namespace Assets.Scripts
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
             //}
 
-            MyCurrentScene = Scene.Scene1;
-
+            MyCurrentScene = Scene.Scene7;
             SetPlayerPositionToScene((int)MyCurrentScene);
         }
 
@@ -130,21 +131,64 @@ namespace Assets.Scripts
                     Debug.Log($"Spawn position: {_spawnPoint5.position}");
                     Player.position = _spawnPoint5.position;
                     //Marker.position = _spawnPoint5.position;
-                    break;                                                 
+                    break;
                 case 6:
                     Debug.Log($"Spawn position: {_spawnPoint6.position}");
-                    Player.position = _spawnPoint6.position;             
+                    Player.position = _spawnPoint6.position;
                     //Marker.position = _spawnPoint6.position;             
-                    break;                                                 
+                    break;
                 case 7:
                     Debug.Log($"Spawn position: {_spawnPoint7.position}");
-                    Player.position = _spawnPoint7.position;             
+                    Player.position = _spawnPoint7.position;
                     //Marker.position = _spawnPoint7.position;             
-                    break;                                                 
+                    break;
                 case 8:
                     Debug.Log($"Spawn position: {_spawnPoint8.position}");
-                    Player.position = _spawnPoint8.position;             
+                    Player.position = _spawnPoint8.position;
                     //Marker.position = _spawnPoint8.position;             
+                    break;
+            }
+        }
+
+        public void SetPlayerPositionToScene_Animate(int sceneId)
+        {
+            Debug.Log($"SpawnPoint: {sceneId}");
+
+            _playerMovementScript = Player.GetComponent<PlayerMovement>();
+
+            switch (sceneId)
+            {
+                case 1:
+                    Debug.Log($"Spawn position: {_spawnPoint1.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint1.localPosition, 5));
+                    break;
+                case 2:
+                    Debug.Log($"Spawn position: {_spawnPoint2.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint2.localPosition, 5));
+                    break;
+                case 3:
+                    Debug.Log($"Spawn position: {_spawnPoint3.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint3.localPosition, 5));
+                    break;
+                case 4:
+                    Debug.Log($"Spawn position: {_spawnPoint4.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint4.localPosition, 5));
+                    break;
+                case 5:
+                    Debug.Log($"Spawn position: {_spawnPoint5.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint5.localPosition, 5));
+                    break;
+                case 6:
+                    Debug.Log($"Spawn position: {_spawnPoint6.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint6.localPosition, 5));
+                    break;
+                case 7:
+                    Debug.Log($"Spawn position: {_spawnPoint7.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint7.localPosition, 5));
+                    break;
+                case 8:
+                    Debug.Log($"Spawn position: {_spawnPoint8.position}");
+                    StartCoroutine(_playerMovementScript.MoveToPosition(_spawnPoint8.localPosition, 5));
                     break;
             }
         }

@@ -648,7 +648,7 @@ MonoBehaviour:
   EnableLinearMovement: 1
   EnableRotation: 1
   RotationEitherThumbstick: 0
-  MoveScaleMultiplier: 0.5
+  MoveScaleMultiplier: 0.8
 --- !u!114 &3656844927490755316
 MonoBehaviour:
   m_ObjectHideFlags: 0
