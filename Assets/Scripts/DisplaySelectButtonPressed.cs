@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -6,20 +7,37 @@ namespace Assets.Scripts
     {
         [SerializeField] private int _displayId;
 
-        private DisplaySelect _displaySelectDisplay;
+        //private DisplaySelect _displaySelectDisplay;
 
-        void Start()
-        {
-            _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
-        }
+        //void Start()
+        //{
+        //    _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
+        //}
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Hand"))
             {
-                _displaySelectDisplay.SetDisplayId(_displayId);
-                _displaySelectDisplay.KeepInSync();
+                Debug.Log($"Display select:{_displayId}");
+
+                var scenes = MediaDisplayManager.instance.Scenes;
+                var sceneName = GetCurrentSceneFromParent();
+                var scene = scenes.First(s => s.Name == sceneName).Scene;
+
+                var gameManager = GameObject.Find("GameManager");
+                var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                displaySelect.SetDisplayId(_displayId);
+                displaySelect.KeepInSync();
+
+                //_displaySelectDisplay.SetDisplayId(_displayId);
+                //_displaySelectDisplay.KeepInSync();
             }
+        }
+
+        private string GetCurrentSceneFromParent()
+        {
+            var parentScene = transform.parent.parent.parent.gameObject;
+            return parentScene.name;
         }
     }
 }

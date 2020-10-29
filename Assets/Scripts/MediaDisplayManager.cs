@@ -290,9 +290,9 @@ namespace Assets.Scripts
             sceneAudio.transform.SetParent(sceneObject.transform);
             sceneLights.transform.SetParent(sceneObject.transform);
 
-            //selectionPanels.name = $"Selection Panel {_sceneIndex}";
-            //sceneAudio.name = $"Scene Audio {_sceneIndex}";
-            //sceneLights.name = $"Scene Lights {_sceneIndex}";
+            selectionPanels.name = $"Selection Panel";
+            sceneAudio.name = $"Scene Audio";
+            sceneLights.name = $"Scene Lights";
 
             Scenes.Add(new SceneDetail
             {
@@ -384,7 +384,7 @@ namespace Assets.Scripts
             {
                 var audioSource =
                     GameObject.Find(thisScene.Name)
-                        .transform.Find("SceneAudio(Clone)")
+                        .transform.Find("Scene Audio")
                         .GetComponent<AudioSource>();
 
                 audioSource.Play();
