@@ -37,7 +37,7 @@ namespace Assets.Scripts
 
             if (_formationId > 0 && _formationId != _previousId)
             {
-                _formationIdText.text = _formationId.ToString();
+                //_formationIdText.text = _formationId.ToString();
 
                 MediaDisplayManager.instance.TweenScreens(scene, (ScreenFormation)_formationId, animationSeconds);
             }

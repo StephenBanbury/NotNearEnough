@@ -243,11 +243,11 @@ namespace Assets.Scripts
 
             var joined = _app.Join(_roomName);
 
-            if (joined)
-            {
-                //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
-                _testText.text = $"Joined {_roomName}";
-            }
+            //if (joined)
+            //{
+            //    //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+            //    _testText.text = $"Joined {_roomName}";
+            //}
         }
 
         //public void OnJoinButtonClicked()

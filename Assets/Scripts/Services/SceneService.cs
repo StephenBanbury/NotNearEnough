@@ -18,7 +18,7 @@ namespace Assets.Scripts.Services
             switch (_scene)
             {
                 case Scene.Scene1:
-                    position = new Vector3(0f, 0f, 0f);
+                    position = new Vector3(20f, 0f, -20f);
                     break;
                 case Scene.Scene2:
                     position = new Vector3(20f, 0f, 0f);
@@ -46,21 +46,5 @@ namespace Assets.Scripts.Services
             return position;
         }
 
-        //public Vector3 GetSelectionPanelPosition()
-        //{
-        //    Vector3 position = new Vector3(-1.38f, -1f, -2.76f);
-        //    return position;
-        //}
-
-        //public Vector3 GetSceneLightsPosition()
-        //{
-        //    Vector3 position = new Vector3(0f, 0f, 0f);
-        //    return position;
-        //}
-        //public Vector3 GetSceneAudioPosition()
-        //{
-        //    Vector3 position = new Vector3(-1.01f, 0.24f, -3.28f);
-        //    return position;
-        //}
     }
 }

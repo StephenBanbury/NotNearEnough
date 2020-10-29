@@ -14,7 +14,8 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                MediaDisplayManager.instance.SetPlayerPositionToScene(_sceneId);
+                _sceneNameText.text = ((Scene) _sceneId).ToString();
+                //MediaDisplayManager.instance.SetPlayerPositionToScene(_sceneId);
             }
         }
     }

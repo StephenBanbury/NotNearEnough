@@ -30,19 +30,11 @@ namespace Assets.Scripts
 
             foreach (GameObject panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
-
                 foreach (Transform child in panel.transform)
                 {
                     child.gameObject.SetActive(_show);
                 }
             }
-
-            //GameObject panels = GameObject.Find("SelectionPanels");
-
-            //foreach (Transform child in panels.transform)
-            //{
-            //    child.gameObject.SetActive(_show);
-            //}
 
             _show = !_show;
         }
