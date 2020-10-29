@@ -16,7 +16,8 @@ namespace Assets.Scripts
 
         void Start()
         {
-            _formationSelectSync = gameObject.GetComponentInParent<FormationSelectSync>();
+            //_formationSelectSync = gameObject.GetComponentInParent<FormationSelectSync>();
+            _formationSelectSync = gameObject.GetComponent<FormationSelectSync>();
         }
 
         public void SetFormationId(int id, int animationSeconds)
