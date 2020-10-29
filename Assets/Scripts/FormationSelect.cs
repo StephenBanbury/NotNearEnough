@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public class FormationSelect : MonoBehaviour
     {
-        [SerializeField] private Text _formationIdText;
+        //[SerializeField] private Text _formationIdText;
 
         private int _formationId;
         private int _previousId;
@@ -25,7 +25,7 @@ namespace Assets.Scripts
 
             if (_formationId > 0 && _formationId != _previousId)
             {
-                _formationIdText.text = _formationId.ToString();
+                //_formationIdText.text = _formationId.ToString();
 
                 MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId, animationSeconds);
             }

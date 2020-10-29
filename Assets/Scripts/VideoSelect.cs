@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public class VideoSelect : MonoBehaviour
     {
-        [SerializeField] private Text _videoIdText;
+        //[SerializeField] private Text _videoIdText;
 
         private int _videoId;
         private int _previousId;

@@ -5,7 +5,7 @@ namespace Assets.Scripts
 {
     public class DisplaySelect : MonoBehaviour
     {
-        [SerializeField] private Text _displayIdText;
+        //[SerializeField] private Text _displayIdText;
 
         private int _displayId;
         private int _previousId;

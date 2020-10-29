@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
     public class VideoSelectButtonPressed : MonoBehaviour
     {
+        [SerializeField] private Text _videoIdText;
         [SerializeField] private int _videoId;
 
         //private VideoSelect _videoSelectDisplay;
@@ -29,6 +31,8 @@ namespace Assets.Scripts
                 var videoSelect = gameManager.GetComponent<VideoSelect>();
                 videoSelect.SetVideoId(_videoId);
                 videoSelect.KeepInSync();
+
+                _videoIdText.text = _videoId.ToString();
 
                 //_videoSelectDisplay.SetVideoId(_videoId);
                 //_videoSelectDisplay.KeepInSync();

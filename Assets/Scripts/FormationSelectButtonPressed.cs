@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
     public class FormationSelectButtonPressed : MonoBehaviour
     {
+        [SerializeField] private Text _formationIdText;
         [SerializeField] private int _formationId;
 
         //private FormationSelect _formationSelectDisplay;
@@ -26,6 +28,8 @@ namespace Assets.Scripts
                 var formationSelect = gameManager.GetComponent<FormationSelect>();
                 formationSelect.SetFormationId(scene, _formationId, 10);
                 //formationSelect.KeepInSync();
+
+                _formationIdText.text = _formationId.ToString();
 
                 //_formationSelectDisplay.SetFormationId(_formationId, 10);
                 //_formationSelectDisplay.KeepInSync();

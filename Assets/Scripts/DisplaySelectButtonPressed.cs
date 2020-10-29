@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
     public class DisplaySelectButtonPressed : MonoBehaviour
     {
+        [SerializeField] private Text _displayIdText;
         [SerializeField] private int _displayId;
 
         //private DisplaySelect _displaySelectDisplay;
@@ -28,6 +30,8 @@ namespace Assets.Scripts
                 var displaySelect = gameManager.GetComponent<DisplaySelect>();
                 displaySelect.SetDisplayId(_displayId);
                 displaySelect.KeepInSync();
+
+                _displayIdText.text = _displayId.ToString();
 
                 //_displaySelectDisplay.SetDisplayId(_displayId);
                 //_displaySelectDisplay.KeepInSync();
