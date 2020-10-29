@@ -10,13 +10,13 @@ namespace Assets.Scripts
 
         private int _formationId;
         private int _previousId;
+        private int _scene;
         
         private FormationSelectSync _formationSelectSync;
 
 
         void Start()
         {
-            //_formationSelectSync = gameObject.GetComponentInParent<FormationSelectSync>();
             _formationSelectSync = gameObject.GetComponent<FormationSelectSync>();
         }
 
@@ -26,8 +26,6 @@ namespace Assets.Scripts
 
             if (_formationId > 0 && _formationId != _previousId)
             {
-                //_formationIdText.text = _formationId.ToString();
-
                 MediaDisplayManager.instance.TweenScreens((ScreenFormation)_formationId, animationSeconds);
             }
         }
@@ -35,22 +33,27 @@ namespace Assets.Scripts
         public void SetFormationId(Scene scene, int id, int animationSeconds)
         {
             _formationId = id;
+            _scene = (int) scene;
 
             if (_formationId > 0 && _formationId != _previousId)
             {
-                //_formationIdText.text = _formationId.ToString();
-
                 MediaDisplayManager.instance.TweenScreens(scene, (ScreenFormation)_formationId, animationSeconds);
             }
         }
 
         public void KeepInSync()
         {
-            // If the id has changed, call SetId on the sync component
-            if (_formationId != _previousId)
+            // generate cross-scene id
+
+            // create id in 'composite' form, e.g. 12 = scene 1, formation 2.
+
+            string scenePlusFormation = $"{_scene}{_formationId}";
+            int compoundId = int.Parse(scenePlusFormation);
+
+            if (compoundId != _previousId)
             {
-                _formationSelectSync.SetId(_formationId);
-                _previousId = _formationId;
+                _formationSelectSync.SetId(compoundId);
+                _previousId = compoundId;
             }
         }
     }

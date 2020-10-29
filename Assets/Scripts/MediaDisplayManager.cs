@@ -77,9 +77,13 @@ namespace Assets.Scripts
             SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
 
             //Debug.Log("Scenes: -");
-            //foreach (var sceneDetail in _scenes)
+            //foreach (var sceneDetail in Scenes)
             //{
             //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
+            //    //foreach (var screen in sceneDetail.CurrentScreens)
+            //    //{
+            //    //    Debug.Log($"Screen: {screen.id}");
+            //    //}
             //}
 
             MyCurrentScene = Scene.Scene1;
@@ -317,15 +321,17 @@ namespace Assets.Scripts
 
                     GameObject screen;
 
+                    var screenId = _sceneIndex * 100 + screenPosition.Id;
+
                     if (screenPosition.Id % 2 != 0)
                     {
                         screen = Instantiate(_screen, vector3, Quaternion.identity);
-                        screen.name = $"Screen {screenPosition.Id}";
+                        screen.name = $"Screen {screenId}";
                     }
                     else
                     {
                         screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
-                        screen.name = $"Screen Variant {screenPosition.Id}";
+                        screen.name = $"Screen Variant {screenId}";
                     }
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
@@ -387,7 +393,7 @@ namespace Assets.Scripts
                         .transform.Find("Scene Audio")
                         .GetComponent<AudioSource>();
 
-                audioSource.Play();
+                //audioSource.Play();
 
                 foreach (var screenPosition in thisFormation)
                 {

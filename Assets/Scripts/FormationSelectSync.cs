@@ -1,4 +1,5 @@
-﻿using Normal.Realtime;
+﻿using Assets.Scripts.Enums;
+using Normal.Realtime;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -50,7 +51,15 @@ namespace Assets.Scripts
             if (_model != null && _model.formationId > 0)
             {
                 // Get the value from the model, display it 
-                _formationSelectDisplay.SetFormationId(_model.formationId, 10);
+
+                string scenePlusFormation = _model.formationId.ToString();
+                int scene = int.Parse(scenePlusFormation.Substring(0, 1));
+                int formationId = int.Parse(scenePlusFormation.Substring(1, 1));
+
+                Debug.Log($"UpdateFormationId - scenePlusFormation: {scenePlusFormation}");
+                Debug.Log($"UpdateFormationId - scene: {(Scene) scene}");
+                Debug.Log($"UpdateFormationId - formationId: {formationId}");
+                _formationSelectDisplay.SetFormationId((Scene) scene, formationId, 10);
 
                 //Debug.Log($"in UpdateFormationId: {_model.formationId}");
 

@@ -93,7 +93,7 @@ namespace Assets.Scripts
             var scene = scenes.First(s => s.Name == sceneName).Scene;
 
             formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
-            //formationSelect.KeepInSync();
+            formationSelect.KeepInSync();
         }
 
         private string GetCurrentSceneFromParent()

@@ -26,6 +26,7 @@ namespace Assets.Scripts
 
                 var gameManager = GameObject.Find("GameManager");
                 var formationSelect = gameManager.GetComponent<FormationSelect>();
+
                 formationSelect.SetFormationId(scene, _formationId, 10);
 
                 formationSelect.KeepInSync();
