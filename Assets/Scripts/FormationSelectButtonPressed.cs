@@ -9,13 +9,6 @@ namespace Assets.Scripts
         [SerializeField] private Text _formationIdText;
         [SerializeField] private int _formationId;
 
-        //private FormationSelect _formationSelectDisplay;
-
-        //void Start()
-        //{
-        //    _formationSelectDisplay = gameObject.GetComponentInParent<FormationSelect>();
-        //}
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Hand"))
@@ -32,9 +25,6 @@ namespace Assets.Scripts
                 formationSelect.KeepInSync();
 
                 _formationIdText.text = _formationId.ToString();
-
-                //_formationSelectDisplay.SetFormationId(_formationId, 10);
-                //_formationSelectDisplay.KeepInSync();
             }
         }
 

@@ -5,8 +5,6 @@ namespace Assets.Scripts
 {
     public class DisplaySelect : MonoBehaviour
     {
-        //[SerializeField] private Text _displayIdText;
-
         private int _displayId;
         private int _previousId;
 
@@ -15,7 +13,6 @@ namespace Assets.Scripts
 
         void Start()
         {
-            //_displaySelectSync = gameObject.GetComponentInParent<DisplaySelectSync>();
             _displaySelectSync = gameObject.GetComponent<DisplaySelectSync>();
         }
 
@@ -23,9 +20,8 @@ namespace Assets.Scripts
         {
             _displayId = id;
             
-            if (_displayId > 0) // && _displayId != _previousId)
+            if (_displayId > 0 && _displayId != _previousId)
             {
-                //_displayIdText.text = _displayId.ToString();
                 MediaDisplayManager.instance.SelectedDisplay = _displayId;
             }
         }

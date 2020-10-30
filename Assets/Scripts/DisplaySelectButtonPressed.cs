@@ -9,32 +9,30 @@ namespace Assets.Scripts
         [SerializeField] private Text _displayIdText;
         [SerializeField] private int _displayId;
 
-        //private DisplaySelect _displaySelectDisplay;
-
-        //void Start()
-        //{
-        //    _displaySelectDisplay = gameObject.GetComponentInParent<DisplaySelect>();
-        //}
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Hand"))
             {
-                Debug.Log($"Display select:{_displayId}");
+                // _displayId is a composite of scene + _displayId
+                // e.g. 814 = scene 8, display 14; 208 = scene 2, display 8
 
                 var scenes = MediaDisplayManager.instance.Scenes;
                 var sceneName = GetCurrentSceneFromParent();
-                var scene = scenes.First(s => s.Name == sceneName).Scene;
+                var sceneId = scenes.First(s => s.Name == sceneName).Id;
+                var compositeId = sceneId * 100 + _displayId;
+
+                //Debug.Log($"Display select displayId:{_displayId}");
+                //Debug.Log($"Display select sceneId:{sceneId}");
+                //Debug.Log($"Display select compositeId:{compositeId}");
+
 
                 var gameManager = GameObject.Find("GameManager");
+
                 var displaySelect = gameManager.GetComponent<DisplaySelect>();
-                displaySelect.SetDisplayId(_displayId);
+                displaySelect.SetDisplayId(compositeId);
                 displaySelect.KeepInSync();
 
                 _displayIdText.text = _displayId.ToString();
-
-                //_displaySelectDisplay.SetDisplayId(_displayId);
-                //_displaySelectDisplay.KeepInSync();
             }
         }
 

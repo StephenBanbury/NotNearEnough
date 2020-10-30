@@ -86,7 +86,7 @@ namespace Assets.Scripts
             //    //}
             //}
 
-            MyCurrentScene = Scene.Scene1;
+            MyCurrentScene = Scene.Scene7;
             OffsetPlayerPositionWithinScene();
         }
         
@@ -173,11 +173,14 @@ namespace Assets.Scripts
         private void AssignVideoToDisplay()
         {
             //Debug.Log("AssignVideoToDisplay");
-            Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
-            Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
+            //Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
+            //Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
+
+            var sceneId = int.Parse(_lastSelectedDisplayId.ToString().Substring(0, 1));
+            var localDisplayId = int.Parse(_lastSelectedDisplayId.ToString().Substring(1, 2));
 
             if (_lastSelectedVideoId > 0 && _lastSelectedDisplayId > 0 &&
-                _displayVideo[_lastSelectedDisplayId].Id != _lastSelectedVideoId)
+                _displayVideo[localDisplayId].Id != _lastSelectedVideoId)
             {
                 var video = _videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
                 video.Show = true;
@@ -186,15 +189,21 @@ namespace Assets.Scripts
                 var screenName = $"Screen {_lastSelectedDisplayId}";
                 var screenVariantName = $"Screen Variant {_lastSelectedDisplayId}";
 
-                // Using _displayVideo should be necessary only for URL based content
-                _displayVideo[_lastSelectedDisplayId] = video;
+                //Debug.Log($"screensContainerName: {screensContainerName}");
+                //Debug.Log($"screenName: {screenName}");
+                //Debug.Log($"screenVariantName: {screenVariantName}");
 
-                var screensContainer = GameObject.Find(screensContainerName);
+                // Using _displayVideo should be necessary only for URL based content
+                _displayVideo[localDisplayId] = video;
+
+                var sceneName = Scenes.First(s => s.Id == sceneId).Name;
+                var scene = GameObject.Find(sceneName);
+                var screensContainer = scene.transform.Find(screensContainerName);
+
                 var screenObject = screensContainer.transform.Find(screenName);
                 if (screenObject == null) screenObject = screensContainer.transform.Find(screenVariantName);
 
-
-                Debug.Log($"Show video '{_displayVideo[_lastSelectedDisplayId].Title}' on display {screenObject.name}");
+                Debug.Log($"Show video '{_displayVideo[localDisplayId].Title}' on display {screenObject.name}");
 
                 var videoDisplay = screenObject.transform.Find("VideoDisplay");
                 var canvasDisplay = screenObject.transform.Find("CanvasDisplay");

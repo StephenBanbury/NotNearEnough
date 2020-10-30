@@ -52,19 +52,17 @@ namespace Assets.Scripts
             {
                 // Get the value from the model, display it 
 
+                // _model.formationId comes in 'composite' form, e.g. 12 = scene 1, formation 2.
+
                 string scenePlusFormation = _model.formationId.ToString();
                 int scene = int.Parse(scenePlusFormation.Substring(0, 1));
                 int formationId = int.Parse(scenePlusFormation.Substring(1, 1));
 
-                Debug.Log($"UpdateFormationId - scenePlusFormation: {scenePlusFormation}");
-                Debug.Log($"UpdateFormationId - scene: {(Scene) scene}");
-                Debug.Log($"UpdateFormationId - formationId: {formationId}");
+                //Debug.Log($"UpdateFormationId - scenePlusFormation: {scenePlusFormation}");
+                //Debug.Log($"UpdateFormationId - scene: {(Scene) scene}");
+                //Debug.Log($"UpdateFormationId - formationId: {formationId}");
+
                 _formationSelectDisplay.SetFormationId((Scene) scene, formationId, 10);
-
-                //Debug.Log($"in UpdateFormationId: {_model.formationId}");
-
-                // TODO: this may not be needed, but if it is, maybe move it to its own manager class
-                //MediaDisplayManager.instance.SelectedScreenFormation = (ScreenFormation) _model.formationId;
             }
         }
 
