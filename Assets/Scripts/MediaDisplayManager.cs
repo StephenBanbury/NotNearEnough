@@ -86,7 +86,7 @@ namespace Assets.Scripts
             //    //}
             //}
 
-            MyCurrentScene = Scene.Scene7;
+            MyCurrentScene = Scene.Scene1;
             OffsetPlayerPositionWithinScene();
         }
         
@@ -149,9 +149,14 @@ namespace Assets.Scripts
 
             _displayVideo = new Dictionary<int, MediaDetail>();
 
-            for (var i = 1; i <= 16; i++)
+            //for (var i = 1; i <= 16; i++)
+            //{
+            //    _displayVideo.Add(i, new MediaDetail());
+            //}
+
+            foreach (var video in _videos)
             {
-                _displayVideo.Add(i, new MediaDetail());
+                _displayVideo.Add(video.Id, video);
             }
         }
 
@@ -163,6 +168,7 @@ namespace Assets.Scripts
                     Debug.Log($"Assign video clip {_lastSelectedVideoId} to display {_lastSelectedDisplayId}");
                     AssignVideoToDisplay();
                     break;
+
                 case MediaType.VideoStream:
                     Debug.Log($"Assign video stream {_lastSelectedStreamId} to display {_lastSelectedDisplayId}");
                     AssignStreamToDisplay();
@@ -179,8 +185,7 @@ namespace Assets.Scripts
             var sceneId = int.Parse(_lastSelectedDisplayId.ToString().Substring(0, 1));
             var localDisplayId = int.Parse(_lastSelectedDisplayId.ToString().Substring(1, 2));
 
-            if (_lastSelectedVideoId > 0 && _lastSelectedDisplayId > 0 &&
-                _displayVideo[localDisplayId].Id != _lastSelectedVideoId)
+            if (_lastSelectedVideoId > 0 && _lastSelectedDisplayId > 0) // && _displayVideo[localDisplayId].Id != _lastSelectedVideoId)
             {
                 var video = _videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
                 video.Show = true;
@@ -212,9 +217,45 @@ namespace Assets.Scripts
                 canvasDisplay.gameObject.SetActive(false);
 
                 var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
-                var vc = _videoClips[_lastSelectedVideoId - 1];
-                videoPlayer.clip = vc;
+
+                //Add AudioSource
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+
+                //Disable Play on Awake for both Video and Audio
+                videoPlayer.playOnAwake = false;
+                audioSource.playOnAwake = false;
+                audioSource.Pause();
+
+                var thisVideoClip = _videos.First(v => v.Id == _lastSelectedVideoId);
+
+                // Video clip from Url
+                if (thisVideoClip.Source == Source.Url)
+                {
+                    Debug.Log("URL video clip");
+                    videoPlayer.source = VideoSource.Url;
+                    videoPlayer.url = thisVideoClip.Url;
+                }
+                else
+                {
+                    Debug.Log("Local video clip");
+                    var vc = _videoClips[_lastSelectedVideoId - 1];
+                    videoPlayer.clip = vc;
+                }
+
+                //Set Audio Output to AudioSource
+                videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+                //Assign the Audio from Video to AudioSource to be played
+                videoPlayer.EnableAudioTrack(0, true);
+                videoPlayer.SetTargetAudioSource(0, audioSource);
+
+                //Set video To Play then prepare Audio to prevent Buffering        
+                videoPlayer.Prepare();
+
+                //Play Video
                 videoPlayer.Play();
+                //Play Sound
+                audioSource.Play();
             }
         }
 
