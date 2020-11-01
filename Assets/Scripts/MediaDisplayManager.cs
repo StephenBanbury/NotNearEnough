@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Models;
+﻿using System.Collections;
+using Assets.Scripts.Models;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,35 +62,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            _videos = new List<MediaDetail>();
-
-            GetVideosFromService();
-            CreateStreamSelectButtons();
-
-            Scenes = new List<SceneDetail>();
-            _sceneIndex = 1;
-
-            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
-            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
-            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.Star);
-            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
-
-            //Debug.Log("Scenes: -");
-            //foreach (var sceneDetail in Scenes)
-            //{
-            //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
-            //    //foreach (var screen in sceneDetail.CurrentScreens)
-            //    //{
-            //    //    Debug.Log($"Screen: {screen.id}");
-            //    //}
-            //}
-
-            MyCurrentScene = Scene.Scene1;
-            OffsetPlayerPositionWithinScene();
+            StartCoroutine(AwaitVideosFromApiBeforeStart());
         }
         
         public void OffsetPlayerPositionWithinScene()
@@ -140,15 +113,16 @@ namespace Assets.Scripts
             }
         }
 
-        private void GetVideosFromService()
+        private void GetLocalVideosDetails()
         {
             // Getting videos from the service will be necessary for URL based content
             // It is not necessary at the moment as we are using local content.
             // TODO: Streaming will probably be another thing altogether!
 
+            Debug.Log("Get Videos from local storage");
+
             var videoService = new VideoService();
 
-            // Get local video details first
             _videos = videoService.GetLocalVideos();
 
             // TODO: We may not ever need _displayVideo
@@ -158,8 +132,13 @@ namespace Assets.Scripts
             {
                 _displayVideo.Add(video.Id, video);
             }
+        }
 
-            // Get external video URLs
+        private void GetVideoLinksFromTextFile()
+        {
+            // Get external video URLs from text file
+            Debug.Log("Get Videos from text file");
+
             var textLines = GetVideosExternal.GetFromTextFile();
 
             var i = 1;
@@ -176,16 +155,66 @@ namespace Assets.Scripts
 
                 _videos.Add(video);
 
-                //_displayVideo.Add(video.Id, video);
-
                 i++;
             }
+        }
+
+        private IEnumerator AwaitVideosFromApiBeforeStart()
+        {
+            _videos = new List<MediaDetail>();
+
+            GetLocalVideosDetails();
+            //GetVideoLinksFromTextFile();
+            yield return StartCoroutine(GetVideosFromApi());
 
             Debug.Log(
                 $"Number of videos: " +
                 $"Local={_videos.Count(v => v.Source == Source.LocalFile)}; " +
                 $"External={_videos.Count(v => v.Source == Source.Url)}");
+
+            CreateStreamSelectButtons();
+
+            Scenes = new List<SceneDetail>();
+            _sceneIndex = 1;
+
+            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
+            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
+            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
+            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
+            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
+            SpawnScene(Scene.Scene7, ScreenFormation.Star);
+            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
+
+            //Debug.Log("Scenes: -");
+            //foreach (var sceneDetail in Scenes)
+            //{
+            //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
+            //    //foreach (var screen in sceneDetail.CurrentScreens)
+            //    //{
+            //    //    Debug.Log($"Screen: {screen.id}");
+            //    //}
+            //}
+
+            MyCurrentScene = Scene.Scene1;
+            OffsetPlayerPositionWithinScene();
+
         }
+
+        public IEnumerator GetVideosFromApi()
+        {
+            // Get external video URLs from database
+
+            var apiService = new ApiService();
+            var videosFromApi = apiService.VideosGet();
+
+            yield return new WaitUntil(() => videosFromApi.Count > 0);
+
+            Debug.Log($"GetVideosFromApi - done: {videosFromApi.Count}");
+
+            _videos.AddRange(videosFromApi);
+        }
+
 
         public void AssignMediaToDisplay()
         {
