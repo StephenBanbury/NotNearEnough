@@ -61,6 +61,8 @@ namespace Assets.Scripts
 
         void Start()
         {
+            _videos = new List<MediaDetail>();
+
             GetVideosFromService();
             CreateStreamSelectButtons();
 
@@ -145,19 +147,44 @@ namespace Assets.Scripts
             // TODO: Streaming will probably be another thing altogether!
 
             var videoService = new VideoService();
-            _videos = videoService.GetVideos();
 
+            // Get local video details first
+            _videos = videoService.GetLocalVideos();
+
+            // TODO: We may not ever need _displayVideo
             _displayVideo = new Dictionary<int, MediaDetail>();
-
-            //for (var i = 1; i <= 16; i++)
-            //{
-            //    _displayVideo.Add(i, new MediaDetail());
-            //}
 
             foreach (var video in _videos)
             {
                 _displayVideo.Add(video.Id, video);
             }
+
+            // Get external video URLs
+            var textLines = GetVideosExternal.GetFromTextFile();
+
+            var i = 1;
+            foreach (var textLine in textLines)
+            {
+                var video = new MediaDetail
+                {
+                    Id = i,
+                    Title = $"Video {_videos.Count + 1}",
+                    MediaType = MediaType.VideoClip,
+                    Source = Source.Url,
+                    Url = textLine
+                };
+
+                _videos.Add(video);
+
+                //_displayVideo.Add(video.Id, video);
+
+                i++;
+            }
+
+            Debug.Log(
+                $"Number of videos: " +
+                $"Local={_videos.Count(v => v.Source == Source.LocalFile)}; " +
+                $"External={_videos.Count(v => v.Source == Source.Url)}");
         }
 
         public void AssignMediaToDisplay()
