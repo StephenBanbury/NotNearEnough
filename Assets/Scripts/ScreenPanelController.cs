@@ -11,16 +11,10 @@ namespace Assets.Scripts
 {
     public class ScreenPanelController : MonoBehaviour
     {
-        private int _screenButtonEventId;
         private bool _triggerIsInAction;
         private int _waitForSeconds = 5;
         private ScreenFormation _currentScreenFormation;
         
-        private void Start()
-        {
-            _screenButtonEventId = 0;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Hand"))
@@ -34,39 +28,58 @@ namespace Assets.Scripts
 
         IEnumerator TriggerAction(string controllerName)
         {
-            // Flag to prevent quickfire actions taking place 
-            _triggerIsInAction = true;
+            var leftHand = controllerName == "LeftHandCollider";
+            var rightHand = controllerName == "RightHandCollider";
 
-            if (_screenButtonEventId == 3)
+            var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
+            var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
+
+            Debug.Log($"Left Trigger: {leftTrigger}");
+            Debug.Log($"Right Trigger: {rightTrigger}");
+
+            if (leftTrigger && rightTrigger)
             {
-                _screenButtonEventId = 1;
+                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
+                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+
+                StartCoroutine(RaiseMeshCollider());
             }
-            else
+            else if (rightHand && rightTrigger)
             {
-                _screenButtonEventId++;
+                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+
+                ToggleVideoOn();
             }
+            else if (leftHand && leftTrigger)
+            {
+                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
 
-            OVRInput.SetControllerVibration(0.5f, 0.5f, controllerName == "LeftHandCollider"
-                ? OVRInput.Controller.LTouch
-                : OVRInput.Controller.RTouch);
-
-            // Randomly select to change formation or change video
-            //var rand = Random.value * 100;
-            //if (rand <= 40)
-            //{
-            //    ChangeScreenFormation();
-            //}
-            //else
-            //{
-            //    ToggleVideoOn();
-            //}
-
-            ChangeScreenFormation();
+                ChangeScreenFormation();
+            }
 
             yield return new WaitForSeconds(_waitForSeconds);
 
             Debug.Log("WaitForNextTrigger done");
             _triggerIsInAction = false;
+        }
+
+        IEnumerator RaiseMeshCollider()
+        {
+            var meshCollider = gameObject.GetComponent<MeshCollider>().transform;
+
+            var x = meshCollider.position.x;
+            var y = meshCollider.position.y;
+            var z = meshCollider.position.z;
+
+            meshCollider.position = new Vector3(x, y + 20f, z);
+
+            Debug.Log("Mesh collider raised");
+
+            yield return new WaitForSeconds(3); 
+
+            meshCollider.position = new Vector3(x, y, z);
+
+            Debug.Log("Mesh collider lowered");
         }
 
         private void ChangeScreenFormation()

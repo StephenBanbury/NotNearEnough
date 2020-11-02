@@ -3,10 +3,10 @@ using Assets.Scripts.Models;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
+using UnityEngine.UI;
 using UnityEngine.Video;
 namespace Assets.Scripts
 {
@@ -422,30 +422,33 @@ namespace Assets.Scripts
             {
                 //if (!screenPosition.Hide)
                 //{
-                    var vector3 = screenPosition.Vector3;
-                    vector3.y += _floorAdjust;
+                var vector3 = screenPosition.Vector3;
+                vector3.y += _floorAdjust;
 
-                    GameObject screen;
+                GameObject screen;
 
-                    var screenId = _sceneIndex * 100 + screenPosition.Id;
+                var screenId = _sceneIndex * 100 + screenPosition.Id;
 
-                    if (screenPosition.Id % 2 != 0)
-                    {
-                        screen = Instantiate(_screen, vector3, Quaternion.identity);
-                        screen.name = $"Screen {screenId}";
-                    }
-                    else
-                    {
-                        screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
-                        screen.name = $"Screen Variant {screenId}";
-                    }
+                if (screenPosition.Id % 2 != 0)
+                {
+                    screen = Instantiate(_screen, vector3, Quaternion.identity);
+                    screen.name = $"Screen {screenId}";
+                }
+                else
+                {
+                    screen = Instantiate(_screenVariant, vector3, Quaternion.identity);
+                    screen.name = $"Screen Variant {screenId}";
+                }
 
-                    screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                var screenNumber = screen.GetComponentInChildren<Text>();
+                screenNumber.text = screenPosition.Id.ToString();
 
-                    screen.transform.SetParent(screens.transform);
-                    screens.transform.SetParent(sceneObject.transform);
+                screen.transform.Rotate(0, screenPosition.Rotation, 0);
 
-                    currentScene.CurrentScreens.Add(screen);
+                screen.transform.SetParent(screens.transform);
+                screens.transform.SetParent(sceneObject.transform);
+
+                currentScene.CurrentScreens.Add(screen);
                 //}
             }
 

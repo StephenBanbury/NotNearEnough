@@ -246,7 +246,7 @@ namespace Assets.Scripts
             if (joined)
             {
                 //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
-                _testText.text = $"Joined {_roomName}";
+                //_testText.text = $"Joined {_roomName}";
             }
         }
 
