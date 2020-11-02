@@ -238,6 +238,11 @@ namespace Assets.Scripts
             //Debug.Log($"_lastSelectedVideoId: {_lastSelectedVideoId}");
             //Debug.Log($"_lastSelectedDisplayId: {_lastSelectedDisplayId}");
 
+            var displaySuffix = "Wide";
+
+            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+            var videoDisplayName = $"VideoDisplay{displaySuffix}";
+
             var sceneId = int.Parse(_lastSelectedDisplayId.ToString().Substring(0, 1));
             var localDisplayId = int.Parse(_lastSelectedDisplayId.ToString().Substring(1, 2));
 
@@ -266,8 +271,8 @@ namespace Assets.Scripts
 
                 Debug.Log($"Show video '{_displayVideo[localDisplayId].Title}' on display {screenObject.name}");
 
-                var videoDisplay = screenObject.transform.Find("VideoDisplay");
-                var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+                var videoDisplay = screenObject.transform.Find(videoDisplayName);
+                var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
 
                 videoDisplay.gameObject.SetActive(true);
                 canvasDisplay.gameObject.SetActive(false);

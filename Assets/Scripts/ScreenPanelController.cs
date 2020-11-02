@@ -117,9 +117,14 @@ namespace Assets.Scripts
 
         private void ToggleVideoOn()
         {
+            var displaySuffix = "Wide";
+
+            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+            var videoDisplayName = $"VideoDisplay{displaySuffix}";
+
             var parent = gameObject.transform.parent;
-            var videoDisplay = parent.Find("VideoDisplay");
-            var canvasDisplay = parent.Find("CanvasDisplay");
+            var videoDisplay = parent.Find(videoDisplayName);
+            var canvasDisplay = parent.Find(canvasDisplayName);
 
             // For now I am going to select a random video to display. We will probably want a different action
 
@@ -139,12 +144,12 @@ namespace Assets.Scripts
             // Will use this later...
             if (videoDisplay)
             {
-                Debug.Log($"VideoDisplay in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
+                Debug.Log($"{videoDisplayName} in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
             }
 
             if (canvasDisplay)
             {
-                Debug.Log($"CanvasDisplay in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
+                Debug.Log($"{canvasDisplayName} in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
             }
 
         }

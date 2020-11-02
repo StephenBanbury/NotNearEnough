@@ -147,6 +147,11 @@ namespace Assets.Scripts
         
         private VideoSurface MakeImageSurface(AgoraUser user)
         {
+            var displaySuffix = "Wide";
+
+            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+            var videoDisplayName = $"VideoDisplay{displaySuffix}";
+
             Debug.Log("Agora MakeImageSurface");
 
             // find a game object to render video stream from 'uid'
@@ -179,8 +184,8 @@ namespace Assets.Scripts
 
             //Debug.Log($"screenObject: {screenObject.name}");
 
-            var videoDisplay = screenObject.transform.Find("VideoDisplay");
-            var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+            var videoDisplay = screenObject.transform.Find(videoDisplayName);
+            var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
 
             videoDisplay.gameObject.SetActive(false);
             canvasDisplay.gameObject.SetActive(true);
