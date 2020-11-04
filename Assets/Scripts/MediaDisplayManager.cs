@@ -94,7 +94,7 @@ namespace Assets.Scripts
                 Debug.Log($"Non-local agora users: {joinedUsers.Count}");
 
                 var xPos = selectPanel.transform.position.x;
-                var yStart = 0.55f;
+                var yStart = 0.5f;
                 var zPos = selectPanel.transform.position.z;
 
                 var i = 1;

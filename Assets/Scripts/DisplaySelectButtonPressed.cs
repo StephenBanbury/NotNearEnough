@@ -21,7 +21,7 @@ namespace Assets.Scripts
                 var sceneId = scenes.First(s => s.Name == sceneName).Id;
                 var compositeId = sceneId * 100 + _displayId;
 
-                //Debug.Log($"Display select displayId:{_displayId}");
+                Debug.Log($"Display select displayId:{_displayId}");
                 //Debug.Log($"Display select sceneId:{sceneId}");
                 //Debug.Log($"Display select compositeId:{compositeId}");
 

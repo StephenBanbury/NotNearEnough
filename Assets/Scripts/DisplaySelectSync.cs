@@ -44,11 +44,15 @@ namespace Assets.Scripts
 
         private void UpdateDisplayId()
         {
+            Debug.Log("UpdateDisplayId");
+
             if (_model != null && _model.displayId > 0)
             {
                 // Get the value from the model, display it and update the video display manager
                 _displaySelect.SetDisplayId(_model.displayId);
-
+                
+                Debug.Log("Sync: Selected display updated");
+                
                 MediaDisplayManager.instance.SelectedDisplay = _model.displayId;
                 MediaDisplayManager.instance.AssignMediaToDisplay();
             }
@@ -56,6 +60,8 @@ namespace Assets.Scripts
         
         public void SetId(int id)
         {
+            Debug.Log("DisplaySelectSync: SetId");
+
             // Set the value on the model
             // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
             _model.displayId = id;

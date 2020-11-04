@@ -18,6 +18,8 @@ namespace Assets.Scripts
 
         public void SetDisplayId(int id)
         {
+            Debug.Log($"SetDisplayeId: {id}");
+
             _displayId = id;
             
             if (_displayId > 0 && _displayId != _previousId)
@@ -29,12 +31,16 @@ namespace Assets.Scripts
         public void KeepInSync()
         {
             // If the id has changed, call SetId on the sync component
-            if (_displayId != _previousId)
-            {
-                Debug.Log($"displayId: {_displayId}");
+            //if (_displayId != _previousId)
+            //{
+
+            // TODO: check display plus media type and id have not changed
+
+                Debug.Log($"Keep in sync: displayId: {_displayId}");
+
                 _displaySelectSync.SetId(_displayId);
                 _previousId = _displayId;
-            }
+            //}
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -6,22 +7,21 @@ namespace Assets.Scripts
     {
         public int StreamId;
 
-        private StreamSelect _streamSelectDisplay;
-
-        void Start()
-        {
-            _streamSelectDisplay = gameObject.GetComponentInParent<StreamSelect>();
-        }
-
+        [SerializeField] private Text _streamIdText;
+        
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log($"Selected StreamId: {StreamId}");
             if (other.CompareTag("Hand"))
             {
-                _streamSelectDisplay.SetStreamId(StreamId);
-                _streamSelectDisplay.KeepInSync();
+                Debug.Log($"Stream button pressed: StreamId: {StreamId}");
+
+                var gameManager = GameObject.Find("GameManager");
+                var streamSelect = gameManager.GetComponent<StreamSelect>();
+                streamSelect.SetStreamId(StreamId);
+                streamSelect.KeepInSync();
+
+                //_streamIdText.text = StreamId.ToString();
             }
         }
-
     }
 }

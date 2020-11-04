@@ -1,4 +1,5 @@
 ﻿using Normal.Realtime;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -46,12 +47,14 @@ namespace Assets.Scripts
 
         private void UpdateVideoId()
         {
+            Debug.Log("UpdateVideoId");
+
             if (_model != null && _model.videoId > 0)
             {
                 // Get the value from the model, display it 
                 _videoSelectDisplay.SetVideoId(_model.videoId);
 
-                //Debug.Log($"in UpdateVideoId: {_model.videoId}");
+                Debug.Log("Sync: Selected video clip updated");
 
                 MediaDisplayManager.instance.SelectedVideo = _model.videoId;
             }
@@ -59,6 +62,8 @@ namespace Assets.Scripts
 
         public void SetId(int id)
         {
+            Debug.Log("VodeoSelectSync: SetId");
+
             // Set the value on the model
             // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
             _model.videoId = id;

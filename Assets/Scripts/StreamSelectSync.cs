@@ -46,10 +46,14 @@ namespace Assets.Scripts
 
         private void UpdateStreamId()
         {
+            Debug.Log("UpdateStreamId");
+
             if (_model != null && _model.streamId > 0)
             {
                 // Get the value from the model, display it 
                 _streamSelectDisplay.SetStreamId(_model.streamId);
+
+                Debug.Log("Sync: Selected stream updated");
 
                 MediaDisplayManager.instance.SelectedStream = _model.streamId;
             }
@@ -57,6 +61,8 @@ namespace Assets.Scripts
 
         public void SetId(int id)
         {
+            Debug.Log("StreamSelectSync: SetId");
+
             // Set the value on the model
             // This will fire the valueChanged event on the model, which will update the value for both the local player and all remote players
             _model.streamId = id;
