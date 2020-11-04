@@ -507,7 +507,7 @@ namespace Assets.Scripts
                         .transform.Find("Scene Audio")
                         .GetComponent<AudioSource>();
 
-                //audioSource.Play();
+                audioSource.Play();
 
                 foreach (var screenPosition in thisFormation)
                 {
