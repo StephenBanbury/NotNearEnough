@@ -69,9 +69,12 @@ namespace Assets.Scripts
         {
             var sceneService = new SceneService(MyCurrentScene);
             var offset = sceneService.GetScenePosition();
-
             var player = GameObject.Find("PlayerAudience");
             player.transform.position = player.transform.position + offset;
+
+            Debug.Log($"player.transform.position: {player.transform.position}");
+            Debug.Log($"Offset: {offset}");
+            Debug.Log($"New position: {player.transform.position + offset}");
 
             //var panels = GameObject.Find("SelectionPanels");
             //panels.transform.position = panels.transform.position + offset;
@@ -172,7 +175,6 @@ namespace Assets.Scripts
                 $"Local={_videos.Count(v => v.Source == Source.LocalFile)}; " +
                 $"External={_videos.Count(v => v.Source == Source.Url)}");
 
-            CreateStreamSelectButtons();
 
             Scenes = new List<SceneDetail>();
             _sceneIndex = 1;
@@ -196,8 +198,10 @@ namespace Assets.Scripts
             //    //}
             //}
 
+            CreateStreamSelectButtons();
+
             MyCurrentScene = Scene.Scene1;
-            OffsetPlayerPositionWithinScene();
+            //OffsetPlayerPositionWithinScene();
 
         }
 
