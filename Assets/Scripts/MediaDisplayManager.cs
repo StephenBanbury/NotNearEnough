@@ -3,6 +3,7 @@ using Assets.Scripts.Models;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using agora_gaming_rtc;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
@@ -13,8 +14,7 @@ namespace Assets.Scripts
     public class MediaDisplayManager: MonoBehaviour
     {
         public static MediaDisplayManager instance;
-        
-        private List<MediaDetail> _videos;
+
         private List<MediaDetail> _streams;
 
         private int _sceneIndex;
@@ -46,6 +46,7 @@ namespace Assets.Scripts
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
         public List<SceneDetail> Scenes { get; private set; }
         public Scene MyCurrentScene { get; set; }
+        public List<MediaDetail> Videos { get; private set; }
 
         void Awake()
         {
@@ -126,12 +127,12 @@ namespace Assets.Scripts
 
             var videoService = new VideoService();
 
-            _videos = videoService.GetLocalVideos();
+            Videos = videoService.GetLocalVideos();
 
             // TODO: We may not ever need _displayVideo
             _displayVideo = new Dictionary<int, MediaDetail>();
 
-            foreach (var video in _videos)
+            foreach (var video in Videos)
             {
                 _displayVideo.Add(video.Id, video);
             }
@@ -150,13 +151,13 @@ namespace Assets.Scripts
                 var video = new MediaDetail
                 {
                     Id = i,
-                    Title = $"Video {_videos.Count + 1}",
+                    Title = $"Video {Videos.Count + 1}",
                     MediaType = MediaType.VideoClip,
                     Source = Source.Url,
                     Url = textLine
                 };
 
-                _videos.Add(video);
+                Videos.Add(video);
 
                 i++;
             }
@@ -164,7 +165,7 @@ namespace Assets.Scripts
 
         private IEnumerator AwaitVideosFromApiBeforeStart()
         {
-            _videos = new List<MediaDetail>();
+            Videos = new List<MediaDetail>();
 
             GetLocalVideosDetails();
             //GetVideoLinksFromTextFile();
@@ -172,8 +173,8 @@ namespace Assets.Scripts
 
             Debug.Log(
                 $"Number of videos: " +
-                $"Local={_videos.Count(v => v.Source == Source.LocalFile)}; " +
-                $"External={_videos.Count(v => v.Source == Source.Url)}");
+                $"Local={Videos.Count(v => v.Source == Source.LocalFile)}; " +
+                $"External={Videos.Count(v => v.Source == Source.Url)}");
 
 
             Scenes = new List<SceneDetail>();
@@ -216,7 +217,7 @@ namespace Assets.Scripts
 
             Debug.Log($"GetVideosFromApi - done: {videosFromApi.Count}");
 
-            _videos.AddRange(videosFromApi);
+            Videos.AddRange(videosFromApi);
         }
 
 
@@ -252,7 +253,8 @@ namespace Assets.Scripts
 
             if (_lastSelectedVideoId > 0 && _lastSelectedDisplayId > 0) // && _displayVideo[localDisplayId].Id != _lastSelectedVideoId)
             {
-                var video = _videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
+                Debug.Log($"Assign videoId: {_lastSelectedVideoId}");
+                var video = Videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
                 video.Show = true;
 
                 var screensContainerName = "Screens";
@@ -291,7 +293,7 @@ namespace Assets.Scripts
                 audioSource.playOnAwake = false;
                 audioSource.Pause();
 
-                var thisVideoClip = _videos.First(v => v.Id == _lastSelectedVideoId);
+                var thisVideoClip = Videos.First(v => v.Id == _lastSelectedVideoId);
 
                 // Video clip from Url
                 if (thisVideoClip.Source == Source.Url)

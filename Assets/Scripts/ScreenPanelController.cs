@@ -127,8 +127,9 @@ namespace Assets.Scripts
             var canvasDisplay = parent.Find(canvasDisplayName);
 
             // For now I am going to select a random video to display. We will probably want a different action
+            var videos = MediaDisplayManager.instance.Videos;
 
-            var videoId = (int) Math.Ceiling(Random.value * 5);
+            var videoId = (int) Math.Ceiling(Random.value * videos.Count);
             var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
             var gameManager = GameObject.Find("GameManager");

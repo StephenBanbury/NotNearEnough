@@ -22,7 +22,9 @@ namespace Assets.Scripts.Services
                     if (response != null)
                     {
                         Debug.Log($"VideosGet: {response}");
-                        var i = 1;
+                        var currentVideos = MediaDisplayManager.instance.Videos;
+                        var i = currentVideos.Count + 1;
+
                         foreach (var video in response.Where(v => v.Title != null))
                         {
                             Debug.Log($"VideosGet: {video.Title} / {video.Url}");
