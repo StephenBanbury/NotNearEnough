@@ -181,13 +181,13 @@ namespace Assets.Scripts
             _sceneIndex = 1;
 
             SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
-            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
-            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.Star);
-            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
+            //SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            //SpawnScene(Scene.Scene3, ScreenFormation.Circle);
+            //SpawnScene(Scene.Scene4, ScreenFormation.Cross);
+            //SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
+            //SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
+            //SpawnScene(Scene.Scene7, ScreenFormation.Star);
+            //SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
 
             //Debug.Log("Scenes: -");
             //foreach (var sceneDetail in Scenes)
@@ -429,6 +429,7 @@ namespace Assets.Scripts
 
             var currentScene = Scenes.First(s => s.Id == _sceneIndex);
 
+            /*
             foreach (var screenPosition in thisFormation)
             {
                 //if (!screenPosition.Hide)
@@ -462,7 +463,7 @@ namespace Assets.Scripts
                 currentScene.CurrentScreens.Add(screen);
                 //}
             }
-
+            */
             _sceneIndex++;
         }
 
