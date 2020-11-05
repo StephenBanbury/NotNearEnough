@@ -15,7 +15,7 @@
                  #pragma vertex vert
                  #pragma fragment frag
                  #pragma multi_compile_fwdbase
-				 #pragma multi_compile_fog", UNITY_FOG_COORDS, UNITY_TRANSFER_FOG, UNITY_APPLY_FOG
+				 #pragma multi_compile_fog, UNITY_FOG_COORDS, UNITY_TRANSFER_FOG, UNITY_APPLY_FOG
                  #pragma fragmentoption ARB_fog_exp2
                  #pragma fragmentoption ARB_precision_hint_fastest
                  
@@ -57,7 +57,7 @@
                  #pragma vertex vert
                  #pragma fragment frag
                  #pragma multi_compile_fwdadd_fullshadows
-				 #pragma multi_compile_fog", UNITY_FOG_COORDS, UNITY_TRANSFER_FOG, UNITY_APPLY_FOG
+				 #pragma multi_compile_fog, UNITY_FOG_COORDS, UNITY_TRANSFER_FOG, UNITY_APPLY_FOG
                  #pragma fragmentoption ARB_fog_exp2
                  #pragma fragmentoption ARB_precision_hint_fastest
                  

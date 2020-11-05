@@ -641,7 +641,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 518279404}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99dcaba2234393f4a829d0fd1fb4a608, type: 3}
+  m_Script: {fileID: -1424795628, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &518279408 stripped
@@ -1839,34 +1839,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1569018221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1011e140c5c34458f64fd8ad5095b7, type: 3}
+  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 518279406}
-  _sceneViewUUID: ead13a37e5aefa4e8568d7bcf59a3e67
-  _sceneViewOwnedByCreatingClient: 0
+  _sceneViewUUID: 
+  _viewUUID: 373ad1ea-aee5-4efa-8568-d7bcf59a3e67
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
   _isRootPrefabView: 0
   _components:
   - componentID: 1
     component: {fileID: 1569018227}
-    componentIDHasBeenUsed: 1
   - componentID: 2
     component: {fileID: 1569018225}
-    componentIDHasBeenUsed: 1
   - componentID: 3
     component: {fileID: 1569018230}
-    componentIDHasBeenUsed: 1
   - componentID: 4
     component: {fileID: 1569018232}
-    componentIDHasBeenUsed: 1
-  _parentView: {fileID: 0}
-  _childViews:
-  - viewID: 1
-    view: {fileID: 0}
-    viewIDHasBeenUsed: 1
-    viewToUseIfMovedBack: {fileID: 1868294225}
+  _childViews: []
 --- !u!114 &1569018230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2317,29 +2308,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1868294218}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1011e140c5c34458f64fd8ad5095b7, type: 3}
+  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _realtime: {fileID: 518279406}
-  _sceneViewUUID: 85984ab9e631b6459137deb46fea9caf
-  _sceneViewOwnedByCreatingClient: 1
+  _sceneViewUUID: 
+  _viewUUID: b94a9885-31e6-45b6-9137-deb46fea9caf
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
   _isRootPrefabView: 0
   _components:
   - componentID: 1
     component: {fileID: 1868294224}
-    componentIDHasBeenUsed: 1
   - componentID: 2
     component: {fileID: 1868294222}
-    componentIDHasBeenUsed: 1
   - componentID: 3
     component: {fileID: 1868294227}
-    componentIDHasBeenUsed: 1
   - componentID: 4
     component: {fileID: 1868294228}
-    componentIDHasBeenUsed: 1
-  _parentView: {fileID: 0}
   _childViews: []
 --- !u!114 &1868294226
 MonoBehaviour:

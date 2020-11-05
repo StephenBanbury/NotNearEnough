@@ -22,7 +22,8 @@ namespace Assets.Scripts
                 if (_model != null)
                 {
                     // Unregister from events
-                    _model.valueDidChange -= ValueDidChange;
+                    //_model.valueDidChange -= ValueDidChange;
+                    _model.scaleValueDidChange -= ScaleValueDidChange;
                 }
 
                 // Store the model
@@ -34,12 +35,13 @@ namespace Assets.Scripts
                     UpdateSlidingScaleValue();
 
                     // Register for events so we'll know if the value changes later
-                    _model.valueDidChange += ValueDidChange;
+                    //_model.valueDidChange += ValueDidChange;
+                    _model.scaleValueDidChange += ScaleValueDidChange;
                 }
             }
         }
 
-        private void ValueDidChange(SlidingScaleSyncModel model, float value)
+        private void ScaleValueDidChange(SlidingScaleSyncModel model, float value)
         {
             // Update the scale value
             //Debug.Log("In ValueDidChange");
