@@ -3,7 +3,6 @@ using Assets.Scripts.Models;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using agora_gaming_rtc;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
@@ -15,12 +14,12 @@ namespace Assets.Scripts
     {
         public static MediaDisplayManager instance;
 
-        private List<MediaDetail> _streams;
+        //private List<MediaDetail> _streams;
 
         private int _sceneIndex;
 
-        private Dictionary<int, MediaDetail> _displayVideo;
-        private Dictionary<int, MediaDetail> _displayStream;
+        //private Dictionary<int, MediaDetail> _displayVideo;
+        //private Dictionary<int, MediaDetail> _displayStream;
 
         private int _lastSelectedVideoId;
         private int _lastSelectedStreamId;
@@ -130,12 +129,12 @@ namespace Assets.Scripts
             Videos = videoService.GetLocalVideos();
 
             // TODO: We may not ever need _displayVideo
-            _displayVideo = new Dictionary<int, MediaDetail>();
+            //_displayVideo = new Dictionary<int, MediaDetail>();
 
-            foreach (var video in Videos)
-            {
-                _displayVideo.Add(video.Id, video);
-            }
+            //foreach (var video in Videos)
+            //{
+            //    _displayVideo.Add(video.Id, video);
+            //}
         }
 
         private void GetVideoLinksFromTextFile()
@@ -255,7 +254,7 @@ namespace Assets.Scripts
             {
                 Debug.Log($"Assign videoId: {_lastSelectedVideoId}");
                 var video = Videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
-                video.Show = true;
+                //video.Show = true;
 
                 var screensContainerName = "Screens";
                 var screenName = $"Screen {_lastSelectedDisplayId}";
@@ -266,7 +265,7 @@ namespace Assets.Scripts
                 //Debug.Log($"screenVariantName: {screenVariantName}");
 
                 // Using _displayVideo should be necessary only for URL based content
-                _displayVideo[localDisplayId] = video;
+                //_displayVideo[localDisplayId] = video;
 
                 var sceneName = Scenes.First(s => s.Id == sceneId).Name;
                 var scene = GameObject.Find(sceneName);
@@ -275,7 +274,9 @@ namespace Assets.Scripts
                 var screenObject = screensContainer.transform.Find(screenName);
                 if (screenObject == null) screenObject = screensContainer.transform.Find(screenVariantName);
 
-                Debug.Log($"Show video '{_displayVideo[localDisplayId].Title}' on display {screenObject.name}");
+                var thisVideoClip = Videos.First(v => v.Id == _lastSelectedVideoId);
+
+                Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
 
                 var videoDisplay = screenObject.transform.Find(videoDisplayName);
                 var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
@@ -293,17 +294,16 @@ namespace Assets.Scripts
                 audioSource.playOnAwake = false;
                 audioSource.Pause();
 
-                var thisVideoClip = Videos.First(v => v.Id == _lastSelectedVideoId);
-
-                // Video clip from Url
                 if (thisVideoClip.Source == Source.Url)
                 {
+                    // Video clip from Url
                     Debug.Log("URL video clip");
                     videoPlayer.source = VideoSource.Url;
                     videoPlayer.url = thisVideoClip.Url;
                 }
                 else
                 {
+                    // Video clip from local storage
                     Debug.Log("Local video clip");
                     var vc = _videoClips[_lastSelectedVideoId - 1];
                     videoPlayer.clip = vc;
