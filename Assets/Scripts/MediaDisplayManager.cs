@@ -256,7 +256,7 @@ namespace Assets.Scripts
                 var video = Videos.FirstOrDefault(v => v.Id == _lastSelectedVideoId);
                 //video.Show = true;
 
-                var screensContainerName = "Screens";
+                var screensContainerName = $"Screens {sceneId}";
                 var screenName = $"Screen {_lastSelectedDisplayId}";
                 var screenVariantName = $"Screen Variant {_lastSelectedDisplayId}";
 
@@ -446,8 +446,15 @@ namespace Assets.Scripts
                 CurrentScreens = new List<GameObject>()
             });
 
-            GameObject screens = new GameObject("Screens");
+            GameObject screensObject = GameObject.Find($"Screens {_sceneIndex}");
 
+            if (screensObject == null)
+            {
+                Debug.Log($"Screens {_sceneIndex} not found");
+                screensObject = new GameObject($"Screens {_sceneIndex}");
+                screensObject.transform.SetParent(sceneObject.transform);
+            }
+            
             var currentScene = Scenes.First(s => s.Id == _sceneIndex);
 
             foreach (var screenPosition in thisFormation)
@@ -484,8 +491,7 @@ namespace Assets.Scripts
 
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
 
-                    screen.transform.SetParent(screens.transform);
-                    screens.transform.SetParent(sceneObject.transform);
+                    screen.transform.SetParent(screensObject.transform);
                 }
                 else
                 {
