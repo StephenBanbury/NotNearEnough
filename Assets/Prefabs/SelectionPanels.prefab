@@ -1662,7 +1662,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652248515915256}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.21, y: 0.68, z: 0.45}
+  m_LocalPosition: {x: 0.277, y: 0.68, z: 0.45}
   m_LocalScale: {x: 0.14, y: 0.17, z: 0.0026406306}
   m_Children:
   - {fileID: 2827652248621909516}
@@ -1823,7 +1823,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652248547492963}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.21, y: 0.68, z: 0.30579054}
+  m_LocalPosition: {x: 0.277, y: 0.68, z: 0.306}
   m_LocalScale: {x: 0.14, y: 0.17, z: 0.0026406306}
   m_Children:
   - {fileID: 2827652249745292865}
@@ -2191,7 +2191,7 @@ GameObject:
   - component: {fileID: 2827652248650652274}
   - component: {fileID: 2827652248650652275}
   m_Layer: 0
-  m_Name: TestSelectorPanel
+  m_Name: SceneSelectorPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3707,7 +3707,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652248986999840}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 1, y: 0.68, z: 0.45}
+  m_LocalPosition: {x: 0.912, y: 0.68, z: 0.45}
   m_LocalScale: {x: 0.14, y: 0.17, z: 0.004}
   m_Children:
   - {fileID: 2827652250069936157}
@@ -4798,7 +4798,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652249279975219}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: -0.26436508, z: 0.3042904}
+  m_LocalPosition: {x: 0.912, y: -0.26436508, z: 0.304}
   m_LocalScale: {x: 0.27585065, y: 1.6875238, z: 0.06408621}
   m_Children:
   - {fileID: 2827652250317152430}
@@ -6273,7 +6273,7 @@ GameObject:
   - component: {fileID: 2827652249814993772}
   - component: {fileID: 2827652249814993773}
   m_Layer: 0
-  m_Name: TestView
+  m_Name: SceneSelectorView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6998,7 +6998,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652249912254330}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.68, z: 0.30579054}
+  m_LocalPosition: {x: 0.912, y: 0.68, z: 0.306}
   m_LocalScale: {x: 0.14, y: 0.17, z: 0.004}
   m_Children:
   - {fileID: 2827652248920990669}
@@ -7859,8 +7859,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652250089839295}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.4, y: 0.2, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children:
   - {fileID: 2827652249912254329}
@@ -7879,7 +7879,7 @@ Transform:
   - {fileID: 2827652249174783734}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2827652250137550113
 GameObject:
   m_ObjectHideFlags: 0
@@ -8695,7 +8695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652250236692402}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 1, y: -0.26436508, z: 0.45}
+  m_LocalPosition: {x: 0.912, y: -0.26436508, z: 0.45}
   m_LocalScale: {x: 0.27585065, y: 1.6875238, z: 0.06408621}
   m_Children: []
   m_Father: {fileID: 2827652250089839294}
@@ -9138,7 +9138,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652250302064599}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.21, y: -0.26436508, z: 0.45}
+  m_LocalPosition: {x: 0.277, y: -0.26436508, z: 0.45}
   m_LocalScale: {x: 0.27585065, y: 1.6875238, z: 0.06408621}
   m_Children:
   - {fileID: 2827652249913712334}
@@ -9386,7 +9386,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2827652250337107210}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.21, y: -0.26436508, z: 0.3042904}
+  m_LocalPosition: {x: 0.277, y: -0.26436508, z: 0.304}
   m_LocalScale: {x: 0.27585065, y: 1.6875238, z: 0.06408621}
   m_Children:
   - {fileID: 2827652249032078367}
@@ -9594,8 +9594,8 @@ GameObject:
   - component: {fileID: 2827652250361801498}
   - component: {fileID: 2827652250361801499}
   m_Layer: 5
-  m_Name: TestText
-  m_TagString: Untagged
+  m_Name: SceneText
+  m_TagString: SceneIndicator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

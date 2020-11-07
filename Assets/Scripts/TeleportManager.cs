@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Assets.Scripts.Enums;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -30,14 +31,20 @@ namespace Assets.Scripts
             playerController.enabled = false;
             sceneSampleController.enabled = false;
 
-            yield return new WaitForSeconds(0.5f);
+            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_1");
+
+            yield return new WaitForSeconds(1.5f);
+
+            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
+
+            yield return new WaitForSeconds(1f);
 
             playerContainer.position = spawnPoint.position;
 
-            yield return new WaitForSeconds(0.5f);
-
             playerController.enabled = true;
             sceneSampleController.enabled = true;
+
+            MediaDisplayManager.instance.MyCurrentScene = (Scene) _sceneId;
         }
     }
     

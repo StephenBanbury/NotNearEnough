@@ -34,8 +34,8 @@ namespace Assets.Scripts
             var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
             var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
 
-            Debug.Log($"Left Trigger: {leftTrigger}");
-            Debug.Log($"Right Trigger: {rightTrigger}");
+            //Debug.Log($"Left Trigger: {leftTrigger}");
+            //Debug.Log($"Right Trigger: {rightTrigger}");
 
             if (leftTrigger && rightTrigger)
             {
@@ -73,13 +73,14 @@ namespace Assets.Scripts
 
             meshCollider.position = new Vector3(x, y + 20f, z);
 
-            Debug.Log("Mesh collider raised");
+            PlayerAudioManager.instance.PlayAudioClip("Door 3 Open");
+            //Debug.Log("Mesh collider raised");
 
             yield return new WaitForSeconds(3); 
 
             meshCollider.position = new Vector3(x, y, z);
 
-            Debug.Log("Mesh collider lowered");
+            //Debug.Log("Mesh collider lowered");
         }
 
         private void ChangeScreenFormation()

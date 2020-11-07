@@ -399,30 +399,43 @@ namespace Assets.Scripts
             //var sceneObject = Instantiate(_sceneObject, scenePosition, Quaternion.identity);
 
             var sceneName = $"Scene {_sceneIndex}";
-
             var sceneObject = GameObject.Find(sceneName);
 
             if (sceneObject == null)
             {
-                Debug.Log($"{sceneName} not found");
+                //Debug.Log($"{sceneName} not found");
                 sceneObject = new GameObject(sceneName);
             }
             
 
             // Instantiate selection panels, audio source and lighting as part of scene object
-
+            
             var selectionPanelsTrans = sceneObject.transform.Find($"Selection Panel {_sceneIndex}");
             if (selectionPanelsTrans == null)
             {
-                var selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
+                GameObject selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
                 selectionPanels.transform.SetParent(sceneObject.transform);
                 selectionPanels.name = $"Selection Panel {_sceneIndex}";
+
+                Text indicator = selectionPanels.transform.Find("SceneSelectorView/Canvas/SceneText").GetComponent<Text>();
+                if (indicator != null)
+                {
+                    indicator.text = sceneName;
+                }
+
+                foreach (Transform child in selectionPanels.transform)
+                {
+                    Debug.Log($"In selection panel: {child.name}");
+                }
+
+                //var indicator = texts.FirstOrDefault(t => t.name == "SceneIndicator");
+                //if (indicator != null) indicator.text = sceneName;
             }
 
             var sceneAudioTrans = sceneObject.transform.Find($"Scene Audio {_sceneIndex}");
             if (sceneAudioTrans == null)
             {
-                var sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
+                AudioSource sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
                 sceneAudio.transform.SetParent(sceneObject.transform);
                 sceneAudio.name = $"Scene Audio {_sceneIndex}";
             }
@@ -430,7 +443,7 @@ namespace Assets.Scripts
             var sceneLightsTrans = sceneObject.transform.Find($"Scene Lights {_sceneIndex}");
             if (sceneLightsTrans == null)
             {
-                var sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
+                GameObject sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
                 sceneLights.transform.SetParent(sceneObject.transform);
                 sceneLights.name = $"Scene Lights {_sceneIndex}";
             }
@@ -450,7 +463,7 @@ namespace Assets.Scripts
 
             if (screensObject == null)
             {
-                Debug.Log($"Screens {_sceneIndex} not found");
+                //Debug.Log($"Screens {_sceneIndex} not found");
                 screensObject = new GameObject($"Screens {_sceneIndex}");
                 screensObject.transform.SetParent(sceneObject.transform);
             }
@@ -485,24 +498,19 @@ namespace Assets.Scripts
 
                 if (screen == null)
                 {
-                    Debug.Log($"{screenName} does not exist");
-
                     screen = Instantiate(thisScreen, vector3, Quaternion.identity);
-
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
-
                     screen.transform.SetParent(screensObject.transform);
                 }
-                else
-                {
-                    Debug.Log($"{screenName} exists");
-                }
+                //else
+                //{
+                //    Debug.Log($"{screenName} exists");
+                //}
 
                 screen.name = screenName;
 
                 var screenNumber = screen.GetComponentInChildren<Text>();
                 screenNumber.text = screenPosition.Id.ToString();
-
 
                 currentScene.CurrentScreens.Add(screen);
                 //}
