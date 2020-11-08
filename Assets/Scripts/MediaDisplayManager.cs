@@ -183,9 +183,9 @@ namespace Assets.Scripts
             SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
             SpawnScene(Scene.Scene3, ScreenFormation.Circle);
             SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
+            SpawnScene(Scene.Scene5, ScreenFormation.LargeSquare);
             SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.Star);
+            SpawnScene(Scene.Scene7, ScreenFormation.LargeStar);
             SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
 
             //Debug.Log("Scenes: -");
@@ -377,8 +377,11 @@ namespace Assets.Scripts
                 case ScreenFormation.Cross:
                     thisFormation = screenFormationService.Cross();
                     break;
-                case ScreenFormation.Star:
-                    thisFormation = screenFormationService.Star();
+                //case ScreenFormation.SmallStar:
+                //    thisFormation = screenFormationService.SmallStar();
+                //    break;
+                case ScreenFormation.LargeStar:
+                    thisFormation = screenFormationService.LargeStar();
                     break;
                 case ScreenFormation.Circle:
                     thisFormation = screenFormationService.Circle();
@@ -540,8 +543,11 @@ namespace Assets.Scripts
                 case ScreenFormation.Cross:
                     thisFormation = screenFormationService.Cross();
                     break;
-                case ScreenFormation.Star:
-                    thisFormation = screenFormationService.Star();
+                //case ScreenFormation.SmallStar:
+                //    thisFormation = screenFormationService.SmallStar();
+                //    break;
+                case ScreenFormation.LargeStar:
+                    thisFormation = screenFormationService.LargeStar();
                     break;
                 case ScreenFormation.Circle:
                     thisFormation = screenFormationService.Circle();

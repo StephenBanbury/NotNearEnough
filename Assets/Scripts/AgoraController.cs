@@ -73,8 +73,11 @@ namespace Assets.Scripts
 
         public void UserJoined(AgoraUser agoraUser)
         {
-            Debug.Log($"Agora UserJoined: {agoraUser}");
-            _joinedUsers.Add(agoraUser);
+            Debug.Log($"Agora joined user is local: {agoraUser.IsLocal}");
+            if (!agoraUser.IsLocal)
+            {
+                _joinedUsers.Add(agoraUser);
+            }
         }
 
         public void UserJoinsRoom(uint uid)
@@ -312,6 +315,7 @@ namespace Assets.Scripts
         {
             if (!ReferenceEquals(_app, null))
             {
+                _app.Leave();
                 _app.UnloadEngine();
             }
         }

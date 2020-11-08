@@ -93,6 +93,8 @@ namespace Assets.Scripts
         {
             if (mRtcEngine == null) return;
 
+            Debug.Log("Agora LeaveChannel");
+
             // leave channel
             mRtcEngine.LeaveChannel();
             // deregister video frame observers in native-c code

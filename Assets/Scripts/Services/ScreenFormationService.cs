@@ -96,7 +96,7 @@ namespace Assets.Scripts.Services
 
             return formation;
         }
-        public List<ScreenPosition> Star()
+        public List<ScreenPosition> SmallStar()
         {
             List<ScreenPosition> formation = new List<ScreenPosition>
             {
@@ -116,6 +116,30 @@ namespace Assets.Scripts.Services
                 new ScreenPosition {Id = 14, Vector3 = new Vector3(-1.49f + _xPos, 0 + _yPos, 0.88f + _zPos), Rotation = 240},
                 new ScreenPosition {Id = 15, Vector3 = new Vector3(-1.12f + _xPos, 0 + _yPos, 1.55f + _zPos), Rotation = 0},
                 new ScreenPosition {Id = 16, Vector3 = new Vector3(0.03f + _xPos, 0 + _yPos, 2.21f + _zPos), Rotation = 300}
+            };
+
+            return formation;
+        }
+        public List<ScreenPosition> LargeStar()
+        {
+            List<ScreenPosition> formation = new List<ScreenPosition>
+            {
+                new ScreenPosition {Id = 1, Vector3 = new Vector3(0.75f + _xPos, 0 + _yPos, 2.50f + _zPos), Rotation = 45},
+                new ScreenPosition {Id = 2, Vector3 = new Vector3(2.07f + _xPos, 0 + _yPos, 1.95f + _zPos), Rotation = 0},
+                new ScreenPosition {Id = 3, Vector3 = new Vector3(2.82f + _xPos, 0 + _yPos, 1.18f + _zPos), Rotation = 90},
+                new ScreenPosition {Id = 4, Vector3 = new Vector3(3.37f + _xPos, 0 + _yPos, -0.15f + _zPos), Rotation = 45},
+                new ScreenPosition {Id = 5, Vector3 = new Vector3(3.38f + _xPos, 0 + _yPos, -1.25f + _zPos), Rotation = 135},
+                new ScreenPosition {Id = 6, Vector3 = new Vector3(2.84f + _xPos, 0 + _yPos, -2.55f + _zPos), Rotation = 90},
+                new ScreenPosition {Id = 7, Vector3 = new Vector3(2.07f + _xPos, 0 + _yPos, -3.35f + _zPos), Rotation = 180},
+                new ScreenPosition {Id = 8, Vector3 = new Vector3(0.75f + _xPos, 0 + _yPos, -3.85f + _zPos), Rotation = 135},
+                new ScreenPosition {Id = 9, Vector3 = new Vector3(-0.39f + _xPos, 0 + _yPos, -3.85f + _zPos), Rotation = 225},
+                new ScreenPosition {Id = 10, Vector3 = new Vector3(-1.70f + _xPos, 0 + _yPos, -3.35f + _zPos), Rotation = 180},
+                new ScreenPosition {Id = 11, Vector3 = new Vector3(-2.46f + _xPos, 0 + _yPos, -2.55f + _zPos), Rotation = 270},
+                new ScreenPosition {Id = 12, Vector3 = new Vector3(-3.00f + _xPos, 0 + _yPos, -1.25f + _zPos), Rotation = 225},
+                new ScreenPosition {Id = 13, Vector3 = new Vector3(-3.00f + _xPos, 0 + _yPos, -0.15f + _zPos), Rotation = 315},
+                new ScreenPosition {Id = 14, Vector3 = new Vector3(-2.47f + _xPos, 0 + _yPos, 1.18f + _zPos), Rotation = 270},
+                new ScreenPosition {Id = 15, Vector3 = new Vector3(-1.69f + _xPos, 0 + _yPos, 1.95f + _zPos), Rotation = 0},
+                new ScreenPosition {Id = 16, Vector3 = new Vector3(-0.39f + _xPos, 0 + _yPos, 2.50f + _zPos), Rotation = 315}
             };
 
             return formation;
