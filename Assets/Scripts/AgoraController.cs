@@ -92,7 +92,7 @@ namespace Assets.Scripts
             }
             else
             {
-                var newId = _joinedUsers.Max(u => u.Id) + 1;
+                var newId = _joinedUsers.Any() ? _joinedUsers.Max(u => u.Id) + 1 : 1;
 
                 var agoraUser = new AgoraUser
                 {

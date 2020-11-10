@@ -4,9 +4,9 @@ namespace Assets.Scripts.Enums
     public enum MediaType
     {
         Misc = 0,
-        VideoClip,
-        VideoStream,
-        Audio
+        VideoClip = 1,
+        VideoStream = 2,
+        Audio =3
     }
 
     public enum Source

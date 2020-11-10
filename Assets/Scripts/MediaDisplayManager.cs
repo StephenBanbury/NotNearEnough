@@ -46,6 +46,7 @@ namespace Assets.Scripts
         public List<SceneDetail> Scenes { get; private set; }
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
+        public List<ScreenDisplayState> ScreenDisplayStates { get; set; }
 
         void Awake()
         {
@@ -231,9 +232,25 @@ namespace Assets.Scripts
 
                 case MediaType.VideoStream:
                     Debug.Log($"Assign video stream {_lastSelectedStreamId} to display {_lastSelectedDisplayId}");
+                    StoreScreenDisplayState();
                     AssignStreamToDisplay();
                     break;
             }
+        }
+
+        private void StoreScreenDisplayState()
+        {
+            var screenDisplayState = new ScreenDisplayState
+            {
+                DisplayId = _lastSelectedDisplayId,
+                MediaId = _lastSelectedMediaType == MediaType.VideoClip ? _lastSelectedVideoId : _lastSelectedStreamId,
+                MediaTypeId = (int) _lastSelectedMediaType,
+                IsShow = true
+            };
+
+            ScreenDisplayStates.Add(screenDisplayState);
+
+            // TODO: Keep in sync
         }
 
         private void AssignVideoToDisplay()
