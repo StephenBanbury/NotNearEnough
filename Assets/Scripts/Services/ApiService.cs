@@ -27,6 +27,8 @@ namespace Assets.Scripts.Services
 
                         foreach (var video in response.Where(v => v.Title != null))
                         {
+                            video.Url = video.Url.Replace("www.dropbox.com", "dl.dropbox.com").Replace("?dl=0", "");
+
                             Debug.Log($"VideosGet: {video.Title} / {video.Url}");
                             video.MediaType = MediaType.VideoClip;
                             video.Source = Source.Url;
