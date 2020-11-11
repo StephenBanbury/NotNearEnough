@@ -30,6 +30,7 @@ namespace Assets.Scripts.Services
                             video.Url = video.Url.Replace("www.dropbox.com", "dl.dropbox.com").Replace("?dl=0", "");
 
                             Debug.Log($"VideosGet: {video.Title} / {video.Url}");
+
                             video.MediaType = MediaType.VideoClip;
                             video.Source = Source.Url;
                             video.Id = i;
