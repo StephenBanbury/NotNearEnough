@@ -6,11 +6,12 @@ using System.Linq;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
 using DG.Tweening;
+using Normal.Realtime;
 using UnityEngine.UI;
 using UnityEngine.Video;
 namespace Assets.Scripts
 {
-    public class MediaDisplayManager: MonoBehaviour
+    public class MediaDisplayManager: RealtimeComponent<MediaScreenDisplayModel>
     {
         public static MediaDisplayManager instance;
 
@@ -28,6 +29,8 @@ namespace Assets.Scripts
         private MediaType _lastSelectedMediaType;
 
         private float _floorAdjust = 1.25f;
+
+        [SerializeField] private Realtime _realtime;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
@@ -107,7 +110,8 @@ namespace Assets.Scripts
                 {
                     var buttonName = $"Button{i}";
                     var yPos = yStart - (i - 1) * 0.117f;
-                    var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos), Quaternion.identity);
+                    //var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos), Quaternion.identity);
+                    var button = Realtime.Instantiate(_selectButton.name, new Vector3(xPos, yPos, zPos), Quaternion.identity);
                     button.name = buttonName;
                     var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
                     buttonScript.StreamId = joinedUser.Id;
@@ -227,12 +231,17 @@ namespace Assets.Scripts
             {
                 case MediaType.VideoClip:
                     Debug.Log($"Assign video clip {_lastSelectedVideoId} to display {_lastSelectedDisplayId}");
+
+                    StoreScreenDisplayState();
+
                     AssignVideoToDisplay();
                     break;
 
                 case MediaType.VideoStream:
                     Debug.Log($"Assign video stream {_lastSelectedStreamId} to display {_lastSelectedDisplayId}");
+
                     StoreScreenDisplayState();
+
                     AssignStreamToDisplay();
                     break;
             }
@@ -240,17 +249,16 @@ namespace Assets.Scripts
 
         private void StoreScreenDisplayState()
         {
-            var screenDisplayState = new ScreenDisplayState
+            MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
             {
-                DisplayId = _lastSelectedDisplayId,
-                MediaId = _lastSelectedMediaType == MediaType.VideoClip ? _lastSelectedVideoId : _lastSelectedStreamId,
-                MediaTypeId = (int) _lastSelectedMediaType,
-                IsShow = true
+                mediaTypeId = (int) _lastSelectedMediaType,
+                mediaId = _lastSelectedMediaType == MediaType.VideoClip
+                    ? _lastSelectedVideoId
+                    : _lastSelectedStreamId,
+                screenDisplayId = _lastSelectedDisplayId
             };
 
-            ScreenDisplayStates.Add(screenDisplayState);
-
-            // TODO: Keep in sync
+            model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
         }
 
         private void AssignVideoToDisplay()
@@ -518,7 +526,8 @@ namespace Assets.Scripts
 
                 if (screen == null)
                 {
-                    screen = Instantiate(thisScreen, vector3, Quaternion.identity);
+                    //screen = Instantiate(thisScreen, vector3, Quaternion.identity);
+                    screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
                     screen.transform.SetParent(screensObject.transform);
                 }
