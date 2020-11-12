@@ -51,9 +51,10 @@ namespace Assets.Scripts
                 // Get the value from the model, display it and update the video display manager
                 _displaySelect.SetDisplayId(_model.displayId);
                 
-                Debug.Log("Sync: Selected display updated");
+                //Debug.Log("Sync: Selected display updated");
                 
                 MediaDisplayManager.instance.SelectedDisplay = _model.displayId;
+                //MediaDisplayManager.instance.StoreScreenDisplayState();
                 MediaDisplayManager.instance.AssignMediaToDisplay();
             }
         }

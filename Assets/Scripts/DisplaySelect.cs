@@ -22,9 +22,10 @@ namespace Assets.Scripts
 
             _displayId = id;
             
-            if (_displayId > 0 && _displayId != _previousId)
+            if (_displayId > 0) // && _displayId != _previousId)
             {
                 MediaDisplayManager.instance.SelectedDisplay = _displayId;
+                MediaDisplayManager.instance.StoreScreenDisplayState();
             }
         }
 

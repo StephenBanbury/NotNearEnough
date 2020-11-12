@@ -2187,9 +2187,6 @@ GameObject:
   - component: {fileID: 2827652248650652276}
   - component: {fileID: 2827652248650652271}
   - component: {fileID: 2827652248650652272}
-  - component: {fileID: 2827652248650652273}
-  - component: {fileID: 2827652248650652274}
-  - component: {fileID: 2827652248650652275}
   m_Layer: 0
   m_Name: SceneSelectorPanel
   m_TagString: Untagged
@@ -2268,52 +2265,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2827652248650652273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652248650652277}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 2
-    component: {fileID: 2827652248650652274}
-  _childViews: []
---- !u!114 &2827652248650652274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652248650652277}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd05586d0291bc48a3dab55d0ebb9e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2827652248650652275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652248650652277}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174fb8bd72ce7cb4c9fb8f645a2f7e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2827652248660398937
 GameObject:
   m_ObjectHideFlags: 0
@@ -4780,9 +4731,6 @@ GameObject:
   - component: {fileID: 2827652249279975218}
   - component: {fileID: 2827652249279975212}
   - component: {fileID: 2827652249279975213}
-  - component: {fileID: 2827652249279975217}
-  - component: {fileID: 2827652249279975216}
-  - component: {fileID: 2827652249279975215}
   m_Layer: 0
   m_Name: DisplaySelectorPanel
   m_TagString: Untagged
@@ -4869,52 +4817,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2827652249279975217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249279975219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 1
-    component: {fileID: 2827652249279975216}
-  _childViews: []
---- !u!114 &2827652249279975216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249279975219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32e0eb908db5c2047a7a3d313f8e0e7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2827652249279975215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249279975219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d89a38bacc1faab4e84a181d35a664a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2827652249327668214
 GameObject:
   m_ObjectHideFlags: 0
@@ -7257,9 +7159,6 @@ GameObject:
   - component: {fileID: 2827652249964200292}
   - component: {fileID: 2827652249964200351}
   - component: {fileID: 2827652249964200288}
-  - component: {fileID: 2827652249964200289}
-  - component: {fileID: 2827652249964200290}
-  - component: {fileID: 2827652249964200291}
   m_Layer: 0
   m_Name: StreamSelectorPanel
   m_TagString: Untagged
@@ -7330,52 +7229,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2827652249964200289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249964200293}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 2
-    component: {fileID: 2827652249964200290}
-  _childViews: []
---- !u!114 &2827652249964200290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249964200293}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65aea28497c0b7a47bc882f72e08dfc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2827652249964200291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652249964200293}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aed6e0b6573e9d04194eb75f3cac7d14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2827652250021867610
 GameObject:
   m_ObjectHideFlags: 0
@@ -8678,7 +8531,6 @@ GameObject:
   - component: {fileID: 2827652250236692400}
   - component: {fileID: 2827652250236692401}
   - component: {fileID: 2827652250236692397}
-  - component: {fileID: 2827652250236692394}
   - component: {fileID: 2827652250236692395}
   m_Layer: 0
   m_Name: SlidingScalePanel
@@ -8776,28 +8628,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scaleText: {fileID: 2827652249246266516}
---- !u!114 &2827652250236692394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250236692402}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 1
-    component: {fileID: 2827652250236692395}
-  _childViews: []
 --- !u!114 &2827652250236692395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9120,9 +8950,6 @@ GameObject:
   - component: {fileID: 2827652250302064598}
   - component: {fileID: 2827652250302064593}
   - component: {fileID: 2827652250302064594}
-  - component: {fileID: 2827652250302064595}
-  - component: {fileID: 2827652250302064596}
-  - component: {fileID: 2827652250302064597}
   m_Layer: 0
   m_Name: FormationSelectorPanel
   m_TagString: Untagged
@@ -9201,52 +9028,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2827652250302064595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250302064599}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 3
-    component: {fileID: 2827652250302064596}
-  _childViews: []
---- !u!114 &2827652250302064596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250302064599}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd4e79b7b2041764bb76efbca5815f7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2827652250302064597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250302064599}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ae61141b8f27bc4b97a29eeadf5e0bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2827652250317152431
 GameObject:
   m_ObjectHideFlags: 0
@@ -9368,9 +9149,6 @@ GameObject:
   - component: {fileID: 2827652250337107209}
   - component: {fileID: 2827652250337107204}
   - component: {fileID: 2827652250337107205}
-  - component: {fileID: 2827652250337107206}
-  - component: {fileID: 2827652250337107207}
-  - component: {fileID: 2827652250337107208}
   m_Layer: 0
   m_Name: VideoSelectorPanel
   m_TagString: Untagged
@@ -9457,52 +9235,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2827652250337107206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250337107210}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -363599832, guid: ebae63e7edba59945a994528ada1f7a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _realtime: {fileID: 0}
-  _sceneViewUUID: 
-  _viewUUID: 
-  _sceneViewPreventOwnershipTakeover: 0
-  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _isRootPrefabView: 1
-  _components:
-  - componentID: 2
-    component: {fileID: 2827652250337107207}
-  _childViews: []
---- !u!114 &2827652250337107207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250337107210}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd05586d0291bc48a3dab55d0ebb9e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2827652250337107208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2827652250337107210}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174fb8bd72ce7cb4c9fb8f645a2f7e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2827652250342992687
 GameObject:
   m_ObjectHideFlags: 0

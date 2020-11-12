@@ -19,13 +19,13 @@ namespace Assets.Scripts.Services
         {
             var returnVideos = new List<MediaDetail>
             {
-                new MediaDetail
-                {
-                    Id = 1,
-                    Title = "Video1",
-                    MediaType = MediaType.VideoClip,
-                    Source = Source.LocalFile
-                },
+                //new MediaDetail
+                //{
+                //    Id = 1,
+                //    Title = "Video1",
+                //    MediaType = MediaType.VideoClip,
+                //    Source = Source.LocalFile
+                //},
                 //new MediaDetail
                 //{
                 //    Id = 2,
