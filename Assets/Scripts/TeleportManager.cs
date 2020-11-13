@@ -20,8 +20,7 @@ namespace Assets.Scripts
         {
             string spawnPointName = $"Spawn Point {_sceneId}";
             Transform spawnPoint = GameObject.Find(spawnPointName).transform;
-            Transform playerContainer = GameObject.Find("PlayerAudience").transform;
-            Transform player = playerContainer.Find("Player").transform;
+            Transform player = GameObject.Find("Player").transform;
             var playerController = player.GetComponent<OVRPlayerController>();
             var sceneSampleController = player.GetComponent<OVRSceneSampleController>();
 
@@ -39,7 +38,7 @@ namespace Assets.Scripts
 
             yield return new WaitForSeconds(1f);
 
-            playerContainer.position = spawnPoint.position;
+            player.position = spawnPoint.position;
 
             playerController.enabled = true;
             sceneSampleController.enabled = true;

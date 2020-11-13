@@ -75,7 +75,7 @@ namespace Assets.Scripts
         {
             var sceneService = new SceneService(MyCurrentScene);
             var offset = sceneService.GetScenePosition();
-            var player = GameObject.Find("PlayerAudience");
+            var player = GameObject.Find("Player");
             player.transform.position = player.transform.position + offset;
 
             Debug.Log($"player.transform.position: {player.transform.position}");
