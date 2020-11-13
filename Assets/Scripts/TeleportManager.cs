@@ -32,13 +32,14 @@ namespace Assets.Scripts
 
             PlayerAudioManager.instance.PlayAudioClip("Teleport 3_1");
 
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2f);
 
             PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
 
-            yield return new WaitForSeconds(1f);
-
             player.position = spawnPoint.position;
+
+            yield return new WaitForSeconds(0.5f);
+
 
             playerController.enabled = true;
             sceneSampleController.enabled = true;
