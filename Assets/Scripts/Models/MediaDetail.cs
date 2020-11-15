@@ -11,5 +11,6 @@ namespace Assets.Scripts.Models
         public MediaType MediaType;
         public Source Source;
         public string Url;
+        public string LocalPath;
     }
 }

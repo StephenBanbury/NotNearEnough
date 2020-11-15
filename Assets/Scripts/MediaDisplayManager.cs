@@ -8,8 +8,10 @@ using Assets.Scripts.Services;
 using DG.Tweening;
 using Normal.Realtime;
 using Normal.Realtime.Serialization;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
+
 namespace Assets.Scripts
 {
     public class MediaDisplayManager: RealtimeComponent<MediaScreenDisplayModel>
@@ -70,7 +72,73 @@ namespace Assets.Scripts
             StartCoroutine(AwaitVideosFromApiBeforeStart());
         }
 
-        
+        private IEnumerator AwaitVideosFromApiBeforeStart()
+        {
+            Videos = new List<MediaDetail>();
+
+            GetLocalVideosDetails();
+
+            //GetVideoLinksFromTextFile();
+
+            yield return StartCoroutine(GetVideosFromApi());
+
+            Debug.Log(
+                $"Number of videos: " +
+                $"Local={Videos.Count(v => v.Source == Source.LocalFile)}; " +
+                $"External={Videos.Count(v => v.Source == Source.Url)}");
+
+            yield return StartCoroutine(DownloadVideoFiles(Videos));
+
+            Scenes = new List<SceneDetail>();
+            _sceneIndex = 1;
+
+            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
+            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
+            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
+            SpawnScene(Scene.Scene5, ScreenFormation.LargeSquare);
+            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
+            SpawnScene(Scene.Scene7, ScreenFormation.LargeStar);
+            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
+
+            CreateStreamSelectButtons();
+
+            MyCurrentScene = Scene.Scene1;
+            //OffsetPlayerPositionWithinScene();
+
+        }
+
+        private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
+        {
+            foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
+            {
+                string url = mediaDetail.Url;
+
+                var startPos = url.LastIndexOf("/");
+
+                var fileName = url.Substring(startPos + 1, url.Length - startPos - 1);
+                fileName = fileName.Replace("%20", "_");
+                Debug.Log($"fileName: {fileName}");
+
+                using (UnityWebRequest www = UnityWebRequest.Get(url))
+                {
+                    yield return www.Send();
+                    if (www.isNetworkError || www.isHttpError)
+                    {
+                        Debug.Log(www.error);
+                    }
+                    else
+                    {
+                        string savePath = string.Format("{0}/{1}", Application.persistentDataPath, fileName);
+                        Debug.Log($"Saving file: {savePath}");
+                        System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+                        mediaDetail.LocalPath = savePath;
+                        Debug.Log("Saved");
+                    }
+                }
+            }
+        }
+
         public void OffsetPlayerPositionWithinScene()
         {
             var sceneService = new SceneService(MyCurrentScene);
@@ -168,60 +236,15 @@ namespace Assets.Scripts
             }
         }
 
-        private IEnumerator AwaitVideosFromApiBeforeStart()
-        {
-            Videos = new List<MediaDetail>();
-
-            GetLocalVideosDetails();
-            //GetVideoLinksFromTextFile();
-            yield return StartCoroutine(GetVideosFromApi());
-
-            Debug.Log(
-                $"Number of videos: " +
-                $"Local={Videos.Count(v => v.Source == Source.LocalFile)}; " +
-                $"External={Videos.Count(v => v.Source == Source.Url)}");
-
-
-            Scenes = new List<SceneDetail>();
-            _sceneIndex = 1;
-
-            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
-            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.LargeStar);
-            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
-
-            //Debug.Log("Scenes: -");
-            //foreach (var sceneDetail in Scenes)
-            //{
-            //    Debug.Log($"Name: {sceneDetail.Name}, Formation: {sceneDetail.ScreenFormation}, Position: {sceneDetail.ScenePosition}");
-            //    //foreach (var screen in sceneDetail.CurrentScreens)
-            //    //{
-            //    //    Debug.Log($"Screen: {screen.id}");
-            //    //}
-            //}
-
-            CreateStreamSelectButtons();
-
-            MyCurrentScene = Scene.Scene1;
-            //OffsetPlayerPositionWithinScene();
-
-        }
-
         public IEnumerator GetVideosFromApi()
         {
             // Get external video URLs from database
-
             var apiService = new ApiService();
             var videosFromApi = apiService.VideosGet();
 
             yield return new WaitUntil(() => videosFromApi.Count > 0);
 
             Debug.Log($"GetVideosFromApi - done: {videosFromApi.Count}");
-
             Videos.AddRange(videosFromApi);
         }
 
@@ -374,7 +397,8 @@ namespace Assets.Scripts
                     // Video clip from Url
                     Debug.Log("URL video clip");
                     videoPlayer.source = VideoSource.Url;
-                    videoPlayer.url = thisVideoClip.Url;
+                    //videoPlayer.url = thisVideoClip.Url;
+                    videoPlayer.url = thisVideoClip.LocalPath;
                 }
                 else
                 {
@@ -391,8 +415,9 @@ namespace Assets.Scripts
                 videoPlayer.EnableAudioTrack(0, true);
                 videoPlayer.SetTargetAudioSource(0, audioSource);
 
+                // TODO test to see if this speeds up or slows down video play start
                 //Set video To Play then prepare Audio to prevent Buffering        
-                videoPlayer.Prepare();
+                //videoPlayer.Prepare();
 
                 //Play Video
                 videoPlayer.Play();
@@ -401,7 +426,7 @@ namespace Assets.Scripts
             }
         }
 
-       private void AssignStreamToDisplay(int streamId, int displayId)
+        private void AssignStreamToDisplay(int streamId, int displayId)
         {
             if (streamId > 0 && displayId > 0)
             {

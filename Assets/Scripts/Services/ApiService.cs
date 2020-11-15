@@ -25,7 +25,13 @@ namespace Assets.Scripts.Services
                         var currentVideos = MediaDisplayManager.instance.Videos;
                         var i = currentVideos.Count + 1;
 
-                        foreach (var video in response.Where(v => v.Title != null))
+                        string[] formats =
+                        {
+                            ".mp4", ".mov", ".3GP", ".asf", ".avi", ".dv", ".m4v", ".mpg", ".mpeg", ".ogv", ".vp8",
+                            ".webm", ".wmv"
+                        };
+
+                        foreach (var video in response.Where(v => (v.Title != null) && formats.Any(v.Url.Contains)))
                         {
                             video.Url = video.Url.Replace("www.dropbox.com", "dl.dropbox.com").Replace("?dl=0", "");
 
