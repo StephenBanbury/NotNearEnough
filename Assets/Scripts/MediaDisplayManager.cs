@@ -18,12 +18,7 @@ namespace Assets.Scripts
     {
         public static MediaDisplayManager instance;
 
-        //private List<MediaDetail> _streams;
-
         private int _sceneIndex;
-
-        //private Dictionary<int, MediaDetail> _displayVideo;
-        //private Dictionary<int, MediaDetail> _displayStream;
 
         private int _lastSelectedVideoId;
         private int _lastSelectedStreamId;
@@ -33,16 +28,14 @@ namespace Assets.Scripts
 
         private float _floorAdjust = 1.25f;
 
-        [SerializeField] private Realtime _realtime;
-
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _selectButton;
-        [SerializeField] private Transform _sceneObject;
         [SerializeField] private GameObject _screen;
         [SerializeField] private GameObject _screenVariant;
         [SerializeField] private AudioSource _sceneAudio;
         [SerializeField] private GameObject _sceneLights;
         [SerializeField] private GameObject _selectionPanels;
+        [SerializeField] private Text _lobbyStatusInfoText;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -52,7 +45,6 @@ namespace Assets.Scripts
         public List<SceneDetail> Scenes { get; private set; }
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
-        public List<ScreenDisplayState> ScreenDisplayStates { get; set; }
 
         void Awake()
         {
@@ -110,6 +102,9 @@ namespace Assets.Scripts
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
         {
+            Debug.Log("Saving video files: -");
+            _lobbyStatusInfoText.text = "Saving video files: -\r\n";
+
             foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
             {
                 string url = mediaDetail.Url;
@@ -118,7 +113,11 @@ namespace Assets.Scripts
 
                 var fileName = url.Substring(startPos + 1, url.Length - startPos - 1);
                 fileName = fileName.Replace("%20", "_");
-                Debug.Log($"fileName: {fileName}");
+
+                string savePath = $"{Application.persistentDataPath}/{fileName}";
+
+                Debug.Log($"{savePath}");
+                _lobbyStatusInfoText.text += $"{fileName}\r\n";
 
                 using (UnityWebRequest www = UnityWebRequest.Get(url))
                 {
@@ -129,14 +128,13 @@ namespace Assets.Scripts
                     }
                     else
                     {
-                        string savePath = string.Format("{0}/{1}", Application.persistentDataPath, fileName);
-                        Debug.Log($"Saving file: {savePath}");
                         System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
                         mediaDetail.LocalPath = savePath;
-                        Debug.Log("Saved");
                     }
                 }
             }
+
+            _lobbyStatusInfoText.text += "Finished.\r\n";
         }
 
         public void OffsetPlayerPositionWithinScene()
