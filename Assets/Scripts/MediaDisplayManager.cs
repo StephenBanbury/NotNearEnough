@@ -104,8 +104,8 @@ namespace Assets.Scripts
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
         {
-            Debug.Log("Saving video files: -");
-            _lobbyStatusInfoText.text = "Saving video files: -\r\n";
+            Debug.Log("Downloading video files: -");
+            _lobbyStatusInfoText.text = "Downloading video files: -\r\n";
 
             foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
             {
