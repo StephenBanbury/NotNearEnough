@@ -36,6 +36,7 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _sceneLights;
         [SerializeField] private GameObject _selectionPanels;
         [SerializeField] private Text _lobbyStatusInfoText;
+        [SerializeField] private GameObject _startButton;
 
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
@@ -61,6 +62,7 @@ namespace Assets.Scripts
 
         void Start()
         {
+            _startButton.SetActive(false);
             StartCoroutine(AwaitVideosFromApiBeforeStart());
         }
 
@@ -135,6 +137,7 @@ namespace Assets.Scripts
             }
 
             _lobbyStatusInfoText.text += "Finished.\r\n";
+            _startButton.SetActive(true);
         }
 
         public void OffsetPlayerPositionWithinScene()
