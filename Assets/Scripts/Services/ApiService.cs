@@ -35,7 +35,11 @@ namespace Assets.Scripts.Services
                         {
                             video.Url = video.Url.Replace("www.dropbox.com", "dl.dropbox.com").Replace("?dl=0", "");
 
-                            Debug.Log($"VideosGet: {video.Title} / {video.Url}");
+                            var startPos = video.Url.LastIndexOf("/");
+                            var fileName = video.Url.Substring(startPos + 1, video.Url.Length - startPos - 1);
+                            video.Filename = fileName.Replace("%20", "_");
+
+                            Debug.Log($"VideosGet: {video.Title} / {video.Filename} / {video.Url}");
 
                             video.MediaType = MediaType.VideoClip;
                             video.Source = Source.Url;

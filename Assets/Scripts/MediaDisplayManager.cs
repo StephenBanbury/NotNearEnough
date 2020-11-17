@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets.Scripts.Models;
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Assets.Scripts.Enums;
 using Assets.Scripts.Services;
@@ -37,7 +39,7 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _selectionPanels;
         [SerializeField] private Text _lobbyStatusInfoText;
         [SerializeField] private GameObject _startButton;
-
+        [SerializeField] private Text _debugText;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -106,20 +108,26 @@ namespace Assets.Scripts
         {
             Debug.Log("Downloading video files: -");
             _lobbyStatusInfoText.text = "Downloading video files: -\r\n";
+            _debugText.text = "Saving video file to: ";
 
             foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
             {
                 string url = mediaDetail.Url;
 
-                var startPos = url.LastIndexOf("/");
+                string savePath = "";
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    string rootPath = Application.persistentDataPath.Substring(0, Application.persistentDataPath.IndexOf("Android", StringComparison.Ordinal));
+                    savePath = Path.Combine(Path.Combine(rootPath, "Android/Data/_Videos"), mediaDetail.Filename);
+                }
+                else
+                {
+                    Debug.Log($"Saving video file to: {savePath}");
+                    savePath = $"{Application.persistentDataPath}/{mediaDetail.Filename}";
+                }
 
-                var fileName = url.Substring(startPos + 1, url.Length - startPos - 1);
-                fileName = fileName.Replace("%20", "_");
-
-                string savePath = $"{Application.persistentDataPath}/{fileName}";
-
-                Debug.Log($"{savePath}");
-                _lobbyStatusInfoText.text += $"{fileName}\r\n";
+                _debugText.text += $"{savePath}";
+                _lobbyStatusInfoText.text += $"{mediaDetail.Filename}\n";
 
                 using (UnityWebRequest www = UnityWebRequest.Get(url))
                 {
@@ -133,6 +141,11 @@ namespace Assets.Scripts
                         System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
                         mediaDetail.LocalPath = savePath;
                     }
+
+                    if (File.Exists(savePath))
+                        _debugText.text += ": Saved!\n";
+                    else
+                        _debugText.text += ": Not saved!\n";
                 }
             }
 
@@ -397,6 +410,20 @@ namespace Assets.Scripts
                 {
                     // Video clip from Url
                     Debug.Log("URL video clip");
+
+                    //videoPlayer.errorReceived += VideoPlayer_errorReceived;
+
+                    //string path = "";
+                    //if (Application.platform == RuntimePlatform.Android)
+                    //{
+                    //    string rootPath = Application.persistentDataPath.Substring(0, Application.persistentDataPath.IndexOf("Android", StringComparison.Ordinal));
+                    //    path = Path.Combine(Path.Combine(rootPath, "Android/Data/_Videos"), thisVideoClip.Filename);
+                    //}
+
+                    // TODO - debuging in headset
+                    //if (File.Exists(path))
+                    //    _debugText.text += "\nFile has been found!\n\n";
+
                     videoPlayer.source = VideoSource.Url;
                     //videoPlayer.url = thisVideoClip.Url;
                     videoPlayer.url = thisVideoClip.LocalPath;
@@ -426,6 +453,14 @@ namespace Assets.Scripts
                 audioSource.Play();
             }
         }
+        //private void VideoPlayer_errorReceived(VideoPlayer source, string message)
+        //{
+        //    _debugText.text += message;
+
+        //    ///// To avoid memory leaks, unsubscribe from the event
+        //    ///// otherwise it could continuously send this message
+        //    videoPlayer.errorReceived -= VideoPlayer_errorReceived;
+        //}
 
         private void AssignStreamToDisplay(int streamId, int displayId)
         {
