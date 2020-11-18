@@ -106,8 +106,11 @@ namespace Assets.Scripts
 
             var scene = scenes.First(s => s.Name == sceneName).Scene;
 
-            formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
-            formationSelect.KeepInSync();
+            if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
+            {
+                formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
+                formationSelect.KeepInSync();
+            }
         }
 
         private string GetCurrentSceneFromParent()

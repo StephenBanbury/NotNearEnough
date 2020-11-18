@@ -17,14 +17,17 @@ namespace Assets.Scripts
                 var sceneName = GetCurrentSceneFromParent();
                 var scene = scenes.First(s => s.Name == sceneName).Scene;
 
-                var gameManager = GameObject.Find("GameManager");
-                var formationSelect = gameManager.GetComponent<FormationSelect>();
+                if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
+                {
+                    var gameManager = GameObject.Find("GameManager");
+                    var formationSelect = gameManager.GetComponent<FormationSelect>();
 
-                formationSelect.SetFormationId(scene, _formationId, 10);
+                    formationSelect.SetFormationId(scene, _formationId, 10);
 
-                formationSelect.KeepInSync();
+                    formationSelect.KeepInSync();
 
-                _formationIdText.text = _formationId.ToString();
+                    _formationIdText.text = _formationId.ToString();
+                }
             }
         }
 

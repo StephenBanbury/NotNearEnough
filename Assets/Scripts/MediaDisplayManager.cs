@@ -46,6 +46,7 @@ namespace Assets.Scripts
         public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
         public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
         public List<SceneDetail> Scenes { get; private set; }
+        public List<Scene> CanTransformScene { get; set; }
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
 
@@ -88,11 +89,13 @@ namespace Assets.Scripts
             Scenes = new List<SceneDetail>();
             _sceneIndex = 1;
 
+            CanTransformScene = new List<Scene> {Scene.Scene1};
+
             SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
             SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
             SpawnScene(Scene.Scene3, ScreenFormation.Circle);
             SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.LargeSquare);
+            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
             SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
             SpawnScene(Scene.Scene7, ScreenFormation.LargeStar);
             SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
@@ -107,49 +110,57 @@ namespace Assets.Scripts
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
         {
             Debug.Log("Downloading video files: -");
-            _lobbyStatusInfoText.text = "Downloading video files: -\r\n";
+            _lobbyStatusInfoText.text = "Downloading video files: -";
             _debugText.text = "Saving video file to: ";
 
             foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
             {
-                string url = mediaDetail.Url;
-
-                string savePath = "";
+                string savePath;
                 if (Application.platform == RuntimePlatform.Android)
                 {
                     string rootPath = Application.persistentDataPath.Substring(0, Application.persistentDataPath.IndexOf("Android", StringComparison.Ordinal));
-                    savePath = Path.Combine(Path.Combine(rootPath, "Android/Data/_Videos"), mediaDetail.Filename);
+                    savePath = Path.Combine(Path.Combine(rootPath, "Android/Data/com.MachineAppStudios.GAM7506/files"), mediaDetail.Filename);
                 }
                 else
                 {
-                    Debug.Log($"Saving video file to: {savePath}");
                     savePath = $"{Application.persistentDataPath}/{mediaDetail.Filename}";
                 }
 
-                _debugText.text += $"{savePath}";
-                _lobbyStatusInfoText.text += $"{mediaDetail.Filename}\n";
+                mediaDetail.LocalPath = savePath;
 
-                using (UnityWebRequest www = UnityWebRequest.Get(url))
+                _debugText.text += $"\n{savePath}";
+                _lobbyStatusInfoText.text += $"\n{mediaDetail.Filename}";
+
+                if (File.Exists(savePath))
                 {
-                    yield return www.Send();
-                    if (www.isNetworkError || www.isHttpError)
+                    _lobbyStatusInfoText.text += " - exists.";
+                }
+                else
+                {
+                    _lobbyStatusInfoText.text += " - downloading.";
+                    string url = mediaDetail.Url;
+                    using (UnityWebRequest www = UnityWebRequest.Get(url))
                     {
-                        Debug.Log(www.error);
-                    }
-                    else
-                    {
-                        System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
-                        mediaDetail.LocalPath = savePath;
-                    }
+                        yield return www.Send();
+                        if (www.isNetworkError || www.isHttpError)
+                        {
+                            Debug.Log(www.error);
+                        }
+                        else
+                        {
+                            Debug.Log($"Saving video file to: {savePath}");
+                            System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+                        }
 
-                    if (File.Exists(savePath))
-                        _debugText.text += ": Saved!\n";
-                    else
-                        _debugText.text += ": Not saved!\n";
+                        if (File.Exists(savePath))
+                            _debugText.text += " - Saved!";
+                        else
+                            _debugText.text += " - Not saved!";
+                    }
                 }
             }
 
-            _lobbyStatusInfoText.text += "Finished.\r\n";
+            _lobbyStatusInfoText.text += "\nFinished.";
             _startButton.SetActive(true);
         }
 
@@ -376,9 +387,6 @@ namespace Assets.Scripts
                 //Debug.Log($"screenName: {screenName}");
                 //Debug.Log($"screenVariantName: {screenVariantName}");
 
-                // Using _displayVideo should be necessary only for URL based content
-                //_displayVideo[localDisplayId] = video;
-
                 var sceneName = Scenes.First(s => s.Id == sceneId).Name;
                 var scene = GameObject.Find(sceneName);
                 var screensContainer = scene.transform.Find(screensContainerName);
@@ -412,17 +420,7 @@ namespace Assets.Scripts
                     Debug.Log("URL video clip");
 
                     //videoPlayer.errorReceived += VideoPlayer_errorReceived;
-
-                    //string path = "";
-                    //if (Application.platform == RuntimePlatform.Android)
-                    //{
-                    //    string rootPath = Application.persistentDataPath.Substring(0, Application.persistentDataPath.IndexOf("Android", StringComparison.Ordinal));
-                    //    path = Path.Combine(Path.Combine(rootPath, "Android/Data/_Videos"), thisVideoClip.Filename);
-                    //}
-
-                    // TODO - debuging in headset
-                    //if (File.Exists(path))
-                    //    _debugText.text += "\nFile has been found!\n\n";
+                    
 
                     videoPlayer.source = VideoSource.Url;
                     //videoPlayer.url = thisVideoClip.Url;
@@ -453,6 +451,7 @@ namespace Assets.Scripts
                 audioSource.Play();
             }
         }
+
         //private void VideoPlayer_errorReceived(VideoPlayer source, string message)
         //{
         //    _debugText.text += message;
@@ -587,7 +586,6 @@ namespace Assets.Scripts
                 sceneLights.name = $"Scene Lights {_sceneIndex}";
             }
             
-
             Scenes.Add(new SceneDetail
             {
                 Id = _sceneIndex,
