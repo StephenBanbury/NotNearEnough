@@ -12,6 +12,7 @@ using Normal.Realtime;
 using Normal.Realtime.Serialization;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.Video;
 
 namespace Assets.Scripts
@@ -31,7 +32,8 @@ namespace Assets.Scripts
         private float _floorAdjust = 1.25f;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
-        [SerializeField] private Transform _selectButton;
+        [SerializeField] private Transform _streamButton;
+        [SerializeField] private Text _streamButtonLabel;
         [SerializeField] private GameObject _screen;
         [SerializeField] private GameObject _screenVariant;
         [SerializeField] private AudioSource _sceneAudio;
@@ -182,35 +184,55 @@ namespace Assets.Scripts
         public void CreateStreamSelectButtons()
         {
             var agoraUsers = AgoraController.instance.AgoraUsers;
-            var selectPanel = GameObject.Find("StreamSelectorPanel");
 
-            if (agoraUsers != null && selectPanel != null)
+            if (agoraUsers != null)
             {
-                foreach (Transform child in selectPanel.transform)
+                foreach (var sceneDetail in Scenes)
                 {
-                    Destroy(child.gameObject);
-                }
+                    GameObject scene = GameObject.Find(sceneDetail.Name);
+                    Transform panels = scene.transform.Find($"Selection Panel {sceneDetail.Id}");
 
-                var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
+                    if(panels != null) { 
+                        Transform selectorPanel = panels.Find("StreamSelectorPanel");
 
-                Debug.Log($"Non-local agora users: {joinedUsers.Count}");
+                        if (selectorPanel != null)
+                        {
+                            foreach (Transform child in selectorPanel)
+                            {
+                                Destroy(child.gameObject);
+                            }
 
-                var xPos = selectPanel.transform.position.x;
-                var yStart = 0.5f;
-                var zPos = selectPanel.transform.position.z;
+                            var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
 
-                var i = 1;
+                            Debug.Log($"Non-local agora users: {joinedUsers.Count}");
 
-                foreach (var joinedUser in joinedUsers)
-                {
-                    var buttonName = $"Button{i}";
-                    var yPos = yStart - (i - 1) * 0.117f;
-                    var button = Instantiate(_selectButton, new Vector3(xPos, yPos, zPos), Quaternion.identity);
-                    button.name = buttonName;
-                    var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
-                    buttonScript.StreamId = joinedUser.Id;
-                    button.transform.SetParent(selectPanel.transform);
-                    i++;
+                            var xPos = selectorPanel.position.x;
+                            var yStart = 0.5f;
+                            var zPos = selectorPanel.position.z;
+
+                            var i = 1;
+
+                            foreach (var joinedUser in joinedUsers)
+                            {
+                                var buttonName = $"Button{sceneDetail.Id}{i}";
+                                var yPos = yStart - (i - 1) * 0.117f;
+                                var button = Instantiate(_streamButton, new Vector3(xPos, yPos, zPos),
+                                    Quaternion.identity);
+
+                                button.name = buttonName;
+
+                                Text buttonText = button.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
+                                buttonText.text = joinedUser.Uid.ToString();
+
+                                var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
+                                buttonScript.StreamId = joinedUser.Id;
+
+                                button.transform.SetParent(selectorPanel);
+                                
+                                i++;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -71,24 +71,6 @@ namespace Assets.Scripts
             return true;
         }
 
-        public string GetSdkVersion()
-        {
-            string ver = IRtcEngine.GetSdkVersion();
-            if (ver == "2.9.1.45")
-            {
-                ver = "2.9.2"; // A conversion for the current internal version#
-            }
-            else
-            {
-                if (ver == "2.9.1.46")
-                {
-                    ver = "2.9.2.2"; // A conversion for the current internal version#
-                }
-            }
-
-            return ver;
-        }
-
         public void Leave()
         {
             if (mRtcEngine == null) return;
@@ -114,43 +96,19 @@ namespace Assets.Scripts
             }
         }
 
-
-        public void EnableVideo(bool pauseVideo)
-        {
-            if (mRtcEngine != null)
-            {
-                if (!pauseVideo)
-                {
-                    mRtcEngine.EnableVideo();
-                }
-                else
-                {
-                    mRtcEngine.DisableVideo();
-                }
-            }
-        }
-
-        // accessing GameObject in Scnene1
-        // set video transform delegate for statically created GameObject
-        public void OnSceneLoaded()
-        {
-            Debug.Log("Agora OnSceneLoaded");
-        }
-
-
         // implement engine callbacks
         private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
         {
-            // TODO: not sure this is required
+            // Local client joins
 
             Debug.Log("Agora OnJoinChannelSuccess: uid = " + uid);
 
-            AgoraController.instance.UserJoined(new AgoraUser
-            {
-                Uid = uid,
-                IsLocal = true,
-                DateJoined = DateTime.UtcNow
-            });
+            //AgoraController.instance.UserJoined(new AgoraUser
+            //{
+            //    Uid = uid,
+            //    IsLocal = true,
+            //    DateJoined = DateTime.UtcNow
+            //});
 
             //GameObject textVersionGameObject = GameObject.Find("VersionText");
             //textVersionGameObject.GetComponent<Text>().text = "SDK Version : " + GetSdkVersion();
@@ -162,19 +120,13 @@ namespace Assets.Scripts
         {
             // this is called in main thread
 
-            Debug.Log("Agora onUserJoined: uid = " + uid + " elapsed = " + elapsed);
+            Debug.Log("Agora remote user joined: uid = " + uid);
 
             // Added by me. 
             // TODO: consider continuing this process. This may be where we start gaining control over our audio devices
             GetAudioDevice();
 
             AgoraController.instance.UserJoinsRoom(uid);
-
-            // Optional: if a data stream is required, here is a good place to create it
-            int streamID = mRtcEngine.CreateDataStream(true, true);
-            Debug.Log("initializeEngine done, data stream id = " + streamID);
-
-           // mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-6!");
 
         }
 
@@ -191,12 +143,6 @@ namespace Assets.Scripts
             Debug.Log("Agora onUserOffline: uid = " + uid + " reason = " + reason);
 
             // this is called in main thread
-
-            //GameObject go = GameObject.Find(uid.ToString());
-            //if (!ReferenceEquals(go, null))
-            //{
-            //    Object.Destroy(go);
-            //}
 
             AgoraController.instance.UserLeavesRoom(uid);
         }

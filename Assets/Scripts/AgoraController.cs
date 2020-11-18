@@ -61,24 +61,19 @@ namespace Assets.Scripts
             JoinRoom();
         }
 
-        //void Start()
-        //{
-        //    CheckAppId();
-        //}
-
         void Update()
         {
             CheckPermissions();
         }
 
-        public void UserJoined(AgoraUser agoraUser)
-        {
-            Debug.Log($"Agora joined user is local: {agoraUser.IsLocal}");
-            if (!agoraUser.IsLocal)
-            {
-                _joinedUsers.Add(agoraUser);
-            }
-        }
+        //public void UserJoined(AgoraUser agoraUser)
+        //{
+        //    Debug.Log($"Agora joined user is local: {agoraUser.IsLocal}");
+        //    if (!agoraUser.IsLocal)
+        //    {
+        //        _joinedUsers.Add(agoraUser);
+        //    }
+        //}
 
         public void UserJoinsRoom(uint uid)
         {
@@ -107,7 +102,7 @@ namespace Assets.Scripts
                 Debug.Log($"Agora Number joined: {_joinedUsers.Count}");
                 foreach (var user in _joinedUsers)
                 {
-                    Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
+                    Debug.Log($" - Uid: {user.Uid})");
                 }
 
                 MediaDisplayManager.instance.CreateStreamSelectButtons();
@@ -119,7 +114,7 @@ namespace Assets.Scripts
             var leavingUser = _joinedUsers.FirstOrDefault(u => u.Uid == uid);
             if (leavingUser != null)
             {
-                leavingUser.LeftRoom = true;
+                _joinedUsers.Remove(leavingUser);
 
                 GameObject go = GameObject.Find(uid.ToString());
                 if (!ReferenceEquals(go, null))
@@ -258,58 +253,6 @@ namespace Assets.Scripts
             }
         }
 
-        //public void OnJoinButtonClicked()
-        //{
-        //    // get parameters(channel name, channel profile, etc.)
-        //    GameObject go = GameObject.Find("ChannelName");
-        //    InputField field = go.GetComponent<InputField>();
-
-        //    _roomName = field.text;
-
-        //    // join channel 
-        //    JoinRoom();
-
-        //    // jump to next scene
-        //    SceneManager.LoadScene(_playSceneName, LoadSceneMode.Single);
-        //}
-
-        //public void OnLeaveButtonClicked()
-        //{
-        //    if (!ReferenceEquals(_app, null))
-        //    {
-        //        _app.Leave(); // leave channel
-        //        _app.UnloadEngine(); // delete engine
-        //        _app = null; // delete app
-        //        SceneManager.LoadScene(_homeSceneName, LoadSceneMode.Single);
-        //    }
-
-        //    Destroy(gameObject);
-        //}
-
-        //public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-        //{
-        //    //if (scene.name != _playSceneName)
-        //    //{
-        //    //    Debug.Log("Something has gone wrong: PlaySceneName != scene.name");
-        //    //}
-        //    //else
-        //    //{
-        //        if (!ReferenceEquals(_app, null))
-        //        {
-        //            _app.OnSceneLoaded(); // call this after scene is loaded
-        //        }
-
-        //        //SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-        //    //}
-        //}
-
-        //void OnApplicationPause(bool paused)
-        //{
-        //    if (!ReferenceEquals(_app, null))
-        //    {
-        //        _app.EnableVideo(paused);
-        //    }
-        //}
 
         void OnApplicationQuit()
         {

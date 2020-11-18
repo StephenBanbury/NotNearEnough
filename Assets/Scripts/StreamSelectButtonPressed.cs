@@ -19,8 +19,6 @@ namespace Assets.Scripts
                 var streamSelect = gameManager.GetComponent<StreamSelect>();
                 streamSelect.SetStreamId(StreamId);
                 streamSelect.KeepInSync();
-
-                //_streamIdText.text = StreamId.ToString();
             }
         }
     }
