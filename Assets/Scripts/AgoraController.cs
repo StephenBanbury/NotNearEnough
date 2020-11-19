@@ -157,6 +157,7 @@ namespace Assets.Scripts
             var goName = user.Uid.ToString();
             var displayId = user.DisplayId;
             var displayName = $"{goName}_{displayId}";
+            var sceneId = int.Parse(displayId.ToString().Substring(0, 1));
 
             //Debug.Log($"In MakeImageSurface. displayName: {displayName}");
 
@@ -172,7 +173,7 @@ namespace Assets.Scripts
             // To be rendered onto
             go.AddComponent<RawImage>();
 
-            var screensContainerName = "Screens";
+            var screensContainerName = $"Screens {sceneId}";
             var screenName = $"Screen {displayId}";
             var screenVariantName = $"Screen Variant {displayId}";
 

@@ -61,6 +61,10 @@ namespace Assets.Scripts
             // allow camera output callback
             mRtcEngine.EnableVideoObserver();
 
+            // Hoping this will close video - we don't want to grab video resources from this client.
+            mRtcEngine.EnableLocalVideo(false);
+
+
             // join channel
             mRtcEngine.JoinChannel(channel, null, 0);
 

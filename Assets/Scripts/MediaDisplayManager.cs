@@ -12,7 +12,6 @@ using Normal.Realtime;
 using Normal.Realtime.Serialization;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using UnityEngine.Video;
 
 namespace Assets.Scripts
@@ -166,6 +165,7 @@ namespace Assets.Scripts
             _startButton.SetActive(true);
         }
 
+        // TODO: remove - not used
         public void OffsetPlayerPositionWithinScene()
         {
             var sceneService = new SceneService(MyCurrentScene);
@@ -176,13 +176,13 @@ namespace Assets.Scripts
             Debug.Log($"player.transform.position: {player.transform.position}");
             Debug.Log($"Offset: {offset}");
             Debug.Log($"New position: {player.transform.position + offset}");
-
-            //var panels = GameObject.Find("SelectionPanels");
-            //panels.transform.position = panels.transform.position + offset;
         }
 
         public void CreateStreamSelectButtons()
         {
+            if (Scenes == null)
+                Scenes = new List<SceneDetail>();
+
             var agoraUsers = AgoraController.instance.AgoraUsers;
 
             if (agoraUsers != null)
