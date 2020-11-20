@@ -11,7 +11,6 @@ namespace Assets.Scripts.Models
         public string Name { get; set; }
         public ScreenFormation ScreenFormation { get; set; }
         public Vector3 ScenePosition { get; set; }
-        public bool canTransform { get; set; }
         public List<GameObject> CurrentScreens { get; set; }
     }
 }

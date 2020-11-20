@@ -26,6 +26,45 @@ namespace Assets.Scripts
             }
         }
 
+        //IEnumerator TriggerAction(string controllerName)
+        //{
+        //    var leftHand = controllerName == "LeftHandCollider";
+        //    var rightHand = controllerName == "RightHandCollider";
+
+        //    var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
+        //    var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
+
+        //    //Debug.Log($"Left Trigger: {leftTrigger}");
+        //    //Debug.Log($"Right Trigger: {rightTrigger}");
+
+        //    _triggerIsInAction = true;
+
+        //    if (leftTrigger && rightTrigger)
+        //    {
+        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
+        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+
+        //        StartCoroutine(RaiseMeshCollider());
+        //    }
+        //    else if (rightHand && rightTrigger)
+        //    {
+        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+
+        //        ToggleVideoOn();
+        //    }
+        //    else if (leftHand && leftTrigger)
+        //    {
+        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
+
+        //        ChangeScreenFormation();
+        //    }
+
+        //    yield return new WaitForSeconds(_waitForSeconds);
+
+        //    Debug.Log("WaitForNextTrigger done");
+        //    _triggerIsInAction = false;
+        //}
+
         IEnumerator TriggerAction(string controllerName)
         {
             var leftHand = controllerName == "LeftHandCollider";
@@ -34,35 +73,42 @@ namespace Assets.Scripts
             var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
             var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
 
-            //Debug.Log($"Left Trigger: {leftTrigger}");
-            //Debug.Log($"Right Trigger: {rightTrigger}");
-
-            if (leftTrigger && rightTrigger)
+            if ((leftHand || rightHand) && (leftTrigger || rightTrigger))
             {
-                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
-                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+                Transform parent = gameObject.transform.parent;
+                int screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-                StartCoroutine(RaiseMeshCollider());
+                ScreenAction nextAction = MediaDisplayManager.instance.GetNextScreenAction(screenId);
+
+                _triggerIsInAction = true;
+
+                switch (nextAction)
+                {
+                    case ScreenAction.ChangeVideoClip:
+                        Debug.Log("Change video clip");
+                        SelectRandomVideo();
+                        break;
+                    case ScreenAction.ChangeVideoStream:
+                        Debug.Log("Change video stream");
+                        break;
+                    case ScreenAction.ChangeFormation:
+                        Debug.Log("Change screen formation");
+                        ChangeScreenFormation();
+                        break;
+                    case ScreenAction.CreatePortal:
+                        Debug.Log("Create Portal");
+                        break;
+                }
+
+                MediaDisplayManager.instance.SetNextScreenAction(screenId);
+
+                yield return new WaitForSeconds(_waitForSeconds);
+
+                _triggerIsInAction = false;
             }
-            else if (rightHand && rightTrigger)
-            {
-                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
-
-                ToggleVideoOn();
-            }
-            else if (leftHand && leftTrigger)
-            {
-                OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
-
-                ChangeScreenFormation();
-            }
-
-            yield return new WaitForSeconds(_waitForSeconds);
-
-            Debug.Log("WaitForNextTrigger done");
-            _triggerIsInAction = false;
         }
 
+        // Raise then lower mesh collider so that player can momentarily leave the scene. 
         IEnumerator RaiseMeshCollider()
         {
             var meshCollider = gameObject.GetComponent<MeshCollider>().transform;
@@ -74,13 +120,10 @@ namespace Assets.Scripts
             meshCollider.position = new Vector3(x, y + 20f, z);
 
             PlayerAudioManager.instance.PlayAudioClip("Door 3 Open");
-            //Debug.Log("Mesh collider raised");
 
             yield return new WaitForSeconds(3); 
 
             meshCollider.position = new Vector3(x, y, z);
-
-            //Debug.Log("Mesh collider lowered");
         }
 
         private void ChangeScreenFormation()
@@ -119,7 +162,7 @@ namespace Assets.Scripts
             return parentScene.name;
         }
 
-        private void ToggleVideoOn()
+        private void SelectRandomVideo()
         {
             var displaySuffix = "Wide";
 
@@ -147,15 +190,15 @@ namespace Assets.Scripts
             displaySelect.KeepInSync();
 
             // Will use this later...
-            if (videoDisplay)
-            {
-                Debug.Log($"{videoDisplayName} in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
-            }
+            //if (videoDisplay)
+            //{
+            //    Debug.Log($"{videoDisplayName} in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
+            //}
 
-            if (canvasDisplay)
-            {
-                Debug.Log($"{canvasDisplayName} in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
-            }
+            //if (canvasDisplay)
+            //{
+            //    Debug.Log($"{canvasDisplayName} in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
+            //}
 
         }
     }

@@ -13,6 +13,7 @@ using Normal.Realtime.Serialization;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -50,6 +51,7 @@ namespace Assets.Scripts
         public List<Scene> CanTransformScene { get; set; }
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
+        public List<ScreenActionModel> ScreenActions { get; private set; }
 
         void Awake()
         {
@@ -88,6 +90,8 @@ namespace Assets.Scripts
             yield return StartCoroutine(DownloadVideoFiles(Videos));
 
             Scenes = new List<SceneDetail>();
+            ScreenActions = new List<ScreenActionModel>();
+
             _sceneIndex = 1;
 
             CanTransformScene = new List<Scene> {Scene.Scene1};
@@ -105,7 +109,32 @@ namespace Assets.Scripts
 
             MyCurrentScene = Scene.Scene1;
             //OffsetPlayerPositionWithinScene();
+        }
 
+        public ScreenAction GetNextScreenAction(int screenId)
+        {
+            var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+            return screenAction.NextAction;
+        }
+
+        public ScreenAction SetNextScreenAction(int screenId)
+        {
+            var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
+            ScreenAction randomAction = (ScreenAction)Math.Ceiling(Random.value * numberOfActions);
+
+            Debug.Log($"Number of screen actions: {numberOfActions}");
+
+            var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+
+            Debug.Log($"Current action: {screenAction.NextAction}");
+
+            Debug.Log($"New random action: {randomAction}");
+
+            screenAction.NextAction = randomAction;
+
+            Debug.Log($"New current action: {screenAction.NextAction}");
+
+            return randomAction;
         }
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
@@ -618,13 +647,13 @@ namespace Assets.Scripts
                 CurrentScreens = new List<GameObject>()
             });
 
-            GameObject screensObject = GameObject.Find($"Screens {_sceneIndex}");
+            GameObject screensContainer = GameObject.Find($"Screens {_sceneIndex}");
 
-            if (screensObject == null)
+            if (screensContainer == null)
             {
                 //Debug.Log($"Screens {_sceneIndex} not found");
-                screensObject = new GameObject($"Screens {_sceneIndex}");
-                screensObject.transform.SetParent(sceneObject.transform);
+                screensContainer = new GameObject($"Screens {_sceneIndex}");
+                screensContainer.transform.SetParent(sceneObject.transform);
             }
             
             var currentScene = Scenes.First(s => s.Id == _sceneIndex);
@@ -660,7 +689,7 @@ namespace Assets.Scripts
                     screen = Instantiate(thisScreen, vector3, Quaternion.identity);
                     //screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
                     screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                    screen.transform.SetParent(screensObject.transform);
+                    screen.transform.SetParent(screensContainer.transform);
                 }
                 //else
                 //{
@@ -673,6 +702,13 @@ namespace Assets.Scripts
                 screenNumber.text = screenPosition.Id.ToString();
 
                 currentScene.CurrentScreens.Add(screen);
+
+                ScreenActions.Add( new ScreenActionModel
+                {
+                    ScreenId = screenId,
+                    NextAction = ScreenAction.ChangeVideoClip
+                });
+
                 //}
             }
 

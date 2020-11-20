@@ -41,4 +41,13 @@ namespace Assets.Scripts.Enums
         Scene7,
         Scene8
     }
+
+    public enum ScreenAction
+    {
+        None = 0,
+        ChangeVideoClip,
+        ChangeVideoStream,
+        ChangeFormation,
+        CreatePortal
+    }
 }
