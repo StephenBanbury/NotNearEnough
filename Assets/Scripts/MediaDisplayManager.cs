@@ -114,27 +114,39 @@ namespace Assets.Scripts
         public ScreenAction GetNextScreenAction(int screenId)
         {
             var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+            SetNextScreenAction(screenId);
+
             return screenAction.NextAction;
         }
 
         public ScreenAction SetNextScreenAction(int screenId)
         {
-            var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
-            ScreenAction randomAction = (ScreenAction)Math.Ceiling(Random.value * numberOfActions);
-
-            Debug.Log($"Number of screen actions: {numberOfActions}");
-
             var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+            var currentAction = screenAction.NextAction;
 
-            Debug.Log($"Current action: {screenAction.NextAction}");
+            //Debug.Log($"Current action: {currentAction}");
 
-            Debug.Log($"New random action: {randomAction}");
+            var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
 
-            screenAction.NextAction = randomAction;
+            ScreenAction newAction;
+            bool canDoFormation = false;
 
-            Debug.Log($"New current action: {screenAction.NextAction}");
+            string sceneIdString = screenId.ToString().Substring(0, 1);
+            int sceneId = int.Parse(sceneIdString);
 
-            return randomAction;
+            Scene scene = Scenes.FirstOrDefault(s => s.Id == sceneId).Scene;
+
+            canDoFormation = MediaDisplayManager.instance.CanTransformScene.Contains(scene);
+
+            do
+            {
+                newAction = (ScreenAction) Math.Ceiling(Random.value * numberOfActions);
+            } while (newAction == currentAction || newAction == ScreenAction.ChangeFormation && !canDoFormation);
+
+            screenAction.NextAction = newAction;
+            //Debug.Log($"New action: {screenAction.NextAction}");
+
+            return newAction;
         }
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
@@ -660,56 +672,55 @@ namespace Assets.Scripts
 
             foreach (var screenPosition in thisFormation)
             {
-                //if (!screenPosition.Hide)
-                //{
-                var vector3 = screenPosition.Vector3;
-                vector3.y += _floorAdjust;
-
-                GameObject screen;
-
-                var screenId = _sceneIndex * 100 + screenPosition.Id;
-                GameObject thisScreen;
-                string screenName;
-
-                if (screenPosition.Id % 2 != 0)
+                if (!screenPosition.Hide)
                 {
-                    screenName = $"Screen {screenId}";
-                    thisScreen = _screen;
+                    var vector3 = screenPosition.Vector3;
+                    vector3.y += _floorAdjust;
+
+                    GameObject screen;
+
+                    var screenId = _sceneIndex * 100 + screenPosition.Id;
+                    GameObject thisScreen;
+                    string screenName;
+
+                    if (screenPosition.Id % 2 != 0)
+                    {
+                        screenName = $"Screen {screenId}";
+                        thisScreen = _screen;
+                    }
+                    else
+                    {
+                        screenName = $"Screen Variant {screenId}";
+                        thisScreen = _screenVariant;
+                    }
+
+                    screen = GameObject.Find(screenName);
+
+                    if (screen == null)
+                    {
+                        screen = Instantiate(thisScreen, vector3, Quaternion.identity);
+                        //screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
+                        screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                        screen.transform.SetParent(screensContainer.transform);
+                    }
+                    //else
+                    //{
+                    //    Debug.Log($"{screenName} exists");
+                    //}
+
+                    screen.name = screenName;
+
+                    var screenNumber = screen.GetComponentInChildren<Text>();
+                    screenNumber.text = screenPosition.Id.ToString();
+
+                    currentScene.CurrentScreens.Add(screen);
+
+                    ScreenActions.Add(new ScreenActionModel
+                    {
+                        ScreenId = screenId,
+                        NextAction = ScreenAction.ChangeVideoClip
+                    });
                 }
-                else
-                {
-                    screenName = $"Screen Variant {screenId}";
-                    thisScreen = _screenVariant;
-                }
-
-                screen = GameObject.Find(screenName);
-
-                if (screen == null)
-                {
-                    screen = Instantiate(thisScreen, vector3, Quaternion.identity);
-                    //screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
-                    screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                    screen.transform.SetParent(screensContainer.transform);
-                }
-                //else
-                //{
-                //    Debug.Log($"{screenName} exists");
-                //}
-
-                screen.name = screenName;
-
-                var screenNumber = screen.GetComponentInChildren<Text>();
-                screenNumber.text = screenPosition.Id.ToString();
-
-                currentScene.CurrentScreens.Add(screen);
-
-                ScreenActions.Add( new ScreenActionModel
-                {
-                    ScreenId = screenId,
-                    NextAction = ScreenAction.ChangeVideoClip
-                });
-
-                //}
             }
 
             _sceneIndex++;

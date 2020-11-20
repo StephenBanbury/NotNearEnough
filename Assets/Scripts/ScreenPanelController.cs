@@ -12,7 +12,7 @@ namespace Assets.Scripts
     public class ScreenPanelController : MonoBehaviour
     {
         private bool _triggerIsInAction;
-        private int _waitForSeconds = 5;
+        private int _waitForSeconds = 2;
         private ScreenFormation _currentScreenFormation;
         
         private void OnTriggerEnter(Collider other)
@@ -79,30 +79,31 @@ namespace Assets.Scripts
                 int screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
                 ScreenAction nextAction = MediaDisplayManager.instance.GetNextScreenAction(screenId);
+                //MediaDisplayManager.instance.SetNextScreenAction(screenId);
 
                 _triggerIsInAction = true;
 
                 switch (nextAction)
                 {
                     case ScreenAction.ChangeVideoClip:
-                        Debug.Log("Change video clip");
-                        SelectRandomVideo();
+                        Debug.Log("ScreenAction: Change video clip");
+                        //SelectRandomVideo();
                         break;
                     case ScreenAction.ChangeVideoStream:
-                        Debug.Log("Change video stream");
+                        Debug.Log("ScreenAction: Change video stream");
                         break;
                     case ScreenAction.ChangeFormation:
-                        Debug.Log("Change screen formation");
-                        ChangeScreenFormation();
+                        Debug.Log("ScreenAction: Change screen formation");
+                        //ChangeScreenFormation();
                         break;
                     case ScreenAction.CreatePortal:
-                        Debug.Log("Create Portal");
+                        Debug.Log("ScreenAction: Create Portal");
                         break;
                 }
 
-                MediaDisplayManager.instance.SetNextScreenAction(screenId);
-
                 yield return new WaitForSeconds(_waitForSeconds);
+
+                Debug.Log("Time has passed");
 
                 _triggerIsInAction = false;
             }
@@ -128,29 +129,25 @@ namespace Assets.Scripts
 
         private void ChangeScreenFormation()
         {
-            var numberOfFormations = Enum.GetValues(typeof(ScreenFormation)).Cast<int>().Max();
-
-            ScreenFormation randomFormation;
-            do
-            {
-                randomFormation = (ScreenFormation) Math.Ceiling(Random.value * numberOfFormations);
-            } while (randomFormation == _currentScreenFormation || randomFormation == ScreenFormation.None);
-
-            _currentScreenFormation = randomFormation;
-
-            var gameManager = GameObject.Find("GameManager");
+            string sceneName = GetCurrentSceneFromParent();
             var scenes = MediaDisplayManager.instance.Scenes;
-
-            var formationSelect = gameManager.GetComponent<FormationSelect>();
-
-            var sceneName = GetCurrentSceneFromParent();
-
-            Debug.Log($"Scene name: {sceneName}");
-
             var scene = scenes.First(s => s.Name == sceneName).Scene;
 
             if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
             {
+                int numberOfFormations = Enum.GetValues(typeof(ScreenFormation)).Cast<int>().Max();
+
+                ScreenFormation randomFormation;
+                do
+                {
+                    randomFormation = (ScreenFormation) Math.Ceiling(Random.value * numberOfFormations);
+                } while (randomFormation == _currentScreenFormation || randomFormation == ScreenFormation.None);
+
+                _currentScreenFormation = randomFormation;
+
+                GameObject gameManager = GameObject.Find("GameManager");
+                FormationSelect formationSelect = gameManager.GetComponent<FormationSelect>();
+
                 formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
                 formationSelect.KeepInSync();
             }
