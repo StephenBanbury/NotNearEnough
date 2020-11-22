@@ -12,40 +12,40 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                StartCoroutine(DoTeleportation());
+                StartCoroutine(MediaDisplayManager.instance.DoTeleportation(_sceneId));
             }
         }
 
-        private IEnumerator DoTeleportation()
-        {
-            string spawnPointName = $"Spawn Point {_sceneId}";
-            Transform spawnPoint = GameObject.Find(spawnPointName).transform;
-            Transform player = GameObject.Find("Player").transform;
-            var playerController = player.GetComponent<OVRPlayerController>();
-            var sceneSampleController = player.GetComponent<OVRSceneSampleController>();
+        //private IEnumerator DoTeleportation()
+        //{
+        //    string spawnPointName = $"Spawn Point {_sceneId}";
+        //    Transform spawnPoint = GameObject.Find(spawnPointName).transform;
+        //    Transform player = GameObject.Find("Player").transform;
+        //    var playerController = player.GetComponent<OVRPlayerController>();
+        //    var sceneSampleController = player.GetComponent<OVRSceneSampleController>();
 
-            //Debug.Log($"Teleporting to {spawnPointName}");
-            //Debug.Log($"SpawnPoint position: {spawnPoint.position}");
+        //    //Debug.Log($"Teleporting to {spawnPointName}");
+        //    //Debug.Log($"SpawnPoint position: {spawnPoint.position}");
 
-            playerController.enabled = false;
-            sceneSampleController.enabled = false;
+        //    playerController.enabled = false;
+        //    sceneSampleController.enabled = false;
 
-            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_1");
+        //    PlayerAudioManager.instance.PlayAudioClip("Teleport 3_1");
 
-            yield return new WaitForSeconds(2f);
+        //    yield return new WaitForSeconds(2f);
 
-            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
+        //    PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
 
-            player.position = spawnPoint.position;
+        //    player.position = spawnPoint.position;
 
-            yield return new WaitForSeconds(0.5f);
+        //    yield return new WaitForSeconds(0.5f);
 
 
-            playerController.enabled = true;
-            sceneSampleController.enabled = true;
+        //    playerController.enabled = true;
+        //    sceneSampleController.enabled = true;
 
-            MediaDisplayManager.instance.MyCurrentScene = (Scene) _sceneId;
-        }
+        //    MediaDisplayManager.instance.MyCurrentScene = (Scene) _sceneId;
+        //}
     }
     
 }

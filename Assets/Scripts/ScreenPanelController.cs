@@ -73,38 +73,49 @@ namespace Assets.Scripts
             var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
             var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
 
-            if ((leftHand || rightHand) && (leftTrigger || rightTrigger))
+            if (leftHand && leftTrigger || rightHand && rightTrigger)
             {
+                if(leftTrigger)
+                    OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
+
+                if(rightTrigger)
+                    OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+
                 Transform parent = gameObject.transform.parent;
                 int screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
                 ScreenAction nextAction = MediaDisplayManager.instance.GetNextScreenAction(screenId);
-                //MediaDisplayManager.instance.SetNextScreenAction(screenId);
 
                 _triggerIsInAction = true;
 
                 switch (nextAction)
                 {
                     case ScreenAction.ChangeVideoClip:
-                        Debug.Log("ScreenAction: Change video clip");
-                        SelectRandomVideoClip();
+                        Debug.Log("Doing action: Change video clip");
+                        //SelectRandomVideoClip();
                         break;
                     case ScreenAction.ChangeVideoStream:
-                        Debug.Log("ScreenAction: Change video stream");
-                        SelectRandomVideoStream();
+                        Debug.Log("Doing action: Change video stream");
+                        //SelectRandomVideoStream();
                         break;
                     case ScreenAction.ChangeFormation:
-                        Debug.Log("ScreenAction: Change screen formation");
-                        ChangeScreenFormation();
+                        Debug.Log("Doing action: Change screen formation");
+                        //ChangeScreenFormation();
                         break;
                     case ScreenAction.CreatePortal:
-                        Debug.Log("ScreenAction: Create Portal");
+                        Debug.Log("Doing action: Create portal");
+                        //MediaDisplayManager.instance.CreatePortal(screenId);
+                        break;
+                    case ScreenAction.DoTeleport:
+                        Debug.Log("Doing action: Teleport");
+                        //int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
+                        //MediaDisplayManager.instance.DoTeleportation(sceneId);
                         break;
                 }
 
                 yield return new WaitForSeconds(_waitForSeconds);
 
-                Debug.Log("Time has passed");
+                MediaDisplayManager.instance.SetNextScreenAction(screenId);
 
                 _triggerIsInAction = false;
             }

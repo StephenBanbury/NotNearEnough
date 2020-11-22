@@ -48,6 +48,7 @@ namespace Assets.Scripts.Enums
         ChangeVideoClip,
         ChangeVideoStream,
         ChangeFormation,
-        CreatePortal
+        CreatePortal,
+        DoTeleport
     }
 }

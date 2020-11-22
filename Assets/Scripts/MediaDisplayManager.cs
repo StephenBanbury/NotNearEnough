@@ -53,6 +53,8 @@ namespace Assets.Scripts
         public List<MediaDetail> Videos { get; private set; }
         public List<ScreenActionModel> ScreenActions { get; private set; }
 
+        public List<int> ScreensAsPortal { get; set; }
+
         void Awake()
         {
             if (instance == null)
@@ -75,6 +77,7 @@ namespace Assets.Scripts
         private IEnumerator AwaitVideosFromApiBeforeStart()
         {
             Videos = new List<MediaDetail>();
+            ScreensAsPortal = new List<int>();
 
             GetLocalVideosDetails();
 
@@ -110,43 +113,92 @@ namespace Assets.Scripts
             MyCurrentScene = Scene.Scene1;
             //OffsetPlayerPositionWithinScene();
         }
+        public void CreatePortal(int screenId)
+        {
+            ScreensAsPortal.Add(screenId);
+            Transform screen = GetScreenObjectFromScreenId(screenId);
+            Debug.Log($"Portal created on '{screen.name}'");
+        }
 
         public ScreenAction GetNextScreenAction(int screenId)
         {
             var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
-            SetNextScreenAction(screenId);
-
             return screenAction.NextAction;
         }
 
-        public ScreenAction SetNextScreenAction(int screenId)
+        public void SetNextScreenAction(int screenId)
         {
             var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
-            var currentAction = screenAction.NextAction;
-
-            //Debug.Log($"Current action: {currentAction}");
-
-            var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
-
+            var lastAction = screenAction.NextAction;
+            
             ScreenAction newAction;
-            bool canDoFormation = false;
+            bool canDoFormation;
 
-            string sceneIdString = screenId.ToString().Substring(0, 1);
-            int sceneId = int.Parse(sceneIdString);
-
-            Scene scene = Scenes.FirstOrDefault(s => s.Id == sceneId).Scene;
+            Scene scene = GetSceneFromScreenId(screenId);
 
             canDoFormation = MediaDisplayManager.instance.CanTransformScene.Contains(scene);
 
-            do
+            if (lastAction == ScreenAction.CreatePortal)
             {
-                newAction = (ScreenAction) Math.Ceiling(Random.value * numberOfActions);
-            } while (newAction == currentAction || newAction == ScreenAction.ChangeFormation && !canDoFormation);
+                newAction = ScreenAction.DoTeleport;
+            }
+            else
+            {
+                var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
+                do
+                {
+                    newAction = (ScreenAction) Math.Ceiling(Random.value * numberOfActions);
+                } while (newAction == lastAction
+                         || newAction == ScreenAction.ChangeFormation && !canDoFormation
+                         || newAction == ScreenAction.DoTeleport && lastAction != ScreenAction.CreatePortal);
+            }
 
             screenAction.NextAction = newAction;
-            //Debug.Log($"New action: {screenAction.NextAction}");
+        }
 
-            return newAction;
+        public Scene GetSceneFromScreenId(int screenId)
+        {
+            int sceneId = GetSceneIdFromScreenId(screenId);
+            Scene scene = Scenes.FirstOrDefault(s => s.Id == sceneId).Scene;
+            return scene;
+        }
+
+        public int GetSceneIdFromScreenId(int screenId)
+        {
+            string sceneIdString = screenId.ToString().Substring(0, 1);
+            int sceneId = int.Parse(sceneIdString);
+            return sceneId;
+        }
+        
+        public IEnumerator DoTeleportation(int sceneId)
+        {
+            string spawnPointName = $"Spawn Point {sceneId}";
+            Transform spawnPoint = GameObject.Find(spawnPointName).transform;
+            Transform player = GameObject.Find("Player").transform;
+            var playerController = player.GetComponent<OVRPlayerController>();
+            var sceneSampleController = player.GetComponent<OVRSceneSampleController>();
+
+            //Debug.Log($"Teleporting to {spawnPointName}");
+            //Debug.Log($"SpawnPoint position: {spawnPoint.position}");
+
+            playerController.enabled = false;
+            sceneSampleController.enabled = false;
+
+            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_1");
+
+            yield return new WaitForSeconds(2f);
+
+            PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
+
+            player.position = spawnPoint.position;
+
+            yield return new WaitForSeconds(0.5f);
+
+
+            playerController.enabled = true;
+            sceneSampleController.enabled = true;
+
+            MediaDisplayManager.instance.MyCurrentScene = (Scene)sceneId;
         }
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
@@ -392,7 +444,6 @@ namespace Assets.Scripts
             }
         }
 
-
         public void StoreScreenDisplayState()
         {
             MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
@@ -408,7 +459,21 @@ namespace Assets.Scripts
             //Debug.Log($"mediaScreenDisplayStates: {model.mediaScreenDisplayStates.Count}");
         }
 
-        private void AssignVideoToDisplay(int videoId, int displayId)
+        private Transform GetScreenObjectFromScreenId(int screenId)
+        {
+            var sceneId = int.Parse(screenId.ToString().Substring(0, 1));
+            var screensContainerName = $"Screens {sceneId}";
+            var screenName = $"Screen {screenId}";
+            var screenVariantName = $"Screen Variant {screenId}";
+            var sceneName = Scenes.First(s => s.Id == sceneId).Name;
+            var scene = GameObject.Find(sceneName);
+            var screensContainer = scene.transform.Find(screensContainerName);
+            var screenObject = screensContainer.transform.Find(screenName);
+            if (screenObject == null) screenObject = screensContainer.transform.Find(screenVariantName);
+            return screenObject;
+        }
+
+        private void AssignVideoToDisplay(int videoId, int screenId)
         {
             //Debug.Log("AssignVideoToDisplay");
             //Debug.Log($"videoId: {videoId}");
@@ -419,29 +484,11 @@ namespace Assets.Scripts
             var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
             var videoDisplayName = $"VideoDisplay{displaySuffix}";
 
-            var sceneId = int.Parse(displayId.ToString().Substring(0, 1));
-            var localDisplayId = int.Parse(displayId.ToString().Substring(1, 2));
-
-            if (videoId > 0 && displayId > 0) // && _displayVideo[localDisplayId].Id != videoId)
+            if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
             {
                 Debug.Log($"Assign videoId: {videoId}");
-                var video = Videos.FirstOrDefault(v => v.Id == videoId);
-                //video.Show = true;
 
-                var screensContainerName = $"Screens {sceneId}";
-                var screenName = $"Screen {displayId}";
-                var screenVariantName = $"Screen Variant {displayId}";
-
-                //Debug.Log($"screensContainerName: {screensContainerName}");
-                //Debug.Log($"screenName: {screenName}");
-                //Debug.Log($"screenVariantName: {screenVariantName}");
-
-                var sceneName = Scenes.First(s => s.Id == sceneId).Name;
-                var scene = GameObject.Find(sceneName);
-                var screensContainer = scene.transform.Find(screensContainerName);
-
-                var screenObject = screensContainer.transform.Find(screenName);
-                if (screenObject == null) screenObject = screensContainer.transform.Find(screenVariantName);
+                Transform screenObject = GetScreenObjectFromScreenId(screenId);
 
                 var thisVideoClip = Videos.First(v => v.Id == videoId);
 
@@ -467,12 +514,8 @@ namespace Assets.Scripts
                 {
                     // Video clip from Url
                     Debug.Log("URL video clip");
-
-                    //videoPlayer.errorReceived += VideoPlayer_errorReceived;
                     
-
                     videoPlayer.source = VideoSource.Url;
-                    //videoPlayer.url = thisVideoClip.Url;
                     videoPlayer.url = thisVideoClip.LocalPath;
                 }
                 else
@@ -703,9 +746,10 @@ namespace Assets.Scripts
 
                     ScreenActions.Add(new ScreenActionModel
                     {
-                        ScreenId = screenId,
-                        NextAction = ScreenAction.ChangeVideoClip
+                        ScreenId = screenId
                     });
+
+                    SetNextScreenAction(screenId);
                 }
             }
 
