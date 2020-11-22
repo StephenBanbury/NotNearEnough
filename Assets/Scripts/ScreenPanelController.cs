@@ -87,14 +87,14 @@ namespace Assets.Scripts
                 {
                     case ScreenAction.ChangeVideoClip:
                         Debug.Log("ScreenAction: Change video clip");
-                        //SelectRandomVideo();
+                        SelectRandomVideo();
                         break;
                     case ScreenAction.ChangeVideoStream:
                         Debug.Log("ScreenAction: Change video stream");
                         break;
                     case ScreenAction.ChangeFormation:
                         Debug.Log("ScreenAction: Change screen formation");
-                        //ChangeScreenFormation();
+                        ChangeScreenFormation();
                         break;
                     case ScreenAction.CreatePortal:
                         Debug.Log("ScreenAction: Create Portal");
