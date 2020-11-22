@@ -128,15 +128,10 @@ namespace Assets.Scripts
 
         public void SetNextScreenAction(int screenId)
         {
-            var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
-            var lastAction = screenAction.NextAction;
-            
             ScreenAction newAction;
-            bool canDoFormation;
-
+            ScreenActionModel screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+            ScreenAction lastAction = screenAction.NextAction;
             Scene scene = GetSceneFromScreenId(screenId);
-
-            canDoFormation = MediaDisplayManager.instance.CanTransformScene.Contains(scene);
 
             if (lastAction == ScreenAction.CreatePortal)
             {
@@ -144,13 +139,16 @@ namespace Assets.Scripts
             }
             else
             {
-                var numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
+                bool canDoFormation = MediaDisplayManager.instance.CanTransformScene.Contains(scene);
+                bool hasVideoStreams = AgoraController.instance.AgoraUsers.Count > 0;
+                int numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
                 do
                 {
                     newAction = (ScreenAction) Math.Ceiling(Random.value * numberOfActions);
                 } while (newAction == lastAction
                          || newAction == ScreenAction.ChangeFormation && !canDoFormation
-                         || newAction == ScreenAction.DoTeleport && lastAction != ScreenAction.CreatePortal);
+                         || newAction == ScreenAction.DoTeleport && lastAction != ScreenAction.CreatePortal 
+                         || newAction == ScreenAction.ChangeVideoStream && !hasVideoStreams);
             }
 
             screenAction.NextAction = newAction;
@@ -169,7 +167,19 @@ namespace Assets.Scripts
             int sceneId = int.Parse(sceneIdString);
             return sceneId;
         }
-        
+
+        public void RandomTeleportation(int currentSceneId)
+        {
+            int numberOfScenes = Scenes.Count - 1; // Do not include final scene
+            int randomSceneId;
+            do
+            {
+                randomSceneId = (int) Math.Ceiling(Random.value * numberOfScenes);
+            } while (randomSceneId == currentSceneId);
+
+            StartCoroutine(DoTeleportation(randomSceneId));
+        }
+
         public IEnumerator DoTeleportation(int sceneId)
         {
             string spawnPointName = $"Spawn Point {sceneId}";

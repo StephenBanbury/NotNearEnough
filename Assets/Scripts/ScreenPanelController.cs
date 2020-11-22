@@ -92,24 +92,24 @@ namespace Assets.Scripts
                 {
                     case ScreenAction.ChangeVideoClip:
                         Debug.Log("Doing action: Change video clip");
-                        //SelectRandomVideoClip();
+                        SelectRandomVideoClip();
                         break;
                     case ScreenAction.ChangeVideoStream:
                         Debug.Log("Doing action: Change video stream");
-                        //SelectRandomVideoStream();
+                        SelectRandomVideoStream();
                         break;
                     case ScreenAction.ChangeFormation:
                         Debug.Log("Doing action: Change screen formation");
-                        //ChangeScreenFormation();
+                        ChangeScreenFormation();
                         break;
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        //MediaDisplayManager.instance.CreatePortal(screenId);
+                        MediaDisplayManager.instance.CreatePortal(screenId);
                         break;
                     case ScreenAction.DoTeleport:
                         Debug.Log("Doing action: Teleport");
-                        //int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
-                        //MediaDisplayManager.instance.DoTeleportation(sceneId);
+                        int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
+                        MediaDisplayManager.instance.RandomTeleportation(sceneId);
                         break;
                 }
 
@@ -178,18 +178,21 @@ namespace Assets.Scripts
             // For now I am going to select a random video to display. We will probably want a different action
             var videos = MediaDisplayManager.instance.Videos;
 
-            var videoId = (int) Math.Ceiling(Random.value * videos.Count);
-            var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
+            if (videos.Count > 0)
+            {
+                var videoId = (int) Math.Ceiling(Random.value * videos.Count);
+                var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-            var gameManager = GameObject.Find("GameManager");
+                var gameManager = GameObject.Find("GameManager");
 
-            var videoSelect = gameManager.GetComponent<VideoSelect>();
-            videoSelect.SetVideoId(videoId);
-            videoSelect.KeepInSync();
+                var videoSelect = gameManager.GetComponent<VideoSelect>();
+                videoSelect.SetVideoId(videoId);
+                videoSelect.KeepInSync();
 
-            var displaySelect = gameManager.GetComponent<DisplaySelect>();
-            displaySelect.SetDisplayId(screenId);
-            displaySelect.KeepInSync();
+                var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                displaySelect.SetDisplayId(screenId);
+                displaySelect.KeepInSync();
+            }
         }
 
         private void SelectRandomVideoStream()
@@ -199,18 +202,20 @@ namespace Assets.Scripts
             // For now I am going to select a random stream to display. We will probably want a different action
             var streams = AgoraController.instance.AgoraUsers;
 
-            var streamId = (int) Math.Ceiling(Random.value * streams.Count);
-            var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
+            if (streams.Count > 0)
+            {
+                var streamId = (int) Math.Ceiling(Random.value * streams.Count);
+                var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-            var gameManager = GameObject.Find("GameManager");
+                var gameManager = GameObject.Find("GameManager");
 
-            var streamSelect = gameManager.GetComponent<StreamSelect>();
-            streamSelect.SetStreamId(streamId);
-            streamSelect.KeepInSync();
+                var streamSelect = gameManager.GetComponent<StreamSelect>();
+                streamSelect.SetStreamId(streamId);
+                streamSelect.KeepInSync();
 
-            var displaySelect = gameManager.GetComponent<DisplaySelect>();
-            displaySelect.SetDisplayId(screenId);
-            displaySelect.KeepInSync();
+                var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                displaySelect.SetDisplayId(screenId);
+            }
         }
     }
 }
