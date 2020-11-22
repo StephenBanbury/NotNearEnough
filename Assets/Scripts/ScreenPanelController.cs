@@ -87,10 +87,11 @@ namespace Assets.Scripts
                 {
                     case ScreenAction.ChangeVideoClip:
                         Debug.Log("ScreenAction: Change video clip");
-                        SelectRandomVideo();
+                        SelectRandomVideoClip();
                         break;
                     case ScreenAction.ChangeVideoStream:
                         Debug.Log("ScreenAction: Change video stream");
+                        SelectRandomVideoStream();
                         break;
                     case ScreenAction.ChangeFormation:
                         Debug.Log("ScreenAction: Change screen formation");
@@ -159,16 +160,9 @@ namespace Assets.Scripts
             return parentScene.name;
         }
 
-        private void SelectRandomVideo()
+        private void SelectRandomVideoClip()
         {
-            var displaySuffix = "Wide";
-
-            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
-            var videoDisplayName = $"VideoDisplay{displaySuffix}";
-
             var parent = gameObject.transform.parent;
-            var videoDisplay = parent.Find(videoDisplayName);
-            var canvasDisplay = parent.Find(canvasDisplayName);
 
             // For now I am going to select a random video to display. We will probably want a different action
             var videos = MediaDisplayManager.instance.Videos;
@@ -185,18 +179,27 @@ namespace Assets.Scripts
             var displaySelect = gameManager.GetComponent<DisplaySelect>();
             displaySelect.SetDisplayId(screenId);
             displaySelect.KeepInSync();
+        }
 
-            // Will use this later...
-            //if (videoDisplay)
-            //{
-            //    Debug.Log($"{videoDisplayName} in {parent.name} active: {videoDisplay.gameObject.activeSelf}");
-            //}
+        private void SelectRandomVideoStream()
+        {
+            var parent = gameObject.transform.parent;
 
-            //if (canvasDisplay)
-            //{
-            //    Debug.Log($"{canvasDisplayName} in {parent.name} active: {canvasDisplay.gameObject.activeSelf}");
-            //}
+            // For now I am going to select a random stream to display. We will probably want a different action
+            var streams = AgoraController.instance.AgoraUsers;
 
+            var streamId = (int) Math.Ceiling(Random.value * streams.Count);
+            var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
+
+            var gameManager = GameObject.Find("GameManager");
+
+            var streamSelect = gameManager.GetComponent<StreamSelect>();
+            streamSelect.SetStreamId(streamId);
+            streamSelect.KeepInSync();
+
+            var displaySelect = gameManager.GetComponent<DisplaySelect>();
+            displaySelect.SetDisplayId(screenId);
+            displaySelect.KeepInSync();
         }
     }
 }

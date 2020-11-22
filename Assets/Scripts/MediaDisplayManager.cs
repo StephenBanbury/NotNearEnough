@@ -280,23 +280,9 @@ namespace Assets.Scripts
 
         private void GetLocalVideosDetails()
         {
-            // Getting videos from the service will be necessary for URL based content
-            // It is not necessary at the moment as we are using local content.
-            // TODO: Streaming will probably be another thing altogether!
-
             Debug.Log("Get Videos from local storage");
-
             var videoService = new VideoService();
-
             Videos = videoService.GetLocalVideos();
-
-            // TODO: We may not ever need _displayVideo
-            //_displayVideo = new Dictionary<int, MediaDetail>();
-
-            //foreach (var video in Videos)
-            //{
-            //    _displayVideo.Add(video.Id, video);
-            //}
         }
 
         private void GetVideoLinksFromTextFile()
