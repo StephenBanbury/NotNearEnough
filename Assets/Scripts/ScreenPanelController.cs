@@ -104,12 +104,13 @@ namespace Assets.Scripts
                         break;
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        MediaDisplayManager.instance.CreatePortal(screenId);
+                        MediaDisplayManager.instance.CreatePortal(screenId, true);
                         break;
                     case ScreenAction.DoTeleport:
                         Debug.Log("Doing action: Teleport");
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
                         MediaDisplayManager.instance.RandomTeleportation(sceneId);
+                        MediaDisplayManager.instance.CreatePortal(screenId, false);
                         break;
                 }
 

@@ -113,11 +113,16 @@ namespace Assets.Scripts
             MyCurrentScene = Scene.Scene1;
             //OffsetPlayerPositionWithinScene();
         }
-        public void CreatePortal(int screenId)
+        public void CreatePortal(int screenId, bool isActive)
         {
             ScreensAsPortal.Add(screenId);
             Transform screen = GetScreenObjectFromScreenId(screenId);
-            Debug.Log($"Portal created on '{screen.name}'");
+            if (screen != null)
+            {
+                Debug.Log($"Creating portal on '{screen.name}'");
+                Transform portal = screen.Find("Portal");
+                portal.gameObject.SetActive(isActive);
+            }
         }
 
         public ScreenAction GetNextScreenAction(int screenId)
