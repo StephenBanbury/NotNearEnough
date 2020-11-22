@@ -115,7 +115,16 @@ namespace Assets.Scripts
         }
         public void CreatePortal(int screenId, bool isActive)
         {
-            ScreensAsPortal.Add(screenId);
+            if (isActive)
+            {
+                ScreensAsPortal.Add(screenId);
+            }
+            else
+            {
+                var s = ScreensAsPortal.Find(x => x.Equals(screenId));
+                ScreensAsPortal.Remove(s);
+            }
+
             Transform screen = GetScreenObjectFromScreenId(screenId);
             if (screen != null)
             {

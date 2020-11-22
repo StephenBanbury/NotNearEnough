@@ -109,7 +109,7 @@ namespace Assets.Scripts
                     case ScreenAction.DoTeleport:
                         Debug.Log("Doing action: Teleport");
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
-                        MediaDisplayManager.instance.RandomTeleportation(sceneId);
+                        //MediaDisplayManager.instance.RandomTeleportation(sceneId);
                         MediaDisplayManager.instance.CreatePortal(screenId, false);
                         break;
                 }
