@@ -25,7 +25,7 @@ namespace Assets.Scripts
             if (_displayId > 0) // && _displayId != _previousId)
             {
                 MediaDisplayManager.instance.SelectedDisplay = _displayId;
-                MediaDisplayManager.instance.StoreScreenDisplayState();
+                MediaDisplayManager.instance.StoreRealtimeScreenMediaState();
             }
         }
 

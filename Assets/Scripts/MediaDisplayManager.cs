@@ -42,6 +42,7 @@ namespace Assets.Scripts
         [SerializeField] private Text _lobbyStatusInfoText;
         [SerializeField] private GameObject _startButton;
         [SerializeField] private Text _debugText;
+        [SerializeField] private Text _hudText;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -113,25 +114,11 @@ namespace Assets.Scripts
             MyCurrentScene = Scene.Scene1;
             //OffsetPlayerPositionWithinScene();
         }
+
         public void CreatePortal(int screenId, bool isActive)
         {
-            if (isActive)
-            {
-                ScreensAsPortal.Add(screenId);
-            }
-            else
-            {
-                var s = ScreensAsPortal.Find(x => x.Equals(screenId));
-                ScreensAsPortal.Remove(s);
-            }
-
-            Transform screen = GetScreenObjectFromScreenId(screenId);
-            if (screen != null)
-            {
-                Debug.Log($"Creating portal on '{screen.name}'");
-                Transform portal = screen.Find("Portal");
-                portal.gameObject.SetActive(isActive);
-            }
+            StoreRealtimeScreenPortalState(screenId);
+            AssignPortalToScreen(screenId, isActive);
         }
 
         public ScreenAction GetNextScreenAction(int screenId)
@@ -153,7 +140,7 @@ namespace Assets.Scripts
             }
             else
             {
-                bool canDoFormation = MediaDisplayManager.instance.CanTransformScene.Contains(scene);
+                bool canDoFormation = CanTransformScene.Contains(scene);
                 bool hasVideoStreams = AgoraController.instance.AgoraUsers.Count > 0;
                 int numberOfActions = Enum.GetValues(typeof(ScreenAction)).Cast<int>().Max();
                 do
@@ -465,22 +452,67 @@ namespace Assets.Scripts
                         AssignStreamToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
                         break;
                 }
+
+                AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
             }
         }
 
-        public void StoreScreenDisplayState()
+        public void StoreRealtimeScreenMediaState()
         {
-            MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
-            {
-                mediaTypeId = (int) _lastSelectedMediaType,
-                mediaId = _lastSelectedMediaType == MediaType.VideoClip
-                    ? _lastSelectedVideoId
-                    : _lastSelectedStreamId,
-                screenDisplayId = _lastSelectedDisplayId
-            };
+            var existing =
+                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == _lastSelectedDisplayId);
 
-            model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
-            //Debug.Log($"mediaScreenDisplayStates: {model.mediaScreenDisplayStates.Count}");
+            //var isPortal = ScreensAsPortal.IndexOf(_lastSelectedDisplayId) != -1;
+
+            if (existing != null)
+            {
+                existing.mediaTypeId =
+                    (int) _lastSelectedMediaType;
+                existing.mediaId =
+                    _lastSelectedMediaType == MediaType.VideoClip
+                        ? _lastSelectedVideoId
+                        : _lastSelectedMediaType == MediaType.VideoStream
+                            ? _lastSelectedStreamId
+                            : 0;
+                //existing.isPortal = isPortal;
+            }
+            else
+            {
+                MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
+                {
+                    screenDisplayId = _lastSelectedDisplayId,
+                    mediaTypeId = (int) _lastSelectedMediaType,
+                    mediaId = _lastSelectedMediaType == MediaType.VideoClip
+                        ? _lastSelectedVideoId
+                        : _lastSelectedStreamId,
+                    //isPortal = isPortal
+                };
+
+                model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
+            }
+        }
+        
+        public void StoreRealtimeScreenPortalState(int screenId)
+        {
+            var existing =
+                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
+
+            var isPortal = ScreensAsPortal.IndexOf(screenId) != -1;
+
+            if (existing != null)
+            {
+                existing.isPortal = isPortal;
+            }
+            else
+            {
+                MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
+                {
+                    screenDisplayId = screenId,
+                    isPortal = isPortal
+                };
+
+                model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
+            }
         }
 
         private Transform GetScreenObjectFromScreenId(int screenId)
@@ -568,15 +600,6 @@ namespace Assets.Scripts
             }
         }
 
-        //private void VideoPlayer_errorReceived(VideoPlayer source, string message)
-        //{
-        //    _debugText.text += message;
-
-        //    ///// To avoid memory leaks, unsubscribe from the event
-        //    ///// otherwise it could continuously send this message
-        //    videoPlayer.errorReceived -= VideoPlayer_errorReceived;
-        //}
-
         private void AssignStreamToDisplay(int streamId, int displayId)
         {
             if (streamId > 0 && displayId > 0)
@@ -610,6 +633,85 @@ namespace Assets.Scripts
                     }
                 }
             }
+        }
+
+        private void AssignPortalToScreen(int screenId, bool isActive)
+        {
+            if (isActive)
+            {
+                //HudClear();
+
+                bool exists = ScreensAsPortal.IndexOf(screenId) != -1;
+
+                HudStartMessage($"Is screen {screenId} already portal?: {exists}");
+                //Debug.Log($"Is screen {screenId} already portal?: {exists}");
+
+                if (!exists)
+                {
+                    //_hudText.text += $"\nAssigning portal to screen {screenId}";
+                    Debug.Log($"Assigning portal to screen {screenId}");
+
+                    ScreensAsPortal.Add(screenId);
+                    var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+                    screenAction.NextAction = ScreenAction.DoTeleport;
+
+                    Transform screenObject = GetScreenObjectFromScreenId(screenId);
+                    if (screenObject != null)
+                    {
+                        Debug.Log($"Creating portal on '{screenObject.name}'");
+                        Transform portal = screenObject.Find("Portal");
+                        portal.gameObject.SetActive(true);
+                    }
+                }
+                //else
+                //{
+                //    var s = ScreensAsPortal.IndexOf(screenId);
+                //    ScreensAsPortal.Remove(s);
+                //    Transform screenObject = GetScreenObjectFromScreenId(screenId);
+                //    if (screenObject != null)
+                //    {
+                //        Debug.Log($"Removing portal from '{screenObject.name}'");
+                //        Transform portal = screenObject.Find("Portal");
+                //        portal.gameObject.SetActive(false);
+                //    }
+                //}
+            }
+            else
+            {
+                ScreensAsPortal.RemoveAll(id => id == screenId);
+
+                Transform screenObject = GetScreenObjectFromScreenId(screenId);
+                if (screenObject != null)
+                {
+                    Debug.Log($"Creating portal on '{screenObject.name}'");
+                    Transform portal = screenObject.Find("Portal");
+                    portal.gameObject.SetActive(false);
+                }
+            }
+
+
+            HudShowPortals();
+        }
+
+        private void HudClear()
+        {
+            _hudText.text = "";
+        }
+
+        private void HudShowPortals()
+        {
+            _hudText.text = "";
+            foreach (var i in ScreensAsPortal)
+            {
+                _hudText.text += $"\nportal: {i}";
+                Debug.Log($"\nportal: {i}");
+            }
+        }
+
+        private void HudStartMessage(string message)
+        {
+            //_hudText.text = $"\n{message}";
+            Debug.Log(message);
         }
 
         private void SpawnScene(Scene scene, ScreenFormation formation)

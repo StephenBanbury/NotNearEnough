@@ -3,7 +3,7 @@ namespace Assets.Scripts.Enums
 {
     public enum MediaType
     {
-        Misc = 0,
+        None = 0,
         VideoClip = 1,
         VideoStream = 2,
         Audio =3
