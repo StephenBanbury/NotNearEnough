@@ -88,29 +88,43 @@ namespace Assets.Scripts
 
                 _triggerIsInAction = true;
 
+                GameObject gameManager = GameObject.Find("GameManager");
+                var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
+
                 switch (nextAction)
                 {
                     case ScreenAction.ChangeVideoClip:
                         Debug.Log("Doing action: Change video clip");
                         SelectRandomVideoClip();
                         break;
+
                     case ScreenAction.ChangeVideoStream:
                         Debug.Log("Doing action: Change video stream");
                         SelectRandomVideoStream();
                         break;
+
                     case ScreenAction.ChangeFormation:
                         Debug.Log("Doing action: Change screen formation");
                         ChangeScreenFormation();
                         break;
+
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        MediaDisplayManager.instance.CreatePortal(screenId, true);
+                        portalDisplaySelect.SetPortalDisplayId(screenId, true);
+                        portalDisplaySelect.KeepInSync();
                         break;
+
                     case ScreenAction.DoTeleport:
                         Debug.Log("Doing action: Teleport");
+
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
                         MediaDisplayManager.instance.RandomTeleportation(sceneId);
                         MediaDisplayManager.instance.CreatePortal(screenId, false);
+
+                        portalDisplaySelect.SetPortalDisplayId(screenId, false);
+                        portalDisplaySelect.KeepInSync();
+                        // Keep in sync
+
                         break;
                 }
 

@@ -65,8 +65,10 @@ namespace Assets.Scripts
             mRtcEngine.EnableLocalVideo(false);
 
 
-            // join channel
-            mRtcEngine.JoinChannel(channel, null, 0);
+            // Join channel
+            // Force UID to be very high so it is excluded from displaying show  
+            // display button and therefore from joining the video streaming fun
+            mRtcEngine.JoinChannel(channel, null, 99999999);
 
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);

@@ -117,8 +117,8 @@ namespace Assets.Scripts
 
         public void CreatePortal(int screenId, bool isActive)
         {
-            StoreRealtimeScreenPortalState(screenId);
             AssignPortalToScreen(screenId, isActive);
+            StoreRealtimeScreenPortalState(screenId, isActive);
         }
 
         public ScreenAction GetNextScreenAction(int screenId)
@@ -453,6 +453,7 @@ namespace Assets.Scripts
                         break;
                 }
 
+                Debug.Log($"Assign portal to display {mediaInfo.screenDisplayId}?: {mediaInfo.isPortal}");
                 AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
             }
         }
@@ -492,23 +493,30 @@ namespace Assets.Scripts
             }
         }
         
-        public void StoreRealtimeScreenPortalState(int screenId)
+        public void StoreRealtimeScreenPortalState(int screenId, bool isActive)
         {
-            var existing =
-                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
 
             var isPortal = ScreensAsPortal.IndexOf(screenId) != -1;
 
+            if (!isPortal && isActive)
+                ScreensAsPortal.Add(screenId);
+
+            if (isPortal && !isActive)
+                ScreensAsPortal.RemoveAll(id => id == screenId);
+
+            var existing =
+                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
+
             if (existing != null)
             {
-                existing.isPortal = isPortal;
+                existing.isPortal = isActive;
             }
             else
             {
                 MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
                 {
                     screenDisplayId = screenId,
-                    isPortal = isPortal
+                    isPortal = isActive
                 };
 
                 model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
@@ -700,10 +708,10 @@ namespace Assets.Scripts
 
         private void HudShowPortals()
         {
-            _hudText.text = "";
+            //_hudText.text = "";
             foreach (var i in ScreensAsPortal)
             {
-                _hudText.text += $"\nportal: {i}";
+                //_hudText.text += $"\nportal: {i}";
                 Debug.Log($"\nportal: {i}");
             }
         }

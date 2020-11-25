@@ -16,7 +16,7 @@ namespace Assets.Scripts
             _portalSelectSync = gameObject.GetComponent<PortalSelectSync>();
         }
 
-        public void SetPortalDisplayId(int id)
+        public void SetPortalDisplayId(int id, bool isActive)
         {
             Debug.Log($"SetPortalDisplayId: {id}");
 
@@ -25,7 +25,7 @@ namespace Assets.Scripts
             if (_portalDisplayId > 0) // && _displayId != _previousId)
             {
                 //MediaDisplayManager.instance.SelectedDisplay = _portalDisplayId;
-                MediaDisplayManager.instance.CreatePortal(id, true);
+                MediaDisplayManager.instance.CreatePortal(id, isActive);
             }
         }
 

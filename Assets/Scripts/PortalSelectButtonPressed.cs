@@ -29,7 +29,7 @@ namespace Assets.Scripts
                 var gameManager = GameObject.Find("GameManager");
 
                 var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
-                portalDisplaySelect.SetPortalDisplayId(compositeId);
+                portalDisplaySelect.SetPortalDisplayId(compositeId, true);
                 portalDisplaySelect.KeepInSync();
 
                 _displayIdText.text = _portalDisplayId.ToString();

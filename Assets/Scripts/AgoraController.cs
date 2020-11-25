@@ -66,46 +66,40 @@ namespace Assets.Scripts
             CheckPermissions();
         }
 
-        //public void UserJoined(AgoraUser agoraUser)
-        //{
-        //    Debug.Log($"Agora joined user is local: {agoraUser.IsLocal}");
-        //    if (!agoraUser.IsLocal)
-        //    {
-        //        _joinedUsers.Add(agoraUser);
-        //    }
-        //}
-
         public void UserJoinsRoom(uint uid)
         {
-            Debug.Log("Agora UserJoinsRoom");
-
-            var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
-
-            if (userAlreadyJoined)
+            if (uid < 99999999)
             {
-                Debug.Log($"User already joined");
-            }
-            else
-            {
-                var newId = _joinedUsers.Any() ? _joinedUsers.Max(u => u.Id) + 1 : 1;
+                Debug.Log("Agora UserJoinsRoom");
 
-                var agoraUser = new AgoraUser
+                var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
+
+                if (userAlreadyJoined)
                 {
-                    Id = newId,
-                    Uid = uid,
-                    DateJoined = DateTime.UtcNow,
-                    Display = false
-                };
-
-                _joinedUsers.Add(agoraUser);
-
-                Debug.Log($"Agora Number joined: {_joinedUsers.Count}");
-                foreach (var user in _joinedUsers)
-                {
-                    Debug.Log($" - Uid: {user.Uid})");
+                    Debug.Log($"User already joined");
                 }
+                else
+                {
+                    var newId = _joinedUsers.Any() ? _joinedUsers.Max(u => u.Id) + 1 : 1;
 
-                MediaDisplayManager.instance.CreateStreamSelectButtons();
+                    var agoraUser = new AgoraUser
+                    {
+                        Id = newId,
+                        Uid = uid,
+                        DateJoined = DateTime.UtcNow,
+                        Display = false
+                    };
+
+                    _joinedUsers.Add(agoraUser);
+
+                    Debug.Log($"Agora Number joined: {_joinedUsers.Count}");
+                    foreach (var user in _joinedUsers)
+                    {
+                        Debug.Log($" - Uid: {user.Uid})");
+                    }
+
+                    MediaDisplayManager.instance.CreateStreamSelectButtons();
+                }
             }
         }
 

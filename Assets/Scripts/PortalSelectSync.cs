@@ -49,7 +49,7 @@ namespace Assets.Scripts
             if (_model != null && _model.displayId > 0)
             {
                 // Get the value from the model, display it and update the manager
-                _portalSelect.SetPortalDisplayId(_model.displayId);
+                _portalSelect.SetPortalDisplayId(_model.displayId, true);
                 
                 //Debug.Log("Sync: Selected display updated");
                 
