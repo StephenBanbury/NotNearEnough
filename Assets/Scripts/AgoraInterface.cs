@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using agora_gaming_rtc;
 using Assets.Scripts.Models;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -68,7 +69,9 @@ namespace Assets.Scripts
             // Join channel
             // Force UID to be very high so it is excluded from displaying show  
             // display button and therefore from joining the video streaming fun
-            mRtcEngine.JoinChannel(channel, null, 99999999);
+            float newUid = Random.Range(0.1f, 1f) * 4294967295;
+
+            mRtcEngine.JoinChannel(channel, null, (uint) newUid);
 
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);
