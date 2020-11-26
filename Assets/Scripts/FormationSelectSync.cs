@@ -43,13 +43,19 @@ namespace Assets.Scripts
 
         private void FormationIdDidChange(FormationSelectSyncModel model, int value)
         {
+            Debug.Log($"FormationIdDidChange: {value}");
             UpdateFormationId();
         }
 
         private void UpdateFormationId()
         {
+            Debug.Log($"Model is null: {_model == null}");
+
             if (_model != null && _model.formationId > 0)
             {
+
+                Debug.Log($"UpdateFormationId {_model.formationId}");
+
                 // Get the value from the model, display it 
 
                 // _model.formationId comes in 'composite' form, e.g. 12 = scene 1, formation 2.

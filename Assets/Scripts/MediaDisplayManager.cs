@@ -33,7 +33,6 @@ namespace Assets.Scripts
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _streamButton;
-        [SerializeField] private Text _streamButtonLabel;
         [SerializeField] private GameObject _screen;
         [SerializeField] private GameObject _screenVariant;
         [SerializeField] private AudioSource _sceneAudio;
