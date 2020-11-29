@@ -70,13 +70,13 @@ namespace Assets.Scripts
         {
             if (uid < 99999999)
             {
-                Debug.Log("Agora UserJoinsRoom");
+                Debug.Log("Agora: UserJoinsRoom");
 
                 var userAlreadyJoined = _joinedUsers.Any(u => u.Uid == uid);
 
                 if (userAlreadyJoined)
                 {
-                    Debug.Log($"User already joined");
+                    Debug.Log($"Agora: User already joined");
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace Assets.Scripts
 
                     _joinedUsers.Add(agoraUser);
 
-                    Debug.Log($"Agora Number joined: {_joinedUsers.Count}");
+                    Debug.Log($"Agora: Number joined: {_joinedUsers.Count}");
                     foreach (var user in _joinedUsers)
                     {
                         Debug.Log($" - Uid: {user.Uid})");
@@ -122,7 +122,7 @@ namespace Assets.Scripts
 
         public void AssignStreamToDisplay(AgoraUser agoraUser)
         {
-            Debug.Log("Agora AssignStreamToDisplay");
+            Debug.Log("Agora: AssignStreamToDisplay");
 
             // Create a GameObject and assign to this new user
             VideoSurface videoSurface = MakeImageSurface(agoraUser);
@@ -144,7 +144,7 @@ namespace Assets.Scripts
             var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
             var videoDisplayName = $"VideoDisplay{displaySuffix}";
 
-            Debug.Log("Agora MakeImageSurface");
+            Debug.Log("Agora: MakeImageSurface");
 
             // find a game object to render video stream from 'uid'
 
@@ -230,7 +230,7 @@ namespace Assets.Scripts
 
         public void JoinRoom()
         {
-            Debug.Log($"Agora JoinRoom: {_app}");
+            Debug.Log($"Agora: JoinRoom: {_app}");
 
             // create app if nonexistent
             if (ReferenceEquals(_app, null))

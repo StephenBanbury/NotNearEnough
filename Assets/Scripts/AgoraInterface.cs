@@ -15,11 +15,11 @@ namespace Assets.Scripts
         public void LoadEngine(string appId)
         {
             // start sdk
-            Debug.Log("Agora InitializeEngine");
+            Debug.Log("Agora: InitializeEngine");
 
             if (mRtcEngine != null)
             {
-                Debug.Log("Engine exists. Please unload it first!");
+                Debug.Log("Agora: Engine exists. Please unload it first!");
                 return;
             }
 
@@ -39,12 +39,12 @@ namespace Assets.Scripts
             var d = "";
             var audioPlaybackDeviceManager = AudioPlaybackDeviceManager.GetInstance(mRtcEngine);
             var playebackDeviceId = audioPlaybackDeviceManager.GetCurrentPlaybackDevice(ref d);
-            Debug.Log($"playbackDevice: {playebackDeviceId}");
+            Debug.Log($"Agora: playbackDevice: {playebackDeviceId}");
         }
 
         public bool Join(string channel)
         {
-            Debug.Log($"Agora Join (channel = {channel})");
+            Debug.Log($"Agora: Join (channel = {channel})");
 
             if (mRtcEngine == null)
                 return false;
@@ -75,7 +75,7 @@ namespace Assets.Scripts
 
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);
-            Debug.Log("Agora InitializeEngine done, data stream id = " + streamID);
+            Debug.Log("Agora: InitializeEngine done, data stream id = " + streamID);
 
             return true;
         }
@@ -84,7 +84,7 @@ namespace Assets.Scripts
         {
             if (mRtcEngine == null) return;
 
-            Debug.Log("Agora LeaveChannel");
+            Debug.Log("Agora: LeaveChannel");
 
             // leave channel
             mRtcEngine.LeaveChannel();
@@ -95,7 +95,7 @@ namespace Assets.Scripts
         // unload agora engine
         public void UnloadEngine()
         {
-            Debug.Log("Agora UnloadEngine");
+            Debug.Log("Agora: UnloadEngine");
 
             // delete
             if (mRtcEngine != null)
@@ -110,7 +110,7 @@ namespace Assets.Scripts
         {
             // Local client joins
 
-            Debug.Log("Agora OnJoinChannelSuccess: uid = " + uid);
+            Debug.Log("Agora: OnJoinChannelSuccess: uid = " + uid);
 
             //AgoraController.instance.UserJoined(new AgoraUser
             //{
@@ -129,7 +129,7 @@ namespace Assets.Scripts
         {
             // this is called in main thread
 
-            Debug.Log("Agora remote user joined: uid = " + uid);
+            Debug.Log("Agora: remote user joined: uid = " + uid);
 
             // Added by me. 
             // TODO: consider continuing this process. This may be where we start gaining control over our audio devices
@@ -137,11 +137,17 @@ namespace Assets.Scripts
 
             AgoraController.instance.UserJoinsRoom(uid);
 
+            // Optional: if a data stream is required, here is a good place to create it
+            int streamID = mRtcEngine.CreateDataStream(true, true);
+            Debug.Log("initializeEngine done, data stream id = " + streamID);
+
+            mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-6!");
+
         }
 
         void OnStreamMessage(uint userId, int streamId, string data, int length)
         {
-            Debug.Log($"Agora Message from {userId}: {data}");
+            Debug.Log($"Agora: Message from {userId}: {data}");
         }
 
         // When remote user is offline, this delegate will be called. Typically
@@ -149,7 +155,7 @@ namespace Assets.Scripts
         private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
         {
             // remove video stream
-            Debug.Log("Agora onUserOffline: uid = " + uid + " reason = " + reason);
+            Debug.Log("Agora: onUserOffline: uid = " + uid + " reason = " + reason);
 
             // this is called in main thread
 
