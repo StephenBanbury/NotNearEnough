@@ -42,6 +42,7 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _startButton;
         [SerializeField] private Text _debugText;
         [SerializeField] private Text _hudText;
+        private List<MediaScreenDisplayBufferState> _mediaStateBuffers;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -78,6 +79,7 @@ namespace Assets.Scripts
         {
             Videos = new List<MediaDetail>();
             ScreensAsPortal = new List<int>();
+            _mediaStateBuffers = new List<MediaScreenDisplayBufferState>();
 
             GetLocalVideosDetails();
 
@@ -268,19 +270,6 @@ namespace Assets.Scripts
             _startButton.SetActive(true);
         }
 
-        // TODO: remove - not used
-        public void OffsetPlayerPositionWithinScene()
-        {
-            var sceneService = new SceneService(MyCurrentScene);
-            var offset = sceneService.GetScenePosition();
-            var player = GameObject.Find("Player");
-            player.transform.position = player.transform.position + offset;
-
-            Debug.Log($"player.transform.position: {player.transform.position}");
-            Debug.Log($"Offset: {offset}");
-            Debug.Log($"New position: {player.transform.position + offset}");
-        }
-
         public void CreateStreamSelectButtons()
         {
             if (Scenes == null)
@@ -389,16 +378,15 @@ namespace Assets.Scripts
             Debug.Log("MediaAssignedToDisplay: -");
             foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
             {
-                Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+                Debug.Log($"RealtimeArray: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
             }
          
             AssignMediaToDisplaysFromArray();
+            //AssignMediaToDisplay();
         }
 
         protected override void OnRealtimeModelReplaced(MediaScreenDisplayModel previousModel, MediaScreenDisplayModel currentModel)
         {
-            // TODO: Clear screens?
-
             Debug.Log("OnRealtimeModelReplaced");
 
             if (previousModel != null)
@@ -412,7 +400,7 @@ namespace Assets.Scripts
             if (currentModel != null)
             {
                 Debug.Log($"currentModel != null. Models: {currentModel.mediaScreenDisplayStates.Count}");
-                AssignMediaToDisplaysFromArray();
+                //AssignMediaToDisplaysFromArray();
 
                 // Let us know when a new screen has changed 
                 currentModel.mediaScreenDisplayStates.modelAdded += MediaAssignedToDisplay;
@@ -421,6 +409,8 @@ namespace Assets.Scripts
         
         public void AssignMediaToDisplay()
         {
+            Debug.Log("AssignMediaToDisplay");
+
             switch (_lastSelectedMediaType)
             {
                 case MediaType.VideoClip:
@@ -437,7 +427,7 @@ namespace Assets.Scripts
 
         public void AssignMediaToDisplaysFromArray()
         {
-            //Debug.Log("AssignMediaToDisplaysFromArray: -");
+            Debug.Log("AssignMediaToDisplaysFromArray");
             //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
             //{
             //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
@@ -445,22 +435,89 @@ namespace Assets.Scripts
 
             foreach (var mediaInfo in model.mediaScreenDisplayStates)
             {
-                switch (mediaInfo.mediaTypeId)
-                {
-                    case (int) MediaType.VideoClip:
-                        Debug.Log($"Assign video clip {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
-                        AssignVideoToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
-                        break;
+                var exists = _mediaStateBuffers.FirstOrDefault(m =>
+                    m.ScreenDisplayId == mediaInfo.screenDisplayId && m.MediaTypeId == mediaInfo.mediaTypeId &&
+                    m.MediaId == mediaInfo.mediaId);
 
-                    case (int) MediaType.VideoStream:
-                        Debug.Log($"Assign video stream {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
-                        AssignStreamToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
-                        break;
+                if(exists != null)
+                {
+                    Debug.Log($"MediaId {mediaInfo.mediaId} already exists on screen {mediaInfo.screenDisplayId}");
+                }
+                else
+                {
+                    bool assigned = false;
+
+                    switch (mediaInfo.mediaTypeId)
+                    {
+                        case (int) MediaType.VideoClip:
+                            Debug.Log($"Assign video clip {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
+                            assigned = AssignVideoToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
+                            break;
+
+                        case (int) MediaType.VideoStream:
+                            Debug.Log(
+                                $"Assign video stream {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
+                            assigned = AssignStreamToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
+                            break;
+                    }
+
+                    if (assigned)
+                    {
+                        _mediaStateBuffers.Add(new MediaScreenDisplayBufferState
+                        {
+                            MediaTypeId = mediaInfo.mediaTypeId,
+                            MediaId = mediaInfo.mediaId,
+                            ScreenDisplayId = mediaInfo.screenDisplayId
+                        });
+                    }
                 }
 
                 Debug.Log($"Assign portal to display {mediaInfo.screenDisplayId}?: {mediaInfo.isPortal}");
                 AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
             }
+        }
+
+        public void StoreBufferScreenMediaState()
+        {
+            var existing =
+                _mediaStateBuffers.FirstOrDefault(s => s.ScreenDisplayId == _lastSelectedDisplayId);
+
+            Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
+
+            //var isPortal = ScreensAsPortal.IndexOf(_lastSelectedDisplayId) != -1;
+
+            if (existing != null)
+            {
+                existing.MediaTypeId =
+                    (int) _lastSelectedMediaType;
+                existing.MediaId =
+                    _lastSelectedMediaType == MediaType.VideoClip
+                        ? _lastSelectedVideoId
+                        : _lastSelectedMediaType == MediaType.VideoStream
+                            ? _lastSelectedStreamId
+                            : 0;
+                //existing.isPortal = isPortal;
+            }
+            else
+            {
+                MediaScreenDisplayBufferState bufferState = new MediaScreenDisplayBufferState
+                {
+                    ScreenDisplayId = _lastSelectedDisplayId,
+                    MediaTypeId = (int) _lastSelectedMediaType,
+                    MediaId = _lastSelectedMediaType == MediaType.VideoClip
+                        ? _lastSelectedVideoId
+                        : _lastSelectedStreamId,
+                    //isPortal = isPortal
+                };
+
+                _mediaStateBuffers.Add(bufferState);
+            }
+
+            //Debug.Log("StoreRealtimeScreenMediaState: -");
+            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            //{
+            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+            //}
         }
 
         public void StoreRealtimeScreenMediaState()
@@ -505,7 +562,7 @@ namespace Assets.Scripts
             //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
             //}
         }
-        
+
         public void StoreRealtimeScreenPortalState(int screenId, bool isActive)
         {
 
@@ -550,109 +607,148 @@ namespace Assets.Scripts
             return screenObject;
         }
 
-        private void AssignVideoToDisplay(int videoId, int screenId)
+        private bool AssignVideoToDisplay(int videoId, int screenId)
         {
-            //Debug.Log("AssignVideoToDisplay");
-            //Debug.Log($"videoId: {videoId}");
-            //Debug.Log($"displayId: {displayId}");
-
-            var displaySuffix = "Wide";
-
-            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
-            var videoDisplayName = $"VideoDisplay{displaySuffix}";
-
-            if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
+            try
             {
-                Debug.Log($"Assign videoId: {videoId}");
+                //Debug.Log("AssignVideoToDisplay");
+                //Debug.Log($"videoId: {videoId}");
+                //Debug.Log($"displayId: {displayId}");
 
-                Transform screenObject = GetScreenObjectFromScreenId(screenId);
+                var displaySuffix = "Wide";
 
-                var thisVideoClip = Videos.First(v => v.Id == videoId);
+                var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+                var videoDisplayName = $"VideoDisplay{displaySuffix}";
 
-                Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
-
-                var videoDisplay = screenObject.transform.Find(videoDisplayName);
-                var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
-
-                videoDisplay.gameObject.SetActive(true);
-                canvasDisplay.gameObject.SetActive(false);
-
-                var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
-
-                //Add AudioSource
-                //AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-
-                //Disable Play on Awake for both Video and Audio
-                videoPlayer.playOnAwake = false;
-                //audioSource.playOnAwake = false;
-                //audioSource.Pause();
-
-                if (thisVideoClip.Source == Source.Url)
+                if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
                 {
-                    // Video clip from Url
-                    Debug.Log("URL video clip");
-                    
-                    videoPlayer.source = VideoSource.Url;
-                    videoPlayer.url = thisVideoClip.LocalPath;
-                }
-                else
-                {
-                    // Video clip from local storage
-                    Debug.Log("Local video clip");
-                    var vc = _videoClips[videoId - 1];
-                    videoPlayer.clip = vc;
-                }
+                    Debug.Log($"Assign videoId: {videoId}");
 
-                //Set Audio Output to AudioSource
-                //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+                    Transform screenObject = GetScreenObjectFromScreenId(screenId);
 
-                //Assign the Audio from Video to AudioSource to be played
-                //videoPlayer.EnableAudioTrack(0, true);
-                //videoPlayer.SetTargetAudioSource(0, audioSource);
+                    var thisVideoClip = Videos.First(v => v.Id == videoId);
 
-                // TODO test to see if this speeds up or slows down video play start
-                //Set video To Play then prepare Audio to prevent Buffering        
-                //videoPlayer.Prepare();
+                    Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
 
-                //Play Video
-                videoPlayer.Play();
-                //Play Sound
-                //audioSource.Play();
-            }
-        }
+                    var videoDisplay = screenObject.transform.Find(videoDisplayName);
+                    var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
 
-        private void AssignStreamToDisplay(int streamId, int displayId)
-        {
-            if (streamId > 0 && displayId > 0)
-            {
-                var agoraUsers = AgoraController.instance.AgoraUsers;
+                    videoDisplay.gameObject.SetActive(true);
+                    canvasDisplay.gameObject.SetActive(false);
 
-                if (agoraUsers.Any())
-                {
-                    Debug.Log("agoraUsers: -");
-                    foreach (var user in agoraUsers)
+                    var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
+
+                    //Add AudioSource
+                    //AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+
+                    bool isPlaying = false;
+
+                    if (thisVideoClip.Source == Source.Url)
                     {
-                        Debug.Log($" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
-                    }
+                        //Debug.Log($"new path: {thisVideoClip.LocalPath}; current path on {videoPlayer.name}: {videoPlayer.url}");
 
-                    var agoraUser = agoraUsers.FirstOrDefault(u => u.Id == streamId);
-
-                    Debug.Log($"agoraUser exists: {agoraUser != null}");
-
-                    if (agoraUser != null)
-                    {
-                        if (agoraUser.IsLocal || agoraUser.LeftRoom)
+                        if (thisVideoClip.LocalPath == videoPlayer.url)
                         {
-                            Debug.Log(
-                                $"Something has gone wrong - is local: {agoraUser.IsLocal}, left room: {agoraUser.LeftRoom}.");
+                            Debug.Log($"Video {videoId} is already playing on screen {screenId}");
+                            isPlaying = true;
                         }
                         else
                         {
-                            agoraUser.DisplayId = displayId;
-                            AgoraController.instance.AssignStreamToDisplay(agoraUser);
+                            // Video clip from Url
+                            Debug.Log("URL video clip");
+
+                            videoPlayer.source = VideoSource.Url;
+                            videoPlayer.url = thisVideoClip.LocalPath;
                         }
                     }
+                    else
+                    {
+                        // Video clip from local storage
+                        Debug.Log("Local video clip");
+                        var vc = _videoClips[videoId - 1];
+                        videoPlayer.clip = vc;
+                    }
+
+                    //Disable Play on Awake for both Video and Audio
+                    videoPlayer.playOnAwake = false;
+                    //audioSource.playOnAwake = false;
+                    //audioSource.Pause();
+
+                    //Set Audio Output to AudioSource
+                    //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+                    //Assign the Audio from Video to AudioSource to be played
+                    //videoPlayer.EnableAudioTrack(0, true);
+                    //videoPlayer.SetTargetAudioSource(0, audioSource);
+
+                    // TODO test to see if this speeds up or slows down video play start
+                    //Set video To Play then prepare Audio to prevent Buffering        
+                    //videoPlayer.Prepare();
+
+                    //Play Video
+                    if (!isPlaying) videoPlayer.Play();
+
+                    //Play Sound
+                    //audioSource.Play();
+
+                    return true;
                 }
+
+                return false;
+            }
+            catch (Exception exception)
+            {
+                Debug.Log(exception);
+                return false;
+            }
+
+        }
+
+        private bool AssignStreamToDisplay(int streamId, int displayId)
+        {
+            try
+            {
+                if (streamId > 0 && displayId > 0)
+                {
+                    var agoraUsers = AgoraController.instance.AgoraUsers;
+
+                    if (agoraUsers.Any())
+                    {
+                        Debug.Log("agoraUsers: -");
+                        foreach (var user in agoraUsers)
+                        {
+                            Debug.Log(
+                                $" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
+                        }
+
+                        var agoraUser = agoraUsers.FirstOrDefault(u => u.Id == streamId);
+
+                        Debug.Log($"agoraUser exists: {agoraUser != null}");
+
+                        if (agoraUser != null)
+                        {
+                            if (agoraUser.IsLocal || agoraUser.LeftRoom)
+                            {
+                                Debug.Log(
+                                    $"Something has gone wrong - is local: {agoraUser.IsLocal}, left room: {agoraUser.LeftRoom}.");
+                            }
+                            else
+                            {
+                                agoraUser.DisplayId = displayId;
+                                AgoraController.instance.AssignStreamToDisplay(agoraUser);
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception exception)
+            {
+                Debug.Log(exception);
+                return false;
             }
         }
 

@@ -32,6 +32,7 @@ namespace Assets.Scripts
                 //displaySelect.KeepInSync(compositeId);
                 
                 MediaDisplayManager.instance.SelectedDisplay = compositeId;
+                MediaDisplayManager.instance.StoreBufferScreenMediaState();
                 MediaDisplayManager.instance.StoreRealtimeScreenMediaState();
 
                 _displayIdText.text = _displayId.ToString();
