@@ -25,10 +25,14 @@ namespace Assets.Scripts
                 //Debug.Log($"Display select sceneId:{sceneId}");
                 //Debug.Log($"Display select compositeId:{compositeId}");
 
-                var gameManager = GameObject.Find("GameManager");
-                var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                //var gameManager = GameObject.Find("GameManager");
+
+                //var displaySelect = gameManager.GetComponent<DisplaySelect>();
                 //displaySelect.SetDisplayId(compositeId);
-                displaySelect.KeepInSync(compositeId);
+                //displaySelect.KeepInSync(compositeId);
+                
+                MediaDisplayManager.instance.SelectedDisplay = compositeId;
+                MediaDisplayManager.instance.StoreRealtimeScreenMediaState();
 
                 _displayIdText.text = _displayId.ToString();
             }

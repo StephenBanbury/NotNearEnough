@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -14,10 +15,13 @@ namespace Assets.Scripts
             {
                 Debug.Log($"Video button pressed: videoId: {_videoId}");
 
-                var gameManager = GameObject.Find("GameManager");
-                var videoSelect = gameManager.GetComponent<VideoSelect>();
-                //videoSelect.SetVideoId(_videoId);
-                videoSelect.KeepInSync(_videoId);
+                //var gameManager = GameObject.Find("GameManager");
+                //var videoSelect = gameManager.GetComponent<VideoSelect>();
+                ////videoSelect.SetVideoId(_videoId);
+                //videoSelect.KeepInSync(_videoId);
+
+                MediaDisplayManager.instance.SelectedVideo = _videoId;
+                MediaDisplayManager.instance.SelectedMediaType = MediaType.VideoClip;
 
                 _videoIdText.text = _videoId.ToString();
             }

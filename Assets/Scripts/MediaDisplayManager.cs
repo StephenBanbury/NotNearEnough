@@ -113,7 +113,7 @@ namespace Assets.Scripts
             MyCurrentScene = Scene.Scene1;
             //OffsetPlayerPositionWithinScene();
         }
-
+        
         public void CreatePortal(int screenId, bool isActive)
         {
             AssignPortalToScreen(screenId, isActive);
@@ -386,17 +386,18 @@ namespace Assets.Scripts
 
         private void MediaAssignedToDisplay(RealtimeArray<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
         {
-            Debug.Log("MediaAssignedToDisplay");
-            //AssignMediaToDisplay();
+            Debug.Log("MediaAssignedToDisplay: -");
+            foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            {
+                Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+            }
+         
             AssignMediaToDisplaysFromArray();
         }
 
         protected override void OnRealtimeModelReplaced(MediaScreenDisplayModel previousModel, MediaScreenDisplayModel currentModel)
         {
-            // Clear Mesh
-            //_mesh.ClearRibbon();
-
-            // TODO: Clear screens
+            // TODO: Clear screens?
 
             Debug.Log("OnRealtimeModelReplaced");
 
@@ -407,7 +408,6 @@ namespace Assets.Scripts
                 // Unregister from events
                 previousModel.mediaScreenDisplayStates.modelAdded -= MediaAssignedToDisplay;
             }
-
 
             if (currentModel != null)
             {
@@ -437,10 +437,14 @@ namespace Assets.Scripts
 
         public void AssignMediaToDisplaysFromArray()
         {
+            //Debug.Log("AssignMediaToDisplaysFromArray: -");
+            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            //{
+            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+            //}
+
             foreach (var mediaInfo in model.mediaScreenDisplayStates)
             {
-                Debug.Log($"AssignMediaToDisplaysFromArray. mediaInfo: {mediaInfo.screenDisplayId}");
-
                 switch (mediaInfo.mediaTypeId)
                 {
                     case (int) MediaType.VideoClip:
@@ -463,6 +467,8 @@ namespace Assets.Scripts
         {
             var existing =
                 model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == _lastSelectedDisplayId);
+
+            Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
 
             //var isPortal = ScreensAsPortal.IndexOf(_lastSelectedDisplayId) != -1;
 
@@ -492,6 +498,12 @@ namespace Assets.Scripts
 
                 model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
             }
+
+            //Debug.Log("StoreRealtimeScreenMediaState: -");
+            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            //{
+            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+            //}
         }
         
         public void StoreRealtimeScreenPortalState(int screenId, bool isActive)
@@ -692,7 +704,7 @@ namespace Assets.Scripts
                 Transform screenObject = GetScreenObjectFromScreenId(screenId);
                 if (screenObject != null)
                 {
-                    Debug.Log($"Creating portal on '{screenObject.name}'");
+                    Debug.Log($"Removing portal on '{screenObject.name}'");
                     Transform portal = screenObject.Find("Portal");
                     portal.gameObject.SetActive(false);
                 }
