@@ -20,16 +20,13 @@ namespace Assets.Scripts
     public class MediaDisplayManager: RealtimeComponent<MediaScreenDisplayModel>
     {
         public static MediaDisplayManager instance;
-
         private int _sceneIndex;
-
         private int _lastSelectedVideoId;
         private int _lastSelectedStreamId;
-
         private int _lastSelectedDisplayId;
         private MediaType _lastSelectedMediaType;
-
         private float _floorAdjust = 1.25f;
+        private int _compositeScreenId = 0;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _streamButton;
@@ -42,7 +39,8 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _startButton;
         [SerializeField] private Text _debugText;
         [SerializeField] private Text _hudText;
-        private List<MediaScreenDisplayBufferState> _mediaStateBuffers;
+        private List<ScreenPortalBufferState> _screenPortalBuffer;
+        private List<MediaScreenDisplayBufferState> _mediaStateBuffer;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -53,8 +51,6 @@ namespace Assets.Scripts
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
         public List<ScreenActionModel> ScreenActions { get; private set; }
-
-        public List<int> ScreensAsPortal { get; set; }
 
         void Awake()
         {
@@ -78,8 +74,8 @@ namespace Assets.Scripts
         private IEnumerator AwaitVideosFromApiBeforeStart()
         {
             Videos = new List<MediaDetail>();
-            ScreensAsPortal = new List<int>();
-            _mediaStateBuffers = new List<MediaScreenDisplayBufferState>();
+            _mediaStateBuffer = new List<MediaScreenDisplayBufferState>();
+            _screenPortalBuffer = new List<ScreenPortalBufferState>();
 
             GetLocalVideosDetails();
 
@@ -116,11 +112,11 @@ namespace Assets.Scripts
             //OffsetPlayerPositionWithinScene();
         }
         
-        public void CreatePortal(int screenId, bool isActive)
-        {
-            AssignPortalToScreen(screenId, isActive);
-            StoreRealtimeScreenPortalState(screenId, isActive);
-        }
+        //public void CreatePortal(int screenId, bool isActive)
+        //{
+        //    AssignPortalToScreen(screenId, isActive);
+        //    StoreRealtimeScreenPortalState(screenId, isActive);
+        //}
 
         public ScreenAction GetNextScreenAction(int screenId)
         {
@@ -385,6 +381,18 @@ namespace Assets.Scripts
             //AssignMediaToDisplay();
         }
 
+        private void PortalAssignedToDisplay(RealtimeArray<ScreenPortalStateModel> screenPortalStates,
+            ScreenPortalStateModel screenPortalState, bool remote)
+        {
+            Debug.Log("PortalAssignedToDisplay: -");
+            foreach (var modelScreenPortalState in model.screenPortalStates)
+            {
+                Debug.Log($"RealtimeArray: {modelScreenPortalState.screenId} is portal: {modelScreenPortalState.isPortal}");
+            }
+
+            AssignPortalToDisplaysFromArray();
+        }
+
         protected override void OnRealtimeModelReplaced(MediaScreenDisplayModel previousModel, MediaScreenDisplayModel currentModel)
         {
             Debug.Log("OnRealtimeModelReplaced");
@@ -395,6 +403,7 @@ namespace Assets.Scripts
 
                 // Unregister from events
                 previousModel.mediaScreenDisplayStates.modelAdded -= MediaAssignedToDisplay;
+                previousModel.screenPortalStates.modelAdded -= PortalAssignedToDisplay;
             }
 
             if (currentModel != null)
@@ -404,6 +413,7 @@ namespace Assets.Scripts
 
                 // Let us know when a new screen has changed 
                 currentModel.mediaScreenDisplayStates.modelAdded += MediaAssignedToDisplay;
+                currentModel.screenPortalStates.modelAdded += PortalAssignedToDisplay;
             }
         }
         
@@ -425,6 +435,40 @@ namespace Assets.Scripts
             }
         }
 
+        private void AssignPortalToDisplaysFromArray()
+        {
+            // If this is a new player joining the room then they may realtime and local buffer arrays may differ
+            //Debug.Log("AssignPortalToDisplaysFromArray");
+
+            foreach (var portalState in model.screenPortalStates)
+            {
+                var existingBufferRecord = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == portalState.screenId);
+
+                Debug.Log($"Existing portal buffer record: {existingBufferRecord != null}");
+
+                if (existingBufferRecord != null)
+                {
+                    if (existingBufferRecord.IsPortal == portalState.isPortal)
+                        Debug.Log($"Portal on screenId {portalState.screenId} is already set to {portalState.isPortal}");
+                    else
+                    {
+                        existingBufferRecord.IsPortal = portalState.isPortal;
+                        AssignPortalToScreen(portalState.screenId, portalState.isPortal);
+                    }
+                }
+                else
+                {
+                    _screenPortalBuffer.Add(new ScreenPortalBufferState
+                    {
+                        ScreenId = portalState.screenId,
+                        IsPortal = portalState.isPortal
+                    });
+
+                    AssignPortalToScreen(portalState.screenId, portalState.isPortal);
+                }
+            }
+        }
+
         public void AssignMediaToDisplaysFromArray()
         {
             Debug.Log("AssignMediaToDisplaysFromArray");
@@ -435,8 +479,9 @@ namespace Assets.Scripts
 
             foreach (var mediaInfo in model.mediaScreenDisplayStates)
             {
-                var exists = _mediaStateBuffers.FirstOrDefault(m =>
-                    m.ScreenDisplayId == mediaInfo.screenDisplayId && m.MediaTypeId == mediaInfo.mediaTypeId &&
+                var exists = _mediaStateBuffer.FirstOrDefault(m =>
+                    m.ScreenDisplayId == mediaInfo.screenDisplayId && 
+                    m.MediaTypeId == mediaInfo.mediaTypeId &&
                     m.MediaId == mediaInfo.mediaId);
 
                 if(exists != null)
@@ -463,7 +508,7 @@ namespace Assets.Scripts
 
                     if (assigned)
                     {
-                        _mediaStateBuffers.Add(new MediaScreenDisplayBufferState
+                        _mediaStateBuffer.Add(new MediaScreenDisplayBufferState
                         {
                             MediaTypeId = mediaInfo.mediaTypeId,
                             MediaId = mediaInfo.mediaId,
@@ -472,19 +517,17 @@ namespace Assets.Scripts
                     }
                 }
 
-                Debug.Log($"Assign portal to display {mediaInfo.screenDisplayId}?: {mediaInfo.isPortal}");
-                AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
+                //Debug.Log($"Assign portal to display {mediaInfo.screenDisplayId}?: {mediaInfo.isPortal}");
+                //AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
             }
         }
 
         public void StoreBufferScreenMediaState()
         {
             var existing =
-                _mediaStateBuffers.FirstOrDefault(s => s.ScreenDisplayId == _lastSelectedDisplayId);
+                _mediaStateBuffer.FirstOrDefault(s => s.ScreenDisplayId == _lastSelectedDisplayId);
 
             Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
-
-            //var isPortal = ScreensAsPortal.IndexOf(_lastSelectedDisplayId) != -1;
 
             if (existing != null)
             {
@@ -510,7 +553,7 @@ namespace Assets.Scripts
                     //isPortal = isPortal
                 };
 
-                _mediaStateBuffers.Add(bufferState);
+                _mediaStateBuffer.Add(bufferState);
             }
 
             //Debug.Log("StoreRealtimeScreenMediaState: -");
@@ -526,8 +569,6 @@ namespace Assets.Scripts
                 model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == _lastSelectedDisplayId);
 
             Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
-
-            //var isPortal = ScreensAsPortal.IndexOf(_lastSelectedDisplayId) != -1;
 
             if (existing != null)
             {
@@ -555,44 +596,37 @@ namespace Assets.Scripts
 
                 model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
             }
-
-            //Debug.Log("StoreRealtimeScreenMediaState: -");
-            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
-            //{
-            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
-            //}
         }
 
-        public void StoreRealtimeScreenPortalState(int screenId, bool isActive)
+        public void StoreRealtimeScreenPortalState(int screenId)
         {
+            var existingRealtimeState =
+                model.screenPortalStates.FirstOrDefault(p => p.screenId == screenId);
 
-            var isPortal = ScreensAsPortal.IndexOf(screenId) != -1;
+            Debug.Log($"StoreRealtimeScreenPortalState. Exists: {existingRealtimeState != null}");
 
-            if (!isPortal && isActive)
-                ScreensAsPortal.Add(screenId);
-
-            if (isPortal && !isActive)
-                ScreensAsPortal.RemoveAll(id => id == screenId);
-
-            var existing =
-                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
-
-            if (existing != null)
+            if (existingRealtimeState != null)
             {
-                existing.isPortal = isActive;
+                // TODO find a way of making this into an event change
+
+                Debug.Log($"Change existing portal state from {existingRealtimeState.isPortal} to {!existingRealtimeState.isPortal}");
+                existingRealtimeState.isPortal = !existingRealtimeState.isPortal;
+
+                //var existingBufferState = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == screenId);
+                //existingBufferState.IsPortal = !existingBufferState.IsPortal;
             }
             else
             {
-                MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
+                ScreenPortalStateModel state = new ScreenPortalStateModel
                 {
-                    screenDisplayId = screenId,
-                    isPortal = isActive
+                    screenId = screenId,
+                    isPortal = true
                 };
 
-                model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
+                model.screenPortalStates.Add(state);
             }
         }
-
+        
         private Transform GetScreenObjectFromScreenId(int screenId)
         {
             var sceneId = int.Parse(screenId.ToString().Substring(0, 1));
@@ -754,75 +788,33 @@ namespace Assets.Scripts
 
         private void AssignPortalToScreen(int screenId, bool isActive)
         {
-            if (isActive)
+            if (_screenPortalBuffer.Any(p => p.ScreenId == screenId))
             {
-                //HudClear();
+                var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
 
-                bool exists = ScreensAsPortal.IndexOf(screenId) != -1;
-
-                HudStartMessage($"Is screen {screenId} already portal?: {exists}");
-                //Debug.Log($"Is screen {screenId} already portal?: {exists}");
-
-                if (!exists)
+                if (isActive)
                 {
-                    //_hudText.text += $"\nAssigning portal to screen {screenId}";
                     Debug.Log($"Assigning portal to screen {screenId}");
-
-                    ScreensAsPortal.Add(screenId);
-                    var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
                     screenAction.NextAction = ScreenAction.DoTeleport;
-
-                    Transform screenObject = GetScreenObjectFromScreenId(screenId);
-                    if (screenObject != null)
-                    {
-                        Debug.Log($"Creating portal on '{screenObject.name}'");
-                        Transform portal = screenObject.Find("Portal");
-                        portal.gameObject.SetActive(true);
-                    }
                 }
-                //else
-                //{
-                //    var s = ScreensAsPortal.IndexOf(screenId);
-                //    ScreensAsPortal.Remove(s);
-                //    Transform screenObject = GetScreenObjectFromScreenId(screenId);
-                //    if (screenObject != null)
-                //    {
-                //        Debug.Log($"Removing portal from '{screenObject.name}'");
-                //        Transform portal = screenObject.Find("Portal");
-                //        portal.gameObject.SetActive(false);
-                //    }
-                //}
-            }
-            else
-            {
-                ScreensAsPortal.RemoveAll(id => id == screenId);
+                else
+                {
+                    Debug.Log($"Removing portal on screen {screenId}");
+                    screenAction.NextAction = ScreenAction.ChangeVideoClip;
+                }
 
                 Transform screenObject = GetScreenObjectFromScreenId(screenId);
                 if (screenObject != null)
                 {
-                    Debug.Log($"Removing portal on '{screenObject.name}'");
                     Transform portal = screenObject.Find("Portal");
-                    portal.gameObject.SetActive(false);
+                    portal.gameObject.SetActive(isActive);
                 }
             }
-
-
-            HudShowPortals();
         }
-
+        
         private void HudClear()
         {
             _hudText.text = "";
-        }
-
-        private void HudShowPortals()
-        {
-            //_hudText.text = "";
-            foreach (var i in ScreensAsPortal)
-            {
-                //_hudText.text += $"\nportal: {i}";
-                Debug.Log($"\nportal: {i}");
-            }
         }
 
         private void HudStartMessage(string message)

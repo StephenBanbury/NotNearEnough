@@ -26,11 +26,19 @@ namespace Assets.Scripts
                 //Debug.Log($"Display select compositeId:{compositeId}");
 
 
-                var gameManager = GameObject.Find("GameManager");
+                //var gameManager = GameObject.Find("GameManager");
 
-                var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
-                portalDisplaySelect.SetPortalDisplayId(compositeId, true);
-                portalDisplaySelect.KeepInSync();
+                //var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
+                //portalDisplaySelect.SetPortalDisplayId(compositeId, true);
+                //portalDisplaySelect.KeepInSync();
+
+
+                if (compositeId > 0)
+                {
+                    MediaDisplayManager.instance.StoreRealtimeScreenPortalState(compositeId);
+                    //StoreBufferScreenPortalState();
+                    //ShowPortalButtonState();
+                }
 
                 _displayIdText.text = _portalDisplayId.ToString();
             }

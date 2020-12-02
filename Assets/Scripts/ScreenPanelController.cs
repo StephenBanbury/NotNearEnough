@@ -119,7 +119,7 @@ namespace Assets.Scripts
 
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
                         MediaDisplayManager.instance.RandomTeleportation(sceneId);
-                        MediaDisplayManager.instance.CreatePortal(screenId, false);
+                        //MediaDisplayManager.instance.CreatePortal(screenId, false);
 
                         portalDisplaySelect.SetPortalDisplayId(screenId, false);
                         portalDisplaySelect.KeepInSync();

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using Normal.Realtime.Serialization;
 using UnityEngine;
 using Normal.Realtime;
@@ -8,6 +9,7 @@ using Normal.Realtime;
 public partial class MediaScreenDisplayModel
 {
     [RealtimeProperty(1, true)] private RealtimeArray<MediaScreenDisplayStateModel> _mediaScreenDisplayStates;
+    [RealtimeProperty(2, true, true)] private RealtimeArray<ScreenPortalStateModel> _screenPortalStates;
 
 }
 
@@ -17,18 +19,26 @@ public partial class MediaScreenDisplayModel : RealtimeModel {
         get { return _mediaScreenDisplayStates; }
     }
     
+    public Normal.Realtime.Serialization.RealtimeArray<Assets.Scripts.ScreenPortalStateModel> screenPortalStates {
+        get { return _screenPortalStates; }
+    }
+    
     public enum PropertyID : uint {
         MediaScreenDisplayStates = 1,
+        ScreenPortalStates = 2,
     }
     
     public MediaScreenDisplayModel() : this(null) {
     }
     
     public MediaScreenDisplayModel(RealtimeModel parent) : base(null, parent) {
-        RealtimeModel[] childModels = new RealtimeModel[1];
+        RealtimeModel[] childModels = new RealtimeModel[2];
         
         _mediaScreenDisplayStates = new Normal.Realtime.Serialization.RealtimeArray<MediaScreenDisplayStateModel>();
         childModels[0] = _mediaScreenDisplayStates;
+        
+        _screenPortalStates = new Normal.Realtime.Serialization.RealtimeArray<Assets.Scripts.ScreenPortalStateModel>();
+        childModels[1] = _screenPortalStates;
         
         SetChildren(childModels);
     }
@@ -36,11 +46,13 @@ public partial class MediaScreenDisplayModel : RealtimeModel {
     protected override int WriteLength(StreamContext context) {
         int length = 0;
         length += WriteStream.WriteCollectionLength((uint)PropertyID.MediaScreenDisplayStates, _mediaScreenDisplayStates, context);
+        length += WriteStream.WriteCollectionLength((uint)PropertyID.ScreenPortalStates, _screenPortalStates, context);
         return length;
     }
     
     protected override void Write(WriteStream stream, StreamContext context) {
         stream.WriteCollection((uint)PropertyID.MediaScreenDisplayStates, _mediaScreenDisplayStates, context);
+        stream.WriteCollection((uint)PropertyID.ScreenPortalStates, _screenPortalStates, context);
     }
     
     protected override void Read(ReadStream stream, StreamContext context) {
@@ -48,6 +60,10 @@ public partial class MediaScreenDisplayModel : RealtimeModel {
             switch (propertyID) {
                 case (uint)PropertyID.MediaScreenDisplayStates: {
                     stream.ReadCollection(_mediaScreenDisplayStates, context);
+                    break;
+                }
+                case (uint)PropertyID.ScreenPortalStates: {
+                    stream.ReadCollection(_screenPortalStates, context);
                     break;
                 }
                 default: {
