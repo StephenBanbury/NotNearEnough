@@ -109,18 +109,12 @@ namespace Assets.Scripts
             CreateStreamSelectButtons();
 
             MyCurrentScene = Scene.Scene1;
-            //OffsetPlayerPositionWithinScene();
         }
         
-        //public void CreatePortal(int screenId, bool isActive)
-        //{
-        //    AssignPortalToScreen(screenId, isActive);
-        //    StoreRealtimeScreenPortalState(screenId, isActive);
-        //}
-
         public ScreenAction GetNextScreenAction(int screenId)
         {
             var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+            Debug.Log($"GetNextScreenAction on screenId {screenId}: {screenAction.NextAction}");
             return screenAction.NextAction;
         }
 
@@ -144,10 +138,13 @@ namespace Assets.Scripts
                 {
                     newAction = (ScreenAction) Math.Ceiling(Random.value * numberOfActions);
                 } while (newAction == lastAction
+                         || newAction == ScreenAction.CreatePortal // TEMPORARY - TODO: establish if we can create a portal this way
                          || newAction == ScreenAction.ChangeFormation && !canDoFormation
                          || newAction == ScreenAction.DoTeleport && lastAction != ScreenAction.CreatePortal 
                          || newAction == ScreenAction.ChangeVideoStream && !hasVideoStreams);
             }
+
+            Debug.Log($"SetNextScreenAction on screenId {screenId}: {newAction}");
 
             screenAction.NextAction = newAction;
         }
@@ -378,7 +375,6 @@ namespace Assets.Scripts
             }
          
             AssignMediaToDisplaysFromArray();
-            //AssignMediaToDisplay();
         }
 
         private void PortalAssignedToDisplay(RealtimeArray<ScreenPortalStateModel> screenPortalStates,
@@ -409,7 +405,6 @@ namespace Assets.Scripts
             if (currentModel != null)
             {
                 Debug.Log($"currentModel != null. Models: {currentModel.mediaScreenDisplayStates.Count}");
-                //AssignMediaToDisplaysFromArray();
 
                 // Let us know when a new screen has changed 
                 currentModel.mediaScreenDisplayStates.modelAdded += MediaAssignedToDisplay;
@@ -438,7 +433,6 @@ namespace Assets.Scripts
         private void AssignPortalToDisplaysFromArray()
         {
             // If this is a new player joining the room then they may realtime and local buffer arrays may differ
-            //Debug.Log("AssignPortalToDisplaysFromArray");
 
             foreach (var portalState in model.screenPortalStates)
             {
@@ -472,10 +466,6 @@ namespace Assets.Scripts
         public void AssignMediaToDisplaysFromArray()
         {
             Debug.Log("AssignMediaToDisplaysFromArray");
-            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
-            //{
-            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
-            //}
 
             foreach (var mediaInfo in model.mediaScreenDisplayStates)
             {
@@ -516,9 +506,6 @@ namespace Assets.Scripts
                         });
                     }
                 }
-
-                //Debug.Log($"Assign portal to display {mediaInfo.screenDisplayId}?: {mediaInfo.isPortal}");
-                //AssignPortalToScreen(mediaInfo.screenDisplayId, mediaInfo.isPortal);
             }
         }
 
@@ -612,8 +599,23 @@ namespace Assets.Scripts
                 Debug.Log($"Change existing portal state from {existingRealtimeState.isPortal} to {!existingRealtimeState.isPortal}");
                 existingRealtimeState.isPortal = !existingRealtimeState.isPortal;
 
-                //var existingBufferState = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == screenId);
-                //existingBufferState.IsPortal = !existingBufferState.IsPortal;
+                var existingBufferState = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == screenId);
+                existingBufferState.IsPortal = !existingBufferState.IsPortal;
+
+                Transform screenObject = GetScreenObjectFromScreenId(screenId);
+                if (screenObject != null)
+                {
+                    Transform portal = screenObject.Find("Portal");
+                    portal.gameObject.SetActive(existingBufferState.IsPortal);
+                }
+
+                if (!existingBufferState.IsPortal)
+                {
+                    //SetNextScreenAction(screenId);
+
+                    var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
+                    Debug.Log($"New screen action: {screenAction.NextAction}");
+                }
             }
             else
             {

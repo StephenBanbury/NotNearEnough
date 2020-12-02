@@ -88,8 +88,8 @@ namespace Assets.Scripts
 
                 _triggerIsInAction = true;
 
-                GameObject gameManager = GameObject.Find("GameManager");
-                var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
+                //GameObject gameManager = GameObject.Find("GameManager");
+                //var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
 
                 switch (nextAction)
                 {
@@ -110,8 +110,9 @@ namespace Assets.Scripts
 
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        portalDisplaySelect.SetPortalDisplayId(screenId, true);
-                        portalDisplaySelect.KeepInSync();
+                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId);
+                        //portalDisplaySelect.SetPortalDisplayId(screenId, true);
+                        //portalDisplaySelect.KeepInSync();
                         break;
 
                     case ScreenAction.DoTeleport:
@@ -119,11 +120,10 @@ namespace Assets.Scripts
 
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
                         MediaDisplayManager.instance.RandomTeleportation(sceneId);
+                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId); // need to work on portal toggle
                         //MediaDisplayManager.instance.CreatePortal(screenId, false);
-
-                        portalDisplaySelect.SetPortalDisplayId(screenId, false);
-                        portalDisplaySelect.KeepInSync();
-                        // Keep in sync
+                        //portalDisplaySelect.SetPortalDisplayId(screenId, false);
+                        //portalDisplaySelect.KeepInSync();
 
                         break;
                 }
@@ -176,7 +176,7 @@ namespace Assets.Scripts
                 FormationSelect formationSelect = gameManager.GetComponent<FormationSelect>();
 
                 //formationSelect.SetFormationId(scene, (int) _currentScreenFormation, 10);
-                formationSelect.KeepInSync((int)_currentScreenFormation);
+                formationSelect.KeepInSync(scene, (int)_currentScreenFormation);
             }
         }
 

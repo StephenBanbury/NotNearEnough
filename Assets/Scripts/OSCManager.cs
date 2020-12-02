@@ -43,7 +43,7 @@ namespace Assets.Scripts
         {
             Debug.Log($"FormationId: {value}");
             //_formationSelectDisplay.SetFormationId(value, 10);
-            _formationSelectDisplay.KeepInSync(value);
+            //_formationSelectDisplay.KeepInSync(value);
         }
     }
 }

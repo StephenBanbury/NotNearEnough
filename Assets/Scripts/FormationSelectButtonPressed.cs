@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
                     //formationSelect.SetFormationId(scene, _formationId, 10);
 
-                    formationSelect.KeepInSync(_formationId);
+                    formationSelect.KeepInSync(scene, _formationId);
 
                     _formationIdText.text = _formationId.ToString();
                 }

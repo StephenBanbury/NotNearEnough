@@ -41,11 +41,12 @@ namespace Assets.Scripts
             }
         }
 
-        public void KeepInSync(int id)
+        public void KeepInSync(Scene scene, int id)
         {
             // generate cross-scene id
 
             // create id in 'composite' form, e.g. 12 = scene 1, formation 2.
+            _scene = (int)scene;
 
             string scenePlusFormation = $"{_scene}{id}";
             int compositeId = int.Parse(scenePlusFormation);

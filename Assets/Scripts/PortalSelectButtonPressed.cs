@@ -22,23 +22,9 @@ namespace Assets.Scripts
                 var compositeId = sceneId * 100 + _portalDisplayId;
 
                 Debug.Log($"Portal select displayId:{_portalDisplayId}");
-                //Debug.Log($"Display select sceneId:{sceneId}");
-                //Debug.Log($"Display select compositeId:{compositeId}");
-
-
-                //var gameManager = GameObject.Find("GameManager");
-
-                //var portalDisplaySelect = gameManager.GetComponent<PortalSelect>();
-                //portalDisplaySelect.SetPortalDisplayId(compositeId, true);
-                //portalDisplaySelect.KeepInSync();
-
 
                 if (compositeId > 0)
-                {
                     MediaDisplayManager.instance.StoreRealtimeScreenPortalState(compositeId);
-                    //StoreBufferScreenPortalState();
-                    //ShowPortalButtonState();
-                }
 
                 _displayIdText.text = _portalDisplayId.ToString();
             }

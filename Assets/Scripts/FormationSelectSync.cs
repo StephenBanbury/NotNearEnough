@@ -54,9 +54,6 @@ namespace Assets.Scripts
 
             if (model != null && model.formationId > 0)
             {
-
-                Debug.Log($"UpdateFormationId {model.formationId}");
-
                 // Get the value from the model, display it 
                 // _model.formationId comes in 'composite' form, e.g. 12 = scene 1, formation 2.
 
@@ -64,9 +61,9 @@ namespace Assets.Scripts
                 int scene = int.Parse(scenePlusFormation.Substring(0, 1));
                 int formationId = int.Parse(scenePlusFormation.Substring(1, 1));
 
-                //Debug.Log($"UpdateFormationId - scenePlusFormation: {scenePlusFormation}");
-                //Debug.Log($"UpdateFormationId - scene: {(Scene) scene}");
-                //Debug.Log($"UpdateFormationId - formationId: {formationId}");
+                Debug.Log($"UpdateFormationId - scenePlusFormation: {scenePlusFormation}");
+                Debug.Log($"UpdateFormationId - scene: {(Scene)scene}");
+                Debug.Log($"UpdateFormationId - formationId: {formationId}");
 
                 _formationSelectDisplay.SetFormationId((Scene) scene, formationId, 10);
             }
