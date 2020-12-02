@@ -48,12 +48,12 @@ namespace Assets.Scripts
             // create id in 'composite' form, e.g. 12 = scene 1, formation 2.
 
             string scenePlusFormation = $"{_scene}{id}";
-            int compoundId = int.Parse(scenePlusFormation);
+            int compositeId = int.Parse(scenePlusFormation);
 
-            if (compoundId != _previousId)
+            if (compositeId != _previousId)
             {
-                _formationSelectSync.SetId(compoundId);
-                _previousId = compoundId;
+                _formationSelectSync.SetId(compositeId);
+                _previousId = compositeId;
             }
         }
     }
