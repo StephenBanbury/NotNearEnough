@@ -218,7 +218,7 @@ namespace Assets.Scripts
             playerController.enabled = true;
             sceneSampleController.enabled = true;
 
-            MediaDisplayManager.instance.MyCurrentScene = (Scene)sceneId;
+            MyCurrentScene = (Scene)sceneId;
         }
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
