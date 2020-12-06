@@ -39,6 +39,9 @@ namespace Assets.Scripts
         [SerializeField] private GameObject _startButton;
         [SerializeField] private Text _debugText;
         [SerializeField] private Text _hudText;
+        [SerializeField] private Material _skybox1;
+        [SerializeField] private Material _skybox2;
+
         private List<ScreenPortalBufferState> _screenPortalBuffer;
         private List<MediaScreenDisplayBufferState> _mediaStateBuffer;
 
@@ -68,6 +71,7 @@ namespace Assets.Scripts
         void Start()
         {
             _startButton.SetActive(false);
+            SetSkybox(false);
             StartCoroutine(AwaitVideosFromApiBeforeStart());
         }
 
@@ -175,7 +179,7 @@ namespace Assets.Scripts
             StartCoroutine(DoTeleportation(randomSceneId));
         }
 
-        public IEnumerator DoTeleportation(int sceneId)
+        public IEnumerator DoTeleportation(int sceneId, bool scatter = false)
         {
             string spawnPointName = $"Spawn Point {sceneId}";
             Transform spawnPoint = GameObject.Find(spawnPointName).transform;
@@ -195,11 +199,22 @@ namespace Assets.Scripts
 
             PlayerAudioManager.instance.PlayAudioClip("Teleport 3_2");
 
-            player.position = spawnPoint.position;
+            Vector3 newPosition = spawnPoint.position;
+
+            if (scatter)
+            {
+                float x = newPosition.x + Random.Range(-1f, 1f);
+                float y = newPosition.y + Random.Range(-1f, 1f);
+                float z = newPosition.z;
+                newPosition = new Vector3(x, y, z);
+            }
+
+            player.position = newPosition;
+
+            if (sceneId == 9) MediaDisplayManager.instance.SetSkybox(true);
 
             yield return new WaitForSeconds(0.5f);
-
-
+            
             playerController.enabled = true;
             sceneSampleController.enabled = true;
 
@@ -1057,6 +1072,30 @@ namespace Assets.Scripts
                         .SetEase(Ease.Linear);
                 }
 
+            }
+        }
+
+        public void GrandFinale()
+        {
+            StartCoroutine(DoTeleportation(9, true));
+        }
+
+        public void SetSkybox(bool useFinale)
+        {
+            if (!useFinale)
+            {
+                RenderSettings.skybox = _skybox1;
+            }
+            else
+            {
+                RenderSettings.skybox = _skybox2;
+
+                GameObject vpContainer = GameObject.Find("SkyboxVideoPlayer");
+                if (vpContainer != null)
+                {
+                    VideoPlayer vp = vpContainer.GetComponent<VideoPlayer>();
+                    vp.Play();
+                }
             }
         }
     }
