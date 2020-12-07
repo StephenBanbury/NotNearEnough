@@ -102,13 +102,13 @@ namespace Assets.Scripts
             CanTransformScene = new List<Scene> {Scene.Scene1};
 
             SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.ShortRectangle);
+            SpawnScene(Scene.Scene2, ScreenFormation.SmallSquare);
             SpawnScene(Scene.Scene3, ScreenFormation.Circle);
             SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.SmallSquare);
-            SpawnScene(Scene.Scene6, ScreenFormation.LongRectangle);
-            SpawnScene(Scene.Scene7, ScreenFormation.LargeStar);
-            SpawnScene(Scene.Scene8, ScreenFormation.Triangle);
+            SpawnScene(Scene.Scene5, ScreenFormation.ShortRectangle);
+            SpawnScene(Scene.Scene6, ScreenFormation.LargeStar);
+            SpawnScene(Scene.Scene7, ScreenFormation.Triangle);
+            SpawnScene(Scene.Scene8, ScreenFormation.LongRectangle);
 
             CreateStreamSelectButtons();
 
@@ -966,8 +966,8 @@ namespace Assets.Scripts
 
             foreach (var screenPosition in thisFormation)
             {
-                if (!screenPosition.Hide)
-                {
+                //if (!screenPosition.Hide)
+                //{
                     var vector3 = screenPosition.Vector3;
                     vector3.y += _floorAdjust;
 
@@ -1015,7 +1015,7 @@ namespace Assets.Scripts
                     });
 
                     SetNextScreenAction(screenId);
-                }
+                //}
             }
 
             _sceneIndex++;
