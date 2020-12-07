@@ -690,7 +690,7 @@ namespace Assets.Scripts
                     var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
 
                     //Add AudioSource
-                    //AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                    AudioSource audioSource = gameObject.AddComponent<AudioSource>();
 
                     bool isPlaying = false;
 
@@ -709,7 +709,25 @@ namespace Assets.Scripts
                             Debug.Log("URL video clip");
 
                             videoPlayer.source = VideoSource.Url;
+
+
+
+                            // Set mode to Audio Source.
+                            videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+                            // We want to control one audio track with the video player
+                            videoPlayer.controlledAudioTrackCount = 1;
+
+                            // We enable the first track, which has the id zero
+                            videoPlayer.EnableAudioTrack(0, true);
+
+                            // ...and we set the audio source for this track
+                            videoPlayer.SetTargetAudioSource(0, audioSource);
+
+
                             videoPlayer.url = thisVideoClip.LocalPath;
+
+                            StartCoroutine(PrepareVideo(videoPlayer));
                         }
                     }
                     else
@@ -719,29 +737,7 @@ namespace Assets.Scripts
                         var vc = _videoClips[videoId - 1];
                         videoPlayer.clip = vc;
                     }
-
-                    //Disable Play on Awake for both Video and Audio
-                    videoPlayer.playOnAwake = false;
-                    //audioSource.playOnAwake = false;
-                    //audioSource.Pause();
-
-                    //Set Audio Output to AudioSource
-                    //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
-                    //Assign the Audio from Video to AudioSource to be played
-                    //videoPlayer.EnableAudioTrack(0, true);
-                    //videoPlayer.SetTargetAudioSource(0, audioSource);
-
-                    // TODO test to see if this speeds up or slows down video play start
-                    //Set video To Play then prepare Audio to prevent Buffering        
-                    //videoPlayer.Prepare();
-
-                    //Play Video
-                    if (!isPlaying) videoPlayer.Play();
-
-                    //Play Sound
-                    //audioSource.Play();
-
+                    
                     return true;
                 }
 
@@ -753,6 +749,18 @@ namespace Assets.Scripts
                 return false;
             }
 
+        }
+
+        IEnumerator PrepareVideo(VideoPlayer videoPlayer)
+        {
+            videoPlayer.Prepare();
+
+            while (!videoPlayer.isPrepared)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            videoPlayer.Play();
         }
 
         private bool AssignStreamToDisplay(int streamId, int displayId)
@@ -840,7 +848,7 @@ namespace Assets.Scripts
             Debug.Log(message);
         }
 
-        private void SpawnScene(Scene scene, ScreenFormation formation)
+        private void SpawnScene(Scene scene, ScreenFormation formation, bool includeSelectionPanels = false)
         {
             var thisFormation = new List<ScreenPosition>();
             var screenFormationService = new ScreenFormationService(scene);
@@ -888,32 +896,37 @@ namespace Assets.Scripts
                 //Debug.Log($"{sceneName} not found");
                 sceneObject = new GameObject(sceneName);
             }
-            
+
 
             // Instantiate selection panels, audio source and lighting as part of scene object
-            
-            var selectionPanelsTrans = sceneObject.transform.Find($"Selection Panel {_sceneIndex}");
-            if (selectionPanelsTrans == null)
+
+            if (includeSelectionPanels)
             {
-                GameObject selectionPanels = Instantiate(_selectionPanels, _selectionPanels.transform.position + scenePosition, Quaternion.identity);
-                selectionPanels.transform.SetParent(sceneObject.transform);
-                selectionPanels.name = $"Selection Panel {_sceneIndex}";
-
-                Text indicator = selectionPanels.transform.Find("SceneSelectorView/Canvas/SceneText").GetComponent<Text>();
-                if (indicator != null)
+                var selectionPanelsTrans = sceneObject.transform.Find($"Selection Panel {_sceneIndex}");
+                if (selectionPanelsTrans == null)
                 {
-                    indicator.text = sceneName;
-                }
+                    GameObject selectionPanels = Instantiate(_selectionPanels,
+                        _selectionPanels.transform.position + scenePosition, Quaternion.identity);
+                    selectionPanels.transform.SetParent(sceneObject.transform);
+                    selectionPanels.name = $"Selection Panel {_sceneIndex}";
 
-                foreach (Transform child in selectionPanels.transform)
-                {
-                    Debug.Log($"In selection panel: {child.name}");
-                }
+                    Text indicator = selectionPanels.transform.Find("SceneSelectorView/Canvas/SceneText")
+                        .GetComponent<Text>();
+                    if (indicator != null)
+                    {
+                        indicator.text = sceneName;
+                    }
 
-                //var indicator = texts.FirstOrDefault(t => t.name == "SceneIndicator");
-                //if (indicator != null) indicator.text = sceneName;
+                    foreach (Transform child in selectionPanels.transform)
+                    {
+                        Debug.Log($"In selection panel: {child.name}");
+                    }
+
+                    //var indicator = texts.FirstOrDefault(t => t.name == "SceneIndicator");
+                    //if (indicator != null) indicator.text = sceneName;
+                }
             }
-
+            
             var sceneAudioTrans = sceneObject.transform.Find($"Scene Audio {_sceneIndex}");
             if (sceneAudioTrans == null)
             {
