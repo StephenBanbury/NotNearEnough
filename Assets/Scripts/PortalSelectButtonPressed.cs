@@ -23,8 +23,8 @@ namespace Assets.Scripts
 
                 Debug.Log($"Portal select displayId:{_portalDisplayId}");
 
-                if (compositeId > 0)
-                    MediaDisplayManager.instance.StoreRealtimeScreenPortalState(compositeId);
+                //if (compositeId > 0)
+                    //MediaDisplayManager.instance.StoreRealtimeScreenPortalState(compositeId);
 
                 _displayIdText.text = _portalDisplayId.ToString();
             }

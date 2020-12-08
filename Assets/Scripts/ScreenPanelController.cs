@@ -25,46 +25,6 @@ namespace Assets.Scripts
                 }
             }
         }
-
-        //IEnumerator TriggerAction(string controllerName)
-        //{
-        //    var leftHand = controllerName == "LeftHandCollider";
-        //    var rightHand = controllerName == "RightHandCollider";
-
-        //    var leftTrigger = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0;
-        //    var rightTrigger = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0;
-
-        //    //Debug.Log($"Left Trigger: {leftTrigger}");
-        //    //Debug.Log($"Right Trigger: {rightTrigger}");
-
-        //    _triggerIsInAction = true;
-
-        //    if (leftTrigger && rightTrigger)
-        //    {
-        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
-        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
-
-        //        StartCoroutine(RaiseMeshCollider());
-        //    }
-        //    else if (rightHand && rightTrigger)
-        //    {
-        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
-
-        //        ToggleVideoOn();
-        //    }
-        //    else if (leftHand && leftTrigger)
-        //    {
-        //        OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
-
-        //        ChangeScreenFormation();
-        //    }
-
-        //    yield return new WaitForSeconds(_waitForSeconds);
-
-        //    Debug.Log("WaitForNextTrigger done");
-        //    _triggerIsInAction = false;
-        //}
-
         IEnumerator TriggerAction(string controllerName)
         {
             var leftHand = controllerName == "LeftHandCollider";
@@ -110,7 +70,7 @@ namespace Assets.Scripts
 
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId);
+                        //MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId);
                         //portalDisplaySelect.SetPortalDisplayId(screenId, true);
                         //portalDisplaySelect.KeepInSync();
                         break;
@@ -119,8 +79,10 @@ namespace Assets.Scripts
                         Debug.Log("Doing action: Teleport");
 
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
-                        MediaDisplayManager.instance.RandomTeleportation(sceneId);
-                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId); // need to work on portal toggle
+                        //MediaDisplayManager.instance.RandomTeleportation(sceneId);
+                        int destinationSceneId = MediaDisplayManager.instance.TargetedTeleportation(screenId);
+                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId, destinationSceneId); 
+
                         //MediaDisplayManager.instance.CreatePortal(screenId, false);
                         //portalDisplaySelect.SetPortalDisplayId(screenId, false);
                         //portalDisplaySelect.KeepInSync();
