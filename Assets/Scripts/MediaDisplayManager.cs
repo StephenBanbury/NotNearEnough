@@ -41,9 +41,12 @@ namespace Assets.Scripts
         [SerializeField] private Text _hudText;
         [SerializeField] private Material _skybox1;
         [SerializeField] private Material _skybox2;
+        [SerializeField] private Text _messageText;
 
         private List<ScreenPortalBufferState> _screenPortalBuffer;
         private List<MediaScreenDisplayBufferState> _mediaStateBuffer;
+        // _lastSelectionSelected = Scene=1; Formation=2; Stream=3; Clip=4; Screen=5; Portal=6
+        private int _lastSelectionSelected;
 
         public int SelectedVideo { set => _lastSelectedVideoId = value; }
         public int SelectedStream { set => _lastSelectedStreamId = value; }
@@ -80,7 +83,7 @@ namespace Assets.Scripts
             Videos = new List<MediaDetail>();
             _mediaStateBuffer = new List<MediaScreenDisplayBufferState>();
             _screenPortalBuffer = new List<ScreenPortalBufferState>();
-
+            
             GetLocalVideosDetails();
 
             //GetVideoLinksFromTextFile();
@@ -101,18 +104,20 @@ namespace Assets.Scripts
 
             CanTransformScene = new List<Scene> {Scene.Scene1};
 
-            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare);
-            SpawnScene(Scene.Scene2, ScreenFormation.SmallSquare);
-            SpawnScene(Scene.Scene3, ScreenFormation.Circle);
-            SpawnScene(Scene.Scene4, ScreenFormation.Cross);
-            SpawnScene(Scene.Scene5, ScreenFormation.ShortRectangle);
-            SpawnScene(Scene.Scene6, ScreenFormation.LargeStar);
-            SpawnScene(Scene.Scene7, ScreenFormation.Triangle);
-            SpawnScene(Scene.Scene8, ScreenFormation.LongRectangle);
+            SpawnScene(Scene.Scene1, ScreenFormation.LargeSquare, true);
+            SpawnScene(Scene.Scene2, ScreenFormation.SmallSquare, true);
+            SpawnScene(Scene.Scene3, ScreenFormation.Circle, true);
+            SpawnScene(Scene.Scene4, ScreenFormation.Cross, true);
+            SpawnScene(Scene.Scene5, ScreenFormation.ShortRectangle, true);
+            SpawnScene(Scene.Scene6, ScreenFormation.LargeStar, true);
+            SpawnScene(Scene.Scene7, ScreenFormation.Triangle, true);
+            SpawnScene(Scene.Scene8, ScreenFormation.LongRectangle, true);
 
             CreateStreamSelectButtons();
 
             MyCurrentScene = Scene.Scene1;
+
+            ShowSelectionPanel();
         }
         
         public ScreenAction GetNextScreenAction(int screenId)
@@ -219,6 +224,19 @@ namespace Assets.Scripts
             sceneSampleController.enabled = true;
 
             MyCurrentScene = (Scene)sceneId;
+
+            ShowSelectionPanel();
+        }
+        
+        private void ShowSelectionPanel(bool show = false)
+        {
+            foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
+            {
+                foreach (Transform child in panel.transform)
+                {
+                    child.gameObject.SetActive(show);
+                }
+            }
         }
 
         private IEnumerator DownloadVideoFiles(List<MediaDetail> mediaDetails)
@@ -921,6 +939,11 @@ namespace Assets.Scripts
                     {
                         Debug.Log($"In selection panel: {child.name}");
                     }
+
+                    //foreach (Transform child in selectionPanels.transform)
+                    //{
+                    //    child.gameObject.SetActive(false);
+                    //}
 
                     //var indicator = texts.FirstOrDefault(t => t.name == "SceneIndicator");
                     //if (indicator != null) indicator.text = sceneName;
