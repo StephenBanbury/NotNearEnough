@@ -475,22 +475,29 @@ namespace Assets.Scripts
 
                 if (existingBufferRecord != null)
                 {
-                    if (existingBufferRecord.IsPortal == portalState.isPortal)
-                        Debug.Log($"Portal on screenId {portalState.screenId} is already set to {portalState.isPortal}");
+                    if (existingBufferRecord.IsPortal == portalState.isPortal && existingBufferRecord.DestinationSceneId == portalState.destinationSceneId)
+                        Debug.Log($"Portal on screen {portalState.screenId} is already set to {portalState.isPortal} and destination scene {portalState.destinationSceneId}");
+                    else if (existingBufferRecord.IsPortal == portalState.isPortal)
+                    {
+                        Debug.Log($"Portal on screen {portalState.screenId} will change to scene {portalState.destinationSceneId}");
+                        existingBufferRecord.DestinationSceneId = portalState.destinationSceneId;
+                    }
                     else
                     {
+                        Debug.Log($"Screen {portalState.screenId} will become a portal to scene {portalState.destinationSceneId}");
                         existingBufferRecord.IsPortal = portalState.isPortal;
                         AssignPortalToScreen(portalState.screenId, portalState.isPortal);
                     }
                 }
                 else
                 {
+                    Debug.Log($"Assigning portal: screen: {portalState.screenId}; destination scene: {portalState.destinationSceneId}; isPortal: {portalState.isPortal}");
                     _screenPortalBuffer.Add(new ScreenPortalBufferState
                     {
                         ScreenId = portalState.screenId,
+                        DestinationSceneId = portalState.destinationSceneId,
                         IsPortal = portalState.isPortal
                     });
-
                     AssignPortalToScreen(portalState.screenId, portalState.isPortal);
                 }
             }
@@ -618,10 +625,10 @@ namespace Assets.Scripts
             }
         }
 
-        public void StoreRealtimeScreenPortalState(int screenId)
+        public void StoreRealtimeScreenPortalState(int destinationSceneId)
         {
             var existingRealtimeState =
-                model.screenPortalStates.FirstOrDefault(p => p.screenId == screenId);
+                model.screenPortalStates.FirstOrDefault(p => p.screenId == _compositeScreenId);
 
             Debug.Log($"StoreRealtimeScreenPortalState. Exists: {existingRealtimeState != null}");
 
@@ -629,39 +636,62 @@ namespace Assets.Scripts
             {
                 // TODO find a way of making this into an event change
 
-                Debug.Log($"Change existing portal state from {existingRealtimeState.isPortal} to {!existingRealtimeState.isPortal}");
-                existingRealtimeState.isPortal = !existingRealtimeState.isPortal;
-
-                var existingBufferState = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == screenId);
-                existingBufferState.IsPortal = !existingBufferState.IsPortal;
-
-                Transform screenObject = GetScreenObjectFromScreenId(screenId);
-                if (screenObject != null)
+                if (existingRealtimeState.destinationSceneId == destinationSceneId)
                 {
-                    Transform portal = screenObject.Find("Portal");
-                    portal.gameObject.SetActive(existingBufferState.IsPortal);
+                    Debug.Log($"Change existing portal state on screen {_compositeScreenId} from {existingRealtimeState.isPortal} to {!existingRealtimeState.isPortal}");
+                    existingRealtimeState.isPortal = !existingRealtimeState.isPortal;
+                }
+                else
+                {
+                    Debug.Log($"Change existing portal on screen {_compositeScreenId} destination from scene {existingRealtimeState.destinationSceneId} to scene {destinationSceneId}");
+                    existingRealtimeState.destinationSceneId = destinationSceneId;
+                }
+
+                // Buffer state
+                var existingBufferState = _screenPortalBuffer.FirstOrDefault(p => p.ScreenId == _compositeScreenId);
+                if (existingBufferState.DestinationSceneId == destinationSceneId)
+                {
+                    Debug.Log($"Change existing portal state on screen {_compositeScreenId} from {existingBufferState.IsPortal} to {!existingBufferState.IsPortal}");
+                    existingBufferState.IsPortal = !existingBufferState.IsPortal;
+                }
+                else
+                {
+                    Debug.Log($"Change existing portal destination on screen {_compositeScreenId} from scene {existingBufferState.DestinationSceneId} to scene {destinationSceneId}");
+                    existingBufferState.DestinationSceneId = destinationSceneId;
                 }
 
                 if (!existingBufferState.IsPortal)
                 {
-                    //SetNextScreenAction(screenId);
+                    Transform screenObject = GetScreenObjectFromScreenId(_compositeScreenId);
+                    if (screenObject != null)
+                    {
+                        Transform portal = screenObject.Find("Portal");
+                        portal.gameObject.SetActive(false);
+                    }
 
-                    var screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == screenId);
-                    Debug.Log($"New screen action: {screenAction.NextAction}");
+                    //ScreenActionModel screenAction = ScreenActions.FirstOrDefault(a => a.ScreenId == _compositeScreenId);
+                    //screenAction.NextAction = ScreenAction.ChangeVideoClip;
                 }
             }
             else
             {
                 ScreenPortalStateModel state = new ScreenPortalStateModel
                 {
-                    screenId = screenId,
+                    screenId = _compositeScreenId,
+                    destinationSceneId = destinationSceneId,
                     isPortal = true
                 };
 
                 model.screenPortalStates.Add(state);
             }
+
+            //Debug.Log("StoreRealtimeScreenPortalState: -");
+            //foreach (var model in model.screenPortalStates)
+            //{
+            //    Debug.Log($"ScreenId {model.screenId} is portal: {model.isPortal}");
+            //}
         }
-        
+
         private Transform GetScreenObjectFromScreenId(int screenId)
         {
             var sceneId = int.Parse(screenId.ToString().Substring(0, 1));
@@ -837,7 +867,7 @@ namespace Assets.Scripts
 
                 if (isActive)
                 {
-                    Debug.Log($"Assigning portal to screen {screenId}");
+                    Debug.Log($"Assigning NextAction to screen {screenId}");
                     screenAction.NextAction = ScreenAction.DoTeleport;
                 }
                 else
