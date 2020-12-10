@@ -21,10 +21,6 @@ namespace Assets.Scripts
     {
         public static MediaDisplayManager instance;
         private int _sceneIndex;
-        private int _lastSelectedVideoId;
-        private int _lastSelectedStreamId;
-        private int _lastSelectedDisplayId;
-        private MediaType _lastSelectedMediaType;
         private float _floorAdjust = 1.25f;
         private int _compositeScreenId = 0;
 
@@ -48,10 +44,6 @@ namespace Assets.Scripts
         // _lastSelectionSelected = Scene=1; Formation=2; Stream=3; Clip=4; Screen=5; Portal=6
         private int _lastSelectionSelected;
 
-        public int SelectedVideo { set => _lastSelectedVideoId = value; }
-        public int SelectedStream { set => _lastSelectedStreamId = value; }
-        public int SelectedDisplay { set => _lastSelectedDisplayId = value; }
-        public MediaType SelectedMediaType { set => _lastSelectedMediaType = value; }
         public List<SceneDetail> Scenes { get; private set; }
         public List<Scene> CanTransformScene { get; set; }
         public Scene MyCurrentScene { get; set; }
@@ -170,18 +162,6 @@ namespace Assets.Scripts
             string sceneIdString = screenId.ToString().Substring(0, 1);
             int sceneId = int.Parse(sceneIdString);
             return sceneId;
-        }
-
-        public void RandomTeleportation(int currentSceneId)
-        {
-            int numberOfScenes = Scenes.Count - 1; // Do not include final scene
-            int randomSceneId;
-            do
-            {
-                randomSceneId = (int) Math.Ceiling(Random.value * numberOfScenes);
-            } while (randomSceneId == currentSceneId);
-
-            StartCoroutine(DoTeleportation(randomSceneId));
         }
 
         public int TargetedTeleportation(int screenId)
@@ -304,7 +284,7 @@ namespace Assets.Scripts
                 }
             }
 
-            _lobbyStatusInfoText.text += "\nAll downloads finished.";
+            _lobbyStatusInfoText.text = "\nAll downloads finished.";
             _startButton.SetActive(true);
         }
 
@@ -456,24 +436,6 @@ namespace Assets.Scripts
                 currentModel.screenPortalStates.modelAdded += PortalAssignedToDisplay;
             }
         }
-        
-        public void AssignMediaToDisplay()
-        {
-            Debug.Log("AssignMediaToDisplay");
-
-            switch (_lastSelectedMediaType)
-            {
-                case MediaType.VideoClip:
-                    Debug.Log($"Assign video clip {_lastSelectedVideoId} to display {_lastSelectedDisplayId}");
-                    AssignVideoToDisplay(_lastSelectedVideoId, _lastSelectedDisplayId);
-                    break;
-
-                case MediaType.VideoStream:
-                    Debug.Log($"Assign video stream {_lastSelectedStreamId} to display {_lastSelectedDisplayId}");
-                    AssignStreamToDisplay(_lastSelectedStreamId, _lastSelectedDisplayId);
-                    break;
-            }
-        }
 
         private void AssignPortalToDisplaysFromArray()
         {
@@ -561,76 +523,50 @@ namespace Assets.Scripts
             }
         }
 
-        public void StoreBufferScreenMediaState()
+        public void StoreBufferScreenMediaState(int mediaId, int mediaTypeId, int screenId)
         {
             var existing =
-                _mediaStateBuffer.FirstOrDefault(s => s.ScreenDisplayId == _lastSelectedDisplayId);
+                _mediaStateBuffer.FirstOrDefault(s => s.ScreenDisplayId == screenId);
 
             Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
 
             if (existing != null)
             {
-                existing.MediaTypeId =
-                    (int) _lastSelectedMediaType;
-                existing.MediaId =
-                    _lastSelectedMediaType == MediaType.VideoClip
-                        ? _lastSelectedVideoId
-                        : _lastSelectedMediaType == MediaType.VideoStream
-                            ? _lastSelectedStreamId
-                            : 0;
-                //existing.isPortal = isPortal;
+                existing.MediaTypeId = mediaTypeId;
+                existing.MediaId = mediaId;
             }
             else
             {
                 MediaScreenDisplayBufferState bufferState = new MediaScreenDisplayBufferState
                 {
-                    ScreenDisplayId = _lastSelectedDisplayId,
-                    MediaTypeId = (int) _lastSelectedMediaType,
-                    MediaId = _lastSelectedMediaType == MediaType.VideoClip
-                        ? _lastSelectedVideoId
-                        : _lastSelectedStreamId,
-                    //isPortal = isPortal
+                    ScreenDisplayId = screenId,
+                    MediaTypeId = mediaTypeId,
+                    MediaId = mediaId
                 };
 
                 _mediaStateBuffer.Add(bufferState);
             }
-
-            //Debug.Log("StoreRealtimeScreenMediaState: -");
-            //foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
-            //{
-            //    Debug.Log($"{(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
-            //}
         }
 
-        public void StoreRealtimeScreenMediaState()
+        public void StoreRealtimeScreenMediaState(int mediaId, int mediaTypeId, int screenId)
         {
             var existing =
-                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == _lastSelectedDisplayId);
+                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
 
             Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
 
             if (existing != null)
             {
-                existing.mediaTypeId =
-                    (int) _lastSelectedMediaType;
-                existing.mediaId =
-                    _lastSelectedMediaType == MediaType.VideoClip
-                        ? _lastSelectedVideoId
-                        : _lastSelectedMediaType == MediaType.VideoStream
-                            ? _lastSelectedStreamId
-                            : 0;
-                //existing.isPortal = isPortal;
+                existing.mediaTypeId = (int)mediaTypeId;
+                existing.mediaId = mediaId;
             }
             else
             {
                 MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
                 {
-                    screenDisplayId = _lastSelectedDisplayId,
-                    mediaTypeId = (int) _lastSelectedMediaType,
-                    mediaId = _lastSelectedMediaType == MediaType.VideoClip
-                        ? _lastSelectedVideoId
-                        : _lastSelectedStreamId,
-                    //isPortal = isPortal
+                    screenDisplayId = screenId,
+                    mediaTypeId = mediaTypeId,
+                    mediaId = mediaId
                 };
 
                 model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
@@ -737,7 +673,9 @@ namespace Assets.Scripts
 
                     Transform screenObject = GetScreenObjectFromScreenId(screenId);
 
-                    var thisVideoClip = Videos.First(v => v.Id == videoId);
+                    Debug.Log($"Videos count: {Videos.Count}");
+
+                    var thisVideoClip = Videos.FirstOrDefault(v => v.Id == videoId);
 
                     Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
 

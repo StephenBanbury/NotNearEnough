@@ -70,23 +70,13 @@ namespace Assets.Scripts
 
                     case ScreenAction.CreatePortal:
                         Debug.Log("Doing action: Create portal");
-                        //MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId);
-                        //portalDisplaySelect.SetPortalDisplayId(screenId, true);
-                        //portalDisplaySelect.KeepInSync();
                         break;
 
                     case ScreenAction.DoTeleport:
                         Debug.Log("Doing action: Teleport");
-
                         int sceneId = MediaDisplayManager.instance.GetSceneIdFromScreenId(screenId);
-                        //MediaDisplayManager.instance.RandomTeleportation(sceneId);
                         int destinationSceneId = MediaDisplayManager.instance.TargetedTeleportation(screenId);
-                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId, destinationSceneId); 
-
-                        //MediaDisplayManager.instance.CreatePortal(screenId, false);
-                        //portalDisplaySelect.SetPortalDisplayId(screenId, false);
-                        //portalDisplaySelect.KeepInSync();
-
+                        MediaDisplayManager.instance.StoreRealtimeScreenPortalState(screenId, destinationSceneId);
                         break;
                 }
 
@@ -150,48 +140,58 @@ namespace Assets.Scripts
 
         private void SelectRandomVideoClip()
         {
-            var parent = gameObject.transform.parent;
-
-            // For now I am going to select a random video to display. We will probably want a different action
-            var videos = MediaDisplayManager.instance.Videos;
-
-            if (videos.Count > 0)
+            try
             {
-                var videoId = (int) Math.Ceiling(Random.value * videos.Count);
-                var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
+                var parent = gameObject.transform.parent;
+                var videos = MediaDisplayManager.instance.Videos;
+                if (videos.Count > 0)
+                {
+                    int randIx = (int) Math.Ceiling(Random.value * videos.Count);
 
-                //var gameManager = GameObject.Find("GameManager");
+                    Debug.Log($"Random video index: {randIx} of {videos.Count}");
 
-                //var videoSelect = gameManager.GetComponent<VideoSelect>();
-                ////videoSelect.SetVideoId(videoId);
-                //videoSelect.KeepInSync(videoId);
+                    var videoId = videos[randIx].Id;
+                    var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-                //var displaySelect = gameManager.GetComponent<DisplaySelect>();
-                ////displaySelect.SetDisplayId(screenId);
-                //displaySelect.KeepInSync(screenId);
+                    Debug.Log($"Random video: video {videoId} onto screen {screenId}");
+
+                    MediaDisplayManager.instance.StoreRealtimeScreenMediaState(videoId, (int) MediaType.VideoClip,
+                        screenId);
+                    MediaDisplayManager.instance.StoreBufferScreenMediaState(videoId, (int) MediaType.VideoClip,
+                        screenId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
         private void SelectRandomVideoStream()
         {
-            var parent = gameObject.transform.parent;
-
-            // For now I am going to select a random stream to display. We will probably want a different action
+            try
+            {
+                var parent = gameObject.transform.parent;
             var streams = AgoraController.instance.AgoraUsers;
 
             if (streams.Count > 0)
             {
-                var streamId = (int) Math.Ceiling(Random.value * streams.Count);
+                int randIx = (int)Math.Ceiling(Random.value * streams.Count);
+                
+                Debug.Log($"Random stream index: {randIx} of {streams.Count}");
+
+                var streamId = streams[randIx].Id;
                 var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-                //var gameManager = GameObject.Find("GameManager");
+                Debug.Log($"Random video: video {streamId} onto screen {screenId}");
 
-                //var streamSelect = gameManager.GetComponent<StreamSelect>();
-                ////streamSelect.SetStreamId(streamId);
-                //streamSelect.KeepInSync(streamId);
-
-                //var displaySelect = gameManager.GetComponent<DisplaySelect>();
-                //displaySelect.SetDisplayId(screenId);
+                MediaDisplayManager.instance.StoreRealtimeScreenMediaState(streamId, (int)MediaType.VideoStream, screenId);
+                MediaDisplayManager.instance.StoreBufferScreenMediaState(streamId, (int)MediaType.VideoStream, screenId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
