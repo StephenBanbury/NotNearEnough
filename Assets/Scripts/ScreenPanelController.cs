@@ -160,15 +160,15 @@ namespace Assets.Scripts
                 var videoId = (int) Math.Ceiling(Random.value * videos.Count);
                 var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-                var gameManager = GameObject.Find("GameManager");
+                //var gameManager = GameObject.Find("GameManager");
 
-                var videoSelect = gameManager.GetComponent<VideoSelect>();
-                //videoSelect.SetVideoId(videoId);
-                videoSelect.KeepInSync(videoId);
+                //var videoSelect = gameManager.GetComponent<VideoSelect>();
+                ////videoSelect.SetVideoId(videoId);
+                //videoSelect.KeepInSync(videoId);
 
-                var displaySelect = gameManager.GetComponent<DisplaySelect>();
-                //displaySelect.SetDisplayId(screenId);
-                displaySelect.KeepInSync(screenId);
+                //var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                ////displaySelect.SetDisplayId(screenId);
+                //displaySelect.KeepInSync(screenId);
             }
         }
 
@@ -184,14 +184,14 @@ namespace Assets.Scripts
                 var streamId = (int) Math.Ceiling(Random.value * streams.Count);
                 var screenId = int.Parse(parent.name.Replace("Screen", "").Replace("Variant", "").Trim());
 
-                var gameManager = GameObject.Find("GameManager");
+                //var gameManager = GameObject.Find("GameManager");
 
-                var streamSelect = gameManager.GetComponent<StreamSelect>();
-                //streamSelect.SetStreamId(streamId);
-                streamSelect.KeepInSync(streamId);
+                //var streamSelect = gameManager.GetComponent<StreamSelect>();
+                ////streamSelect.SetStreamId(streamId);
+                //streamSelect.KeepInSync(streamId);
 
-                var displaySelect = gameManager.GetComponent<DisplaySelect>();
-                displaySelect.SetDisplayId(screenId);
+                //var displaySelect = gameManager.GetComponent<DisplaySelect>();
+                //displaySelect.SetDisplayId(screenId);
             }
         }
     }
