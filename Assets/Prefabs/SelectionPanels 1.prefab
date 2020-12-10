@@ -8613,8 +8613,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2827652250089839294}
   m_Layer: 0
-  m_Name: SelectionPanels
-  m_TagString: SelectionPanel
+  m_Name: SelectionPanels 1
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

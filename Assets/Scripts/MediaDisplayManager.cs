@@ -95,7 +95,9 @@ namespace Assets.Scripts
                 $"Local={Videos.Count(v => v.Source == Source.LocalFile)}; " +
                 $"External={Videos.Count(v => v.Source == Source.Url)}");
 
-            yield return StartCoroutine(DownloadVideoFiles(Videos));
+            _startButton.SetActive(true);
+
+            //yield return StartCoroutine(DownloadVideoFiles(Videos));
 
             Scenes = new List<SceneDetail>();
             ScreenActions = new List<ScreenActionModel>();
@@ -117,7 +119,7 @@ namespace Assets.Scripts
 
             MyCurrentScene = Scene.Scene1;
 
-            ShowSelectionPanel();
+            //ShowSelectionPanel();
         }
         
         public ScreenAction GetNextScreenAction(int screenId)
@@ -270,15 +272,15 @@ namespace Assets.Scripts
                 mediaDetail.LocalPath = savePath;
 
                 _debugText.text += $"\n{savePath}";
-                _lobbyStatusInfoText.text += $"\n{mediaDetail.Filename}";
+                _lobbyStatusInfoText.text = $"{mediaDetail.Filename}";
 
                 if (File.Exists(savePath))
                 {
-                    _lobbyStatusInfoText.text += " - exists.";
+                    _lobbyStatusInfoText.text += "\n - exists.";
                 }
                 else
                 {
-                    _lobbyStatusInfoText.text += " - downloading.";
+                    _lobbyStatusInfoText.text += "\n - downloading.";
                     string url = mediaDetail.Url;
                     using (UnityWebRequest www = UnityWebRequest.Get(url))
                     {
@@ -956,7 +958,7 @@ namespace Assets.Scripts
 
 
             // Instantiate selection panels, audio source and lighting as part of scene object
-
+            
             if (includeSelectionPanels)
             {
                 var selectionPanelsTrans = sceneObject.transform.Find($"Selection Panel {_sceneIndex}");

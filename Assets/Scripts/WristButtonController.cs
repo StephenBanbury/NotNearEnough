@@ -26,20 +26,20 @@ namespace Assets.Scripts
 
         private void ShowCurrentMessage()
         {
+            Debug.Log($"Show controller panel: {_messages[_show ? 1 : 0]}");
             _messageText.text = _messages[_show ? 1 : 0];
-            ShowPanel();
-            _show = !_show;
-        }
-
-        private void ShowPanel()
-        {
             foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
+                Debug.Log($"in panel: {panel.gameObject.name}");
+
                 foreach (Transform child in panel.transform)
                 {
+                    Debug.Log($"in panel: {child.gameObject.name}");
                     child.gameObject.SetActive(_show);
                 }
             }
+            _show = !_show;
         }
+
     }
 }
