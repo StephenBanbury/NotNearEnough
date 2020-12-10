@@ -97,7 +97,7 @@ namespace Assets.Scripts
 
             _startButton.SetActive(true);
 
-            //yield return StartCoroutine(DownloadVideoFiles(Videos));
+            yield return StartCoroutine(DownloadVideoFiles(Videos));
 
             Scenes = new List<SceneDetail>();
             ScreenActions = new List<ScreenActionModel>();
@@ -256,7 +256,9 @@ namespace Assets.Scripts
             _lobbyStatusInfoText.text = "Downloading video files: -";
             _debugText.text = "Saving video file to: ";
 
-            foreach (var mediaDetail in mediaDetails.Where(m => m.Source == Source.Url))
+            var mediaDetailsToUse = mediaDetails.Where(m => m.Source == Source.Url).Take(20);
+
+            foreach (var mediaDetail in mediaDetailsToUse)
             {
                 string savePath;
                 if (Application.platform == RuntimePlatform.Android)
