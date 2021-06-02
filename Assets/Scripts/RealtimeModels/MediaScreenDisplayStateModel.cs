@@ -15,73 +15,58 @@ public partial class MediaScreenDisplayStateModel
 public partial class MediaScreenDisplayStateModel : RealtimeModel {
     public int mediaTypeId {
         get {
-            return _cache.LookForValueInCache(_mediaTypeId, entry => entry.mediaTypeIdSet, entry => entry.mediaTypeId);
+            return _mediaTypeIdProperty.value;
         }
         set {
-            if (this.mediaTypeId == value) return;
-            _cache.UpdateLocalCache(entry => { entry.mediaTypeIdSet = true; entry.mediaTypeId = value; return entry; });
+            if (_mediaTypeIdProperty.value == value) return;
+            _mediaTypeIdProperty.value = value;
             InvalidateReliableLength();
         }
     }
     
     public int mediaId {
         get {
-            return _cache.LookForValueInCache(_mediaId, entry => entry.mediaIdSet, entry => entry.mediaId);
+            return _mediaIdProperty.value;
         }
         set {
-            if (this.mediaId == value) return;
-            _cache.UpdateLocalCache(entry => { entry.mediaIdSet = true; entry.mediaId = value; return entry; });
+            if (_mediaIdProperty.value == value) return;
+            _mediaIdProperty.value = value;
             InvalidateReliableLength();
         }
     }
     
     public int screenDisplayId {
         get {
-            return _cache.LookForValueInCache(_screenDisplayId, entry => entry.screenDisplayIdSet, entry => entry.screenDisplayId);
+            return _screenDisplayIdProperty.value;
         }
         set {
-            if (this.screenDisplayId == value) return;
-            _cache.UpdateLocalCache(entry => { entry.screenDisplayIdSet = true; entry.screenDisplayId = value; return entry; });
+            if (_screenDisplayIdProperty.value == value) return;
+            _screenDisplayIdProperty.value = value;
             InvalidateReliableLength();
         }
     }
     
     public bool isPortal {
         get {
-            return _cache.LookForValueInCache(_isPortal, entry => entry.isPortalSet, entry => entry.isPortal);
+            return _isPortalProperty.value;
         }
         set {
-            if (this.isPortal == value) return;
-            _cache.UpdateLocalCache(entry => { entry.isPortalSet = true; entry.isPortal = value; return entry; });
+            if (_isPortalProperty.value == value) return;
+            _isPortalProperty.value = value;
             InvalidateReliableLength();
         }
     }
     
     public bool isDisplay {
         get {
-            return _cache.LookForValueInCache(_isDisplay, entry => entry.isDisplaySet, entry => entry.isDisplay);
+            return _isDisplayProperty.value;
         }
         set {
-            if (this.isDisplay == value) return;
-            _cache.UpdateLocalCache(entry => { entry.isDisplaySet = true; entry.isDisplay = value; return entry; });
+            if (_isDisplayProperty.value == value) return;
+            _isDisplayProperty.value = value;
             InvalidateReliableLength();
         }
     }
-    
-    private struct LocalCacheEntry {
-        public bool mediaTypeIdSet;
-        public int mediaTypeId;
-        public bool mediaIdSet;
-        public int mediaId;
-        public bool screenDisplayIdSet;
-        public int screenDisplayId;
-        public bool isPortalSet;
-        public bool isPortal;
-        public bool isDisplaySet;
-        public bool isDisplay;
-    }
-    
-    private LocalChangeCache<LocalCacheEntry> _cache = new LocalChangeCache<LocalCacheEntry>();
     
     public enum PropertyID : uint {
         MediaTypeId = 1,
@@ -91,107 +76,79 @@ public partial class MediaScreenDisplayStateModel : RealtimeModel {
         IsDisplay = 5,
     }
     
-    public MediaScreenDisplayStateModel() : this(null) {
-    }
+    #region Properties
     
-    public MediaScreenDisplayStateModel(RealtimeModel parent) : base(null, parent) {
+    private ReliableProperty<int> _mediaTypeIdProperty;
+    
+    private ReliableProperty<int> _mediaIdProperty;
+    
+    private ReliableProperty<int> _screenDisplayIdProperty;
+    
+    private ReliableProperty<bool> _isPortalProperty;
+    
+    private ReliableProperty<bool> _isDisplayProperty;
+    
+    #endregion
+    
+    public MediaScreenDisplayStateModel() : base(null) {
+        _mediaTypeIdProperty = new ReliableProperty<int>(1, _mediaTypeId);
+        _mediaIdProperty = new ReliableProperty<int>(2, _mediaId);
+        _screenDisplayIdProperty = new ReliableProperty<int>(3, _screenDisplayId);
+        _isPortalProperty = new ReliableProperty<bool>(4, _isPortal);
+        _isDisplayProperty = new ReliableProperty<bool>(5, _isDisplay);
     }
     
     protected override void OnParentReplaced(RealtimeModel previousParent, RealtimeModel currentParent) {
-        UnsubscribeClearCacheCallback();
+        _mediaTypeIdProperty.UnsubscribeCallback();
+        _mediaIdProperty.UnsubscribeCallback();
+        _screenDisplayIdProperty.UnsubscribeCallback();
+        _isPortalProperty.UnsubscribeCallback();
+        _isDisplayProperty.UnsubscribeCallback();
     }
     
     protected override int WriteLength(StreamContext context) {
-        int length = 0;
-        if (context.fullModel) {
-            FlattenCache();
-            length += WriteStream.WriteVarint32Length((uint)PropertyID.MediaTypeId, (uint)_mediaTypeId);
-            length += WriteStream.WriteVarint32Length((uint)PropertyID.MediaId, (uint)_mediaId);
-            length += WriteStream.WriteVarint32Length((uint)PropertyID.ScreenDisplayId, (uint)_screenDisplayId);
-            length += WriteStream.WriteVarint32Length((uint)PropertyID.IsPortal, _isPortal ? 1u : 0u);
-            length += WriteStream.WriteVarint32Length((uint)PropertyID.IsDisplay, _isDisplay ? 1u : 0u);
-        } else if (context.reliableChannel) {
-            LocalCacheEntry entry = _cache.localCache;
-            if (entry.mediaTypeIdSet) {
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.MediaTypeId, (uint)entry.mediaTypeId);
-            }
-            if (entry.mediaIdSet) {
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.MediaId, (uint)entry.mediaId);
-            }
-            if (entry.screenDisplayIdSet) {
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.ScreenDisplayId, (uint)entry.screenDisplayId);
-            }
-            if (entry.isPortalSet) {
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.IsPortal, entry.isPortal ? 1u : 0u);
-            }
-            if (entry.isDisplaySet) {
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.IsDisplay, entry.isDisplay ? 1u : 0u);
-            }
-        }
+        var length = 0;
+        length += _mediaTypeIdProperty.WriteLength(context);
+        length += _mediaIdProperty.WriteLength(context);
+        length += _screenDisplayIdProperty.WriteLength(context);
+        length += _isPortalProperty.WriteLength(context);
+        length += _isDisplayProperty.WriteLength(context);
         return length;
     }
     
     protected override void Write(WriteStream stream, StreamContext context) {
-        var didWriteProperties = false;
-        
-        if (context.fullModel) {
-            stream.WriteVarint32((uint)PropertyID.MediaTypeId, (uint)_mediaTypeId);
-            stream.WriteVarint32((uint)PropertyID.MediaId, (uint)_mediaId);
-            stream.WriteVarint32((uint)PropertyID.ScreenDisplayId, (uint)_screenDisplayId);
-            stream.WriteVarint32((uint)PropertyID.IsPortal, _isPortal ? 1u : 0u);
-            stream.WriteVarint32((uint)PropertyID.IsDisplay, _isDisplay ? 1u : 0u);
-        } else if (context.reliableChannel) {
-            LocalCacheEntry entry = _cache.localCache;
-            if (entry.mediaTypeIdSet || entry.mediaIdSet || entry.screenDisplayIdSet || entry.isPortalSet || entry.isDisplaySet) {
-                _cache.PushLocalCacheToInflight(context.updateID);
-                ClearCacheOnStreamCallback(context);
-            }
-            if (entry.mediaTypeIdSet) {
-                stream.WriteVarint32((uint)PropertyID.MediaTypeId, (uint)entry.mediaTypeId);
-                didWriteProperties = true;
-            }
-            if (entry.mediaIdSet) {
-                stream.WriteVarint32((uint)PropertyID.MediaId, (uint)entry.mediaId);
-                didWriteProperties = true;
-            }
-            if (entry.screenDisplayIdSet) {
-                stream.WriteVarint32((uint)PropertyID.ScreenDisplayId, (uint)entry.screenDisplayId);
-                didWriteProperties = true;
-            }
-            if (entry.isPortalSet) {
-                stream.WriteVarint32((uint)PropertyID.IsPortal, entry.isPortal ? 1u : 0u);
-                didWriteProperties = true;
-            }
-            if (entry.isDisplaySet) {
-                stream.WriteVarint32((uint)PropertyID.IsDisplay, entry.isDisplay ? 1u : 0u);
-                didWriteProperties = true;
-            }
-            
-            if (didWriteProperties) InvalidateReliableLength();
-        }
+        var writes = false;
+        writes |= _mediaTypeIdProperty.Write(stream, context);
+        writes |= _mediaIdProperty.Write(stream, context);
+        writes |= _screenDisplayIdProperty.Write(stream, context);
+        writes |= _isPortalProperty.Write(stream, context);
+        writes |= _isDisplayProperty.Write(stream, context);
+        if (writes) InvalidateContextLength(context);
     }
     
     protected override void Read(ReadStream stream, StreamContext context) {
+        var anyPropertiesChanged = false;
         while (stream.ReadNextPropertyID(out uint propertyID)) {
+            var changed = false;
             switch (propertyID) {
-                case (uint)PropertyID.MediaTypeId: {
-                    _mediaTypeId = (int)stream.ReadVarint32();
+                case (uint) PropertyID.MediaTypeId: {
+                    changed = _mediaTypeIdProperty.Read(stream, context);
                     break;
                 }
-                case (uint)PropertyID.MediaId: {
-                    _mediaId = (int)stream.ReadVarint32();
+                case (uint) PropertyID.MediaId: {
+                    changed = _mediaIdProperty.Read(stream, context);
                     break;
                 }
-                case (uint)PropertyID.ScreenDisplayId: {
-                    _screenDisplayId = (int)stream.ReadVarint32();
+                case (uint) PropertyID.ScreenDisplayId: {
+                    changed = _screenDisplayIdProperty.Read(stream, context);
                     break;
                 }
-                case (uint)PropertyID.IsPortal: {
-                    _isPortal = (stream.ReadVarint32() != 0);
+                case (uint) PropertyID.IsPortal: {
+                    changed = _isPortalProperty.Read(stream, context);
                     break;
                 }
-                case (uint)PropertyID.IsDisplay: {
-                    _isDisplay = (stream.ReadVarint32() != 0);
+                case (uint) PropertyID.IsDisplay: {
+                    changed = _isDisplayProperty.Read(stream, context);
                     break;
                 }
                 default: {
@@ -199,41 +156,20 @@ public partial class MediaScreenDisplayStateModel : RealtimeModel {
                     break;
                 }
             }
+            anyPropertiesChanged |= changed;
+        }
+        if (anyPropertiesChanged) {
+            UpdateBackingFields();
         }
     }
     
-    #region Cache Operations
-    
-    private StreamEventDispatcher _streamEventDispatcher;
-    
-    private void FlattenCache() {
+    private void UpdateBackingFields() {
         _mediaTypeId = mediaTypeId;
         _mediaId = mediaId;
         _screenDisplayId = screenDisplayId;
         _isPortal = isPortal;
         _isDisplay = isDisplay;
-        _cache.Clear();
     }
     
-    private void ClearCache(uint updateID) {
-        _cache.RemoveUpdateFromInflight(updateID);
-    }
-    
-    private void ClearCacheOnStreamCallback(StreamContext context) {
-        if (_streamEventDispatcher != context.dispatcher) {
-            UnsubscribeClearCacheCallback(); // unsub from previous dispatcher
-        }
-        _streamEventDispatcher = context.dispatcher;
-        _streamEventDispatcher.AddStreamCallback(context.updateID, ClearCache);
-    }
-    
-    private void UnsubscribeClearCacheCallback() {
-        if (_streamEventDispatcher != null) {
-            _streamEventDispatcher.RemoveStreamCallback(ClearCache);
-            _streamEventDispatcher = null;
-        }
-    }
-    
-    #endregion
 }
 /* ----- End Normal Autogenerated Code ----- */

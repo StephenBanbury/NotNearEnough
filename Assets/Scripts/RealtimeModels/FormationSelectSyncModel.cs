@@ -15,11 +15,11 @@ namespace Assets.Scripts {
     public partial class FormationSelectSyncModel : RealtimeModel {
         public int formationId {
             get {
-                return _cache.LookForValueInCache(_formationId, entry => entry.formationIdSet, entry => entry.formationId);
+                return _formationIdProperty.value;
             }
             set {
-                if (this.formationId == value) return;
-                _cache.UpdateLocalCache(entry => { entry.formationIdSet = true; entry.formationId = value; return entry; });
+                if (_formationIdProperty.value == value) return;
+                _formationIdProperty.value = value;
                 InvalidateReliableLength();
                 FireFormationIdDidChange(value);
             }
@@ -28,25 +28,22 @@ namespace Assets.Scripts {
         public delegate void PropertyChangedHandler<in T>(FormationSelectSyncModel model, T value);
         public event PropertyChangedHandler<int> formationIdDidChange;
         
-        private struct LocalCacheEntry {
-            public bool formationIdSet;
-            public int formationId;
-        }
-        
-        private LocalChangeCache<LocalCacheEntry> _cache = new LocalChangeCache<LocalCacheEntry>();
-        
         public enum PropertyID : uint {
             FormationId = 3,
         }
         
-        public FormationSelectSyncModel() : this(null) {
-        }
+        #region Properties
         
-        public FormationSelectSyncModel(RealtimeModel parent) : base(null, parent) {
+        private ReliableProperty<int> _formationIdProperty;
+        
+        #endregion
+        
+        public FormationSelectSyncModel() : base(null) {
+            _formationIdProperty = new ReliableProperty<int>(3, _formationId);
         }
         
         protected override void OnParentReplaced(RealtimeModel previousParent, RealtimeModel currentParent) {
-            UnsubscribeClearCacheCallback();
+            _formationIdProperty.UnsubscribeCallback();
         }
         
         private void FireFormationIdDidChange(int value) {
@@ -58,49 +55,25 @@ namespace Assets.Scripts {
         }
         
         protected override int WriteLength(StreamContext context) {
-            int length = 0;
-            if (context.fullModel) {
-                FlattenCache();
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.FormationId, (uint)_formationId);
-            } else if (context.reliableChannel) {
-                LocalCacheEntry entry = _cache.localCache;
-                if (entry.formationIdSet) {
-                    length += WriteStream.WriteVarint32Length((uint)PropertyID.FormationId, (uint)entry.formationId);
-                }
-            }
+            var length = 0;
+            length += _formationIdProperty.WriteLength(context);
             return length;
         }
         
         protected override void Write(WriteStream stream, StreamContext context) {
-            var didWriteProperties = false;
-            
-            if (context.fullModel) {
-                stream.WriteVarint32((uint)PropertyID.FormationId, (uint)_formationId);
-            } else if (context.reliableChannel) {
-                LocalCacheEntry entry = _cache.localCache;
-                if (entry.formationIdSet) {
-                    _cache.PushLocalCacheToInflight(context.updateID);
-                    ClearCacheOnStreamCallback(context);
-                }
-                if (entry.formationIdSet) {
-                    stream.WriteVarint32((uint)PropertyID.FormationId, (uint)entry.formationId);
-                    didWriteProperties = true;
-                }
-                
-                if (didWriteProperties) InvalidateReliableLength();
-            }
+            var writes = false;
+            writes |= _formationIdProperty.Write(stream, context);
+            if (writes) InvalidateContextLength(context);
         }
         
         protected override void Read(ReadStream stream, StreamContext context) {
+            var anyPropertiesChanged = false;
             while (stream.ReadNextPropertyID(out uint propertyID)) {
+                var changed = false;
                 switch (propertyID) {
-                    case (uint)PropertyID.FormationId: {
-                        int previousValue = _formationId;
-                        _formationId = (int)stream.ReadVarint32();
-                        bool formationIdExistsInChangeCache = _cache.ValueExistsInCache(entry => entry.formationIdSet);
-                        if (!formationIdExistsInChangeCache && _formationId != previousValue) {
-                            FireFormationIdDidChange(_formationId);
-                        }
+                    case (uint) PropertyID.FormationId: {
+                        changed = _formationIdProperty.Read(stream, context);
+                        if (changed) FireFormationIdDidChange(formationId);
                         break;
                     }
                     default: {
@@ -108,38 +81,17 @@ namespace Assets.Scripts {
                         break;
                     }
                 }
+                anyPropertiesChanged |= changed;
+            }
+            if (anyPropertiesChanged) {
+                UpdateBackingFields();
             }
         }
         
-        #region Cache Operations
-        
-        private StreamEventDispatcher _streamEventDispatcher;
-        
-        private void FlattenCache() {
+        private void UpdateBackingFields() {
             _formationId = formationId;
-            _cache.Clear();
         }
         
-        private void ClearCache(uint updateID) {
-            _cache.RemoveUpdateFromInflight(updateID);
-        }
-        
-        private void ClearCacheOnStreamCallback(StreamContext context) {
-            if (_streamEventDispatcher != context.dispatcher) {
-                UnsubscribeClearCacheCallback(); // unsub from previous dispatcher
-            }
-            _streamEventDispatcher = context.dispatcher;
-            _streamEventDispatcher.AddStreamCallback(context.updateID, ClearCache);
-        }
-        
-        private void UnsubscribeClearCacheCallback() {
-            if (_streamEventDispatcher != null) {
-                _streamEventDispatcher.RemoveStreamCallback(ClearCache);
-                _streamEventDispatcher = null;
-            }
-        }
-        
-        #endregion
     }
 }
 /* ----- End Normal Autogenerated Code ----- */

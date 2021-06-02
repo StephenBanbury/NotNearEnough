@@ -19,11 +19,11 @@ namespace Assets.Scripts {
     public partial class TeleportToSceneModel : RealtimeModel {
         public int sceneId {
             get {
-                return _cache.LookForValueInCache(_sceneId, entry => entry.sceneIdSet, entry => entry.sceneId);
+                return _sceneIdProperty.value;
             }
             set {
-                if (this.sceneId == value) return;
-                _cache.UpdateLocalCache(entry => { entry.sceneIdSet = true; entry.sceneId = value; return entry; });
+                if (_sceneIdProperty.value == value) return;
+                _sceneIdProperty.value = value;
                 InvalidateReliableLength();
                 FireSceneIdDidChange(value);
             }
@@ -31,11 +31,11 @@ namespace Assets.Scripts {
         
         public int secondsDelay {
             get {
-                return _cache.LookForValueInCache(_secondsDelay, entry => entry.secondsDelaySet, entry => entry.secondsDelay);
+                return _secondsDelayProperty.value;
             }
             set {
-                if (this.secondsDelay == value) return;
-                _cache.UpdateLocalCache(entry => { entry.secondsDelaySet = true; entry.secondsDelay = value; return entry; });
+                if (_secondsDelayProperty.value == value) return;
+                _secondsDelayProperty.value = value;
                 InvalidateReliableLength();
                 FireSecondsDelayDidChange(value);
             }
@@ -45,28 +45,27 @@ namespace Assets.Scripts {
         public event PropertyChangedHandler<int> sceneIdDidChange;
         public event PropertyChangedHandler<int> secondsDelayDidChange;
         
-        private struct LocalCacheEntry {
-            public bool sceneIdSet;
-            public int sceneId;
-            public bool secondsDelaySet;
-            public int secondsDelay;
-        }
-        
-        private LocalChangeCache<LocalCacheEntry> _cache = new LocalChangeCache<LocalCacheEntry>();
-        
         public enum PropertyID : uint {
             SceneId = 1,
             SecondsDelay = 2,
         }
         
-        public TeleportToSceneModel() : this(null) {
-        }
+        #region Properties
         
-        public TeleportToSceneModel(RealtimeModel parent) : base(null, parent) {
+        private ReliableProperty<int> _sceneIdProperty;
+        
+        private ReliableProperty<int> _secondsDelayProperty;
+        
+        #endregion
+        
+        public TeleportToSceneModel() : base(null) {
+            _sceneIdProperty = new ReliableProperty<int>(1, _sceneId);
+            _secondsDelayProperty = new ReliableProperty<int>(2, _secondsDelay);
         }
         
         protected override void OnParentReplaced(RealtimeModel previousParent, RealtimeModel currentParent) {
-            UnsubscribeClearCacheCallback();
+            _sceneIdProperty.UnsubscribeCallback();
+            _secondsDelayProperty.UnsubscribeCallback();
         }
         
         private void FireSceneIdDidChange(int value) {
@@ -86,67 +85,32 @@ namespace Assets.Scripts {
         }
         
         protected override int WriteLength(StreamContext context) {
-            int length = 0;
-            if (context.fullModel) {
-                FlattenCache();
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.SceneId, (uint)_sceneId);
-                length += WriteStream.WriteVarint32Length((uint)PropertyID.SecondsDelay, (uint)_secondsDelay);
-            } else if (context.reliableChannel) {
-                LocalCacheEntry entry = _cache.localCache;
-                if (entry.sceneIdSet) {
-                    length += WriteStream.WriteVarint32Length((uint)PropertyID.SceneId, (uint)entry.sceneId);
-                }
-                if (entry.secondsDelaySet) {
-                    length += WriteStream.WriteVarint32Length((uint)PropertyID.SecondsDelay, (uint)entry.secondsDelay);
-                }
-            }
+            var length = 0;
+            length += _sceneIdProperty.WriteLength(context);
+            length += _secondsDelayProperty.WriteLength(context);
             return length;
         }
         
         protected override void Write(WriteStream stream, StreamContext context) {
-            var didWriteProperties = false;
-            
-            if (context.fullModel) {
-                stream.WriteVarint32((uint)PropertyID.SceneId, (uint)_sceneId);
-                stream.WriteVarint32((uint)PropertyID.SecondsDelay, (uint)_secondsDelay);
-            } else if (context.reliableChannel) {
-                LocalCacheEntry entry = _cache.localCache;
-                if (entry.sceneIdSet || entry.secondsDelaySet) {
-                    _cache.PushLocalCacheToInflight(context.updateID);
-                    ClearCacheOnStreamCallback(context);
-                }
-                if (entry.sceneIdSet) {
-                    stream.WriteVarint32((uint)PropertyID.SceneId, (uint)entry.sceneId);
-                    didWriteProperties = true;
-                }
-                if (entry.secondsDelaySet) {
-                    stream.WriteVarint32((uint)PropertyID.SecondsDelay, (uint)entry.secondsDelay);
-                    didWriteProperties = true;
-                }
-                
-                if (didWriteProperties) InvalidateReliableLength();
-            }
+            var writes = false;
+            writes |= _sceneIdProperty.Write(stream, context);
+            writes |= _secondsDelayProperty.Write(stream, context);
+            if (writes) InvalidateContextLength(context);
         }
         
         protected override void Read(ReadStream stream, StreamContext context) {
+            var anyPropertiesChanged = false;
             while (stream.ReadNextPropertyID(out uint propertyID)) {
+                var changed = false;
                 switch (propertyID) {
-                    case (uint)PropertyID.SceneId: {
-                        int previousValue = _sceneId;
-                        _sceneId = (int)stream.ReadVarint32();
-                        bool sceneIdExistsInChangeCache = _cache.ValueExistsInCache(entry => entry.sceneIdSet);
-                        if (!sceneIdExistsInChangeCache && _sceneId != previousValue) {
-                            FireSceneIdDidChange(_sceneId);
-                        }
+                    case (uint) PropertyID.SceneId: {
+                        changed = _sceneIdProperty.Read(stream, context);
+                        if (changed) FireSceneIdDidChange(sceneId);
                         break;
                     }
-                    case (uint)PropertyID.SecondsDelay: {
-                        int previousValue = _secondsDelay;
-                        _secondsDelay = (int)stream.ReadVarint32();
-                        bool secondsDelayExistsInChangeCache = _cache.ValueExistsInCache(entry => entry.secondsDelaySet);
-                        if (!secondsDelayExistsInChangeCache && _secondsDelay != previousValue) {
-                            FireSecondsDelayDidChange(_secondsDelay);
-                        }
+                    case (uint) PropertyID.SecondsDelay: {
+                        changed = _secondsDelayProperty.Read(stream, context);
+                        if (changed) FireSecondsDelayDidChange(secondsDelay);
                         break;
                     }
                     default: {
@@ -154,39 +118,18 @@ namespace Assets.Scripts {
                         break;
                     }
                 }
+                anyPropertiesChanged |= changed;
+            }
+            if (anyPropertiesChanged) {
+                UpdateBackingFields();
             }
         }
         
-        #region Cache Operations
-        
-        private StreamEventDispatcher _streamEventDispatcher;
-        
-        private void FlattenCache() {
+        private void UpdateBackingFields() {
             _sceneId = sceneId;
             _secondsDelay = secondsDelay;
-            _cache.Clear();
         }
         
-        private void ClearCache(uint updateID) {
-            _cache.RemoveUpdateFromInflight(updateID);
-        }
-        
-        private void ClearCacheOnStreamCallback(StreamContext context) {
-            if (_streamEventDispatcher != context.dispatcher) {
-                UnsubscribeClearCacheCallback(); // unsub from previous dispatcher
-            }
-            _streamEventDispatcher = context.dispatcher;
-            _streamEventDispatcher.AddStreamCallback(context.updateID, ClearCache);
-        }
-        
-        private void UnsubscribeClearCacheCallback() {
-            if (_streamEventDispatcher != null) {
-                _streamEventDispatcher.RemoveStreamCallback(ClearCache);
-                _streamEventDispatcher = null;
-            }
-        }
-        
-        #endregion
     }
 }
 /* ----- End Normal Autogenerated Code ----- */

@@ -65,7 +65,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            _startButton.SetActive(false);
+            _startButton.SetActive(true);
             SetSkybox(false);
             StartCoroutine(AwaitVideosFromApiBeforeStart());
         }
