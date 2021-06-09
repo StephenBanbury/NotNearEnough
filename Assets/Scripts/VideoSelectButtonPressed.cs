@@ -19,18 +19,11 @@ namespace Assets.Scripts
 
                 if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
                 {
-                    MediaDisplayManager.instance.VideoSelect(_videoId);
-
-                    //var gameManager = GameObject.Find("GameManager");
-                    //var displayManager = gameManager.GetComponent<MediaDisplayManager>();
-
-                    ////formationSelect.SetFormationId(scene, _formationId, 10);
-
-                    //_videoId.KeepInSync(scene, _videoId);
+                    MediaDisplayManager.instance.MediaSelect(videoId: _videoId);
 
                     _videoIdText.text = _videoId.ToString();
 
-                    Debug.Log($"VideoSelectButtonPressed: {_videoId}");
+                    //Debug.Log($"VideoSelectButtonPressed: {_videoId}");
                 }
             }
         }

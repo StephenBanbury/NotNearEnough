@@ -52,19 +52,6 @@ namespace Assets.Scripts
         public List<MediaDetail> Videos { get; private set; }
         public List<ScreenActionModel> ScreenActions { get; private set; }
 
-        // TODO: turn into get, set properties
-        public void VideoSelect(int id)
-        {
-            _currentVideoClip = id;
-        }
-        public void StreamSelect(int id)
-        {
-            _currentVideoClip = 0;
-            _currentVideoStream = id;
-        }
-
-
-
         void Awake()
         {
             if (instance == null)
@@ -679,10 +666,24 @@ namespace Assets.Scripts
             return compoundId;
         }
 
+        public void MediaSelect(int videoId = 0, int streamId = 0)
+        {
+            _currentVideoClip = videoId;
+            _currentVideoStream = streamId;
+        }
+
         public void ScreenSelect(int screenId)
         {
             var compoundScreenId = CompoundScreenId(screenId);
-            AssignVideoToDisplay(_currentVideoClip, compoundScreenId);
+
+            if (_currentVideoClip != 0)
+            {
+                AssignVideoToDisplay(_currentVideoClip, compoundScreenId);
+            }
+            else
+            {
+                AssignStreamToDisplay(_currentVideoStream, compoundScreenId);
+            }
         }
 
         private bool AssignVideoToDisplay(int videoId, int screenId)
@@ -780,18 +781,6 @@ namespace Assets.Scripts
 
         }
 
-        IEnumerator PrepareVideo(VideoPlayer videoPlayer)
-        {
-            videoPlayer.Prepare();
-
-            while (!videoPlayer.isPrepared)
-            {
-                yield return new WaitForEndOfFrame();
-            }
-
-            videoPlayer.Play();
-        }
-
         private bool AssignStreamToDisplay(int streamId, int displayId)
         {
             try
@@ -864,6 +853,18 @@ namespace Assets.Scripts
                     portal.gameObject.SetActive(isActive);
                 }
             }
+        }
+
+        IEnumerator PrepareVideo(VideoPlayer videoPlayer)
+        {
+            videoPlayer.Prepare();
+
+            while (!videoPlayer.isPrepared)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            videoPlayer.Play();
         }
 
         private void HudClear()

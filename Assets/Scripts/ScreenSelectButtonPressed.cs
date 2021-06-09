@@ -21,16 +21,9 @@ namespace Assets.Scripts
                 {
                     MediaDisplayManager.instance.ScreenSelect(_screenId);
 
-                    //var gameManager = GameObject.Find("GameManager");
-                    //var displayManager = gameManager.GetComponent<MediaDisplayManager>();
-
-                    ////formationSelect.SetFormationId(scene, _formationId, 10);
-
-                    //_videoId.KeepInSync(scene, _videoId);
-
                     _screenIdText.text = _screenId.ToString();
 
-                    Debug.Log($"ScreenSelectButtonPressed: {_screenId}");
+                    //Debug.Log($"ScreenSelectButtonPressed: {_screenId}");
                 }
             }
         }

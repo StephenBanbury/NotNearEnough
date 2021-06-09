@@ -6,9 +6,6 @@ namespace Assets.Scripts
 {
     public class StreamSelectButtonPressed : MonoBehaviour
     {
-        [SerializeField] private Text _streamIdText;
-        [SerializeField] private int _streamId;
-
         public int StreamId { get; set; }
 
         private void OnTriggerEnter(Collider other)
@@ -21,18 +18,9 @@ namespace Assets.Scripts
 
                 if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
                 {
-                    MediaDisplayManager.instance.StreamSelect(_streamId);
+                    MediaDisplayManager.instance.MediaSelect(streamId: StreamId);
 
-                    //var gameManager = GameObject.Find("GameManager");
-                    //var displayManager = gameManager.GetComponent<MediaDisplayManager>();
-
-                    ////formationSelect.SetFormationId(scene, _formationId, 10);
-
-                    //_streamId.KeepInSync(scene, _streamId);
-
-                    _streamIdText.text = _streamId.ToString();
-
-                    Debug.Log($"StreamSelectButtonPressed: {_streamId}");
+                    //Debug.Log($"StreamSelectButtonPressed: {StreamId}");
                 }
             }
         }
