@@ -98,7 +98,7 @@ namespace Assets.Scripts
                         Debug.Log($" - Uid: {user.Uid})");
                     }
 
-                    //MediaDisplayManager.instance.CreateStreamSelectButtons();
+                    MediaDisplayManager.instance.CreateStreamSelectButtons();
                 }
             }
         }

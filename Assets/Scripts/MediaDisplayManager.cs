@@ -23,6 +23,8 @@ namespace Assets.Scripts
         private int _sceneIndex;
         private float _floorAdjust = 1.25f;
         private int _compositeScreenId = 0;
+        private int _currentVideoClip;
+        private int _currentVideoStream;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _streamButton;
@@ -49,6 +51,19 @@ namespace Assets.Scripts
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
         public List<ScreenActionModel> ScreenActions { get; private set; }
+
+        // TODO: turn into get, set properties
+        public void VideoSelect(int id)
+        {
+            _currentVideoClip = id;
+        }
+        public void StreamSelect(int id)
+        {
+            _currentVideoClip = 0;
+            _currentVideoStream = id;
+        }
+
+
 
         void Awake()
         {
@@ -105,7 +120,7 @@ namespace Assets.Scripts
             SpawnScene(Scene.Scene7, ScreenFormation.Triangle, true);
             SpawnScene(Scene.Scene8, ScreenFormation.LongRectangle, true);
 
-            //CreateStreamSelectButtons();
+            CreateStreamSelectButtons();
 
             MyCurrentScene = Scene.Scene1;
 
@@ -288,64 +303,65 @@ namespace Assets.Scripts
             _startButton.SetActive(true);
         }
 
-        //public void CreateStreamSelectButtons()
-        //{
-        //    if (Scenes == null)
-        //        Scenes = new List<SceneDetail>();
+        public void CreateStreamSelectButtons()
+        {
+            if (Scenes == null)
+                Scenes = new List<SceneDetail>();
 
-        //    var agoraUsers = AgoraController.instance.AgoraUsers;
+            var agoraUsers = AgoraController.instance.AgoraUsers;
 
-        //    if (agoraUsers != null)
-        //    {
-        //        foreach (var sceneDetail in Scenes)
-        //        {
-        //            GameObject scene = GameObject.Find(sceneDetail.Name);
-        //            Transform panels = scene.transform.Find($"Selection Panel {sceneDetail.Id}");
+            if (agoraUsers != null)
+            {
+                foreach (var sceneDetail in Scenes)
+                {
+                    GameObject scene = GameObject.Find(sceneDetail.Name);
+                    Transform panels = scene.transform.Find($"Selection Panel {sceneDetail.Id}");
 
-        //            if(panels != null) { 
-        //                Transform selectorPanel = panels.Find("StreamSelectorPanel");
+                    if (panels != null)
+                    {
+                        Transform selectorPanel = panels.Find("StreamSelectorPanel");
 
-        //                if (selectorPanel != null)
-        //                {
-        //                    foreach (Transform child in selectorPanel)
-        //                    {
-        //                        Destroy(child.gameObject);
-        //                    }
+                        if (selectorPanel != null)
+                        {
+                            foreach (Transform child in selectorPanel)
+                            {
+                                Destroy(child.gameObject);
+                            }
 
-        //                    var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
+                            var joinedUsers = agoraUsers.Where(u => !(u.IsLocal || u.LeftRoom)).ToList();
 
-        //                    Debug.Log($"Non-local agora users: {joinedUsers.Count}");
+                            Debug.Log($"Non-local agora users: {joinedUsers.Count}");
 
-        //                    var xPos = selectorPanel.position.x;
-        //                    var yStart = 0.5f;
-        //                    var zPos = selectorPanel.position.z;
+                            var xPos = selectorPanel.position.x;
+                            var yStart = 0.5f;
+                            var zPos = selectorPanel.position.z;
 
-        //                    var i = 1;
+                            var i = 1;
 
-        //                    foreach (var joinedUser in joinedUsers)
-        //                    {
-        //                        var buttonName = $"Button{sceneDetail.Id}{i}";
-        //                        var yPos = yStart - (i - 1) * 0.117f;
-        //                        var button = Instantiate(_streamButton, new Vector3(xPos, yPos, zPos),
-        //                            Quaternion.identity);
+                            foreach (var joinedUser in joinedUsers)
+                            {
+                                var buttonName = $"Button{sceneDetail.Id}{i}";
+                                var yPos = yStart - (i - 1) * 0.117f;
+                                var button = Instantiate(_streamButton, new Vector3(xPos, yPos, zPos),
+                                    Quaternion.identity);
 
-        //                        button.name = buttonName;
+                                button.name = buttonName;
 
-        //                        Text buttonText = button.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
-        //                        buttonText.text = joinedUser.Uid.ToString();
+                                Text buttonText = button.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
+                                buttonText.text = joinedUser.Uid.ToString();
 
-        //                        var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
-        //                        buttonScript.StreamId = joinedUser.Id;
+                                var buttonScript = button.gameObject.GetComponent<StreamSelectButtonPressed>();
+                                buttonScript.StreamId = joinedUser.Id;
 
-        //                        button.transform.SetParent(selectorPanel);
-                                
-        //                        i++;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+                                button.transform.SetParent(selectorPanel);
+
+                                i++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         private void GetLocalVideosDetails()
         {
@@ -657,6 +673,18 @@ namespace Assets.Scripts
             return screenObject;
         }
 
+        private int CompoundScreenId(int screenId)
+        {
+            var compoundId = (int) MyCurrentScene * 100 + screenId;
+            return compoundId;
+        }
+
+        public void ScreenSelect(int screenId)
+        {
+            var compoundScreenId = CompoundScreenId(screenId);
+            AssignVideoToDisplay(_currentVideoClip, compoundScreenId);
+        }
+
         private bool AssignVideoToDisplay(int videoId, int screenId)
         {
             try
@@ -837,7 +865,7 @@ namespace Assets.Scripts
                 }
             }
         }
-        
+
         private void HudClear()
         {
             _hudText.text = "";
