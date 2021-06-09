@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -13,26 +12,10 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                var scenes = MediaDisplayManager.instance.Scenes;
-                var sceneName = GetCurrentSceneFromParent();
-                var scene = scenes.First(s => s.Name == sceneName).Scene;
-
-                if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
-                {
-                    MediaDisplayManager.instance.ScreenSelect(_screenId);
-
-                    _screenIdText.text = _screenId.ToString();
-
-                    //Debug.Log($"ScreenSelectButtonPressed: {_screenId}");
-                }
+                MediaDisplayManager.instance.ScreenSelect(_screenId);
+                _screenIdText.text = _screenId.ToString();
+                //Debug.Log($"ScreenSelectButtonPressed: {_screenId}");
             }
         }
-
-        private string GetCurrentSceneFromParent()
-        {
-            var parentScene = transform.parent.parent.parent.gameObject;
-            return parentScene.name;
-        }
-
     }
 }

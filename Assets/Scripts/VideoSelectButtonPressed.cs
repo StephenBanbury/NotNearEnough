@@ -13,26 +13,9 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                var scenes = MediaDisplayManager.instance.Scenes;
-                var sceneName = GetCurrentSceneFromParent();
-                var scene = scenes.First(s => s.Name == sceneName).Scene;
-
-                if (MediaDisplayManager.instance.CanTransformScene.Contains(scene))
-                {
-                    MediaDisplayManager.instance.MediaSelect(videoId: _videoId);
-
-                    _videoIdText.text = _videoId.ToString();
-
-                    //Debug.Log($"VideoSelectButtonPressed: {_videoId}");
-                }
+                MediaDisplayManager.instance.MediaSelect(videoId: _videoId);
+                _videoIdText.text = _videoId.ToString();
             }
         }
-
-        private string GetCurrentSceneFromParent()
-        {
-            var parentScene = transform.parent.parent.parent.gameObject;
-            return parentScene.name;
-        }
-
     }
 }

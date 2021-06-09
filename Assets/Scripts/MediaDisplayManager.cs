@@ -111,7 +111,7 @@ namespace Assets.Scripts
 
             MyCurrentScene = Scene.Scene1;
 
-            ShowSelectionPanel();
+            ShowSelectionPanel(false);
         }
         
         public ScreenAction GetNextScreenAction(int screenId)
@@ -177,6 +177,8 @@ namespace Assets.Scripts
 
         public IEnumerator DoTeleportation(int sceneId, bool scatter = false)
         {
+            Debug.Log($"DoTeleportation: {sceneId}");
+
             string spawnPointName = $"Spawn Point {sceneId}";
             Transform spawnPoint = GameObject.Find(spawnPointName).transform;
             Transform player = GameObject.Find("Player").transform;
@@ -216,7 +218,7 @@ namespace Assets.Scripts
 
             MyCurrentScene = (Scene)sceneId;
 
-            ShowSelectionPanel();
+            ShowSelectionPanel(false);
         }
         
         private void ShowSelectionPanel(bool show = false)
@@ -686,6 +688,57 @@ namespace Assets.Scripts
             }
         }
 
+        public void ScreenClear(int screenId)
+        {
+            ClearMediaFromScreen(screenId);
+        }
+
+        private void ClearMediaFromScreen(int screenId)
+        {
+            if (screenId > 0)
+            {
+                var compoundScreenId = CompoundScreenId(screenId);
+
+                Debug.Log($"Clear media from display {compoundScreenId}");
+
+            //try
+            //{
+                Transform screenObject = GetScreenObjectFromScreenId(compoundScreenId);
+
+                Debug.Log($"screenObject: {screenObject != null}");
+
+                var videoDisplay = screenObject.transform.Find("VideoDisplayWide");
+                if(videoDisplay == null) videoDisplay = screenObject.transform.Find("VideoDisplayTall");
+
+                if (videoDisplay != null)
+                {
+                    var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
+                    if (videoPlayer != null)
+                    {
+                        videoPlayer.Pause();
+                    }
+                }
+
+                var canvasDisplay = screenObject.transform.Find("CanvasDisplayWide");
+                if (canvasDisplay == null) canvasDisplay = screenObject.transform.Find("CanvasDisplayTall");
+
+                if (canvasDisplay != null)
+                {
+                    var canvas = videoDisplay.GetComponentInChildren<Canvas>();
+                    if (canvas != null)
+                    {
+                        //canvas.gameObject.SetActive(false);
+                        canvas.enabled = false;
+                    }
+                }
+            }
+            //}
+            //catch (Exception exception)
+            //{
+            //    Debug.Log(exception);
+            //}
+        }
+
         private bool AssignVideoToDisplay(int videoId, int screenId)
         {
             try
@@ -701,15 +754,13 @@ namespace Assets.Scripts
 
                 if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
                 {
-                    Debug.Log($"Assign videoId: {videoId}");
+                    //Debug.Log($"Assign videoId: {videoId}");
 
                     Transform screenObject = GetScreenObjectFromScreenId(screenId);
 
-                    Debug.Log($"Videos count: {Videos.Count}");
-
                     var thisVideoClip = Videos.FirstOrDefault(v => v.Id == videoId);
 
-                    Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
+                    //Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
 
                     var videoDisplay = screenObject.transform.Find(videoDisplayName);
                     var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
@@ -721,9 +772,7 @@ namespace Assets.Scripts
 
                     //Add AudioSource
                     AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-
-                    bool isPlaying = false;
-
+                    
                     if (thisVideoClip.Source == Source.Url)
                     {
                         //Debug.Log($"new path: {thisVideoClip.LocalPath}; current path on {videoPlayer.name}: {videoPlayer.url}");
@@ -731,15 +780,17 @@ namespace Assets.Scripts
                         if (thisVideoClip.LocalPath == videoPlayer.url)
                         {
                             Debug.Log($"Video {videoId} is already playing on screen {screenId}");
-                            isPlaying = true;
+                            if (!videoPlayer.isPlaying)
+                            {
+                                videoPlayer.Play();
+                            }
                         }
                         else
                         {
                             // Video clip from Url
-                            Debug.Log("URL video clip");
+                            //Debug.Log("URL video clip");
 
                             videoPlayer.source = VideoSource.Url;
-
 
 
                             // Set mode to Audio Source.
@@ -757,13 +808,15 @@ namespace Assets.Scripts
 
                             videoPlayer.url = thisVideoClip.LocalPath;
 
+                            videoPlayer.frame = 3000;
+
                             StartCoroutine(PrepareVideo(videoPlayer));
                         }
                     }
                     else
                     {
                         // Video clip from local storage
-                        Debug.Log("Local video clip");
+                        //Debug.Log("Local video clip");
                         var vc = _videoClips[videoId - 1];
                         videoPlayer.clip = vc;
                     }
