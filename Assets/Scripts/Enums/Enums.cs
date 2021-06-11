@@ -51,4 +51,15 @@ namespace Assets.Scripts.Enums
         CreatePortal,
         DoTeleport
     }
+
+    public enum VideoControlVariant
+    {
+        None = 0,
+        Play = 1,
+        Pause = 2,
+        Stop = 3,
+        FastForward = 4,
+        Rewind = 5,
+        JumpToFrame = 6
+    }
 }

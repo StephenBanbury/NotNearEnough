@@ -690,32 +690,25 @@ namespace Assets.Scripts
 
         public void ScreenClear(int screenId)
         {
-            ClearMediaFromScreen(screenId);
-        }
-
-        private void ClearMediaFromScreen(int screenId)
-        {
             if (screenId > 0)
             {
                 var compoundScreenId = CompoundScreenId(screenId);
 
                 Debug.Log($"Clear media from display {compoundScreenId}");
-
-            //try
-            //{
+                
                 Transform screenObject = GetScreenObjectFromScreenId(compoundScreenId);
 
                 Debug.Log($"screenObject: {screenObject != null}");
 
                 var videoDisplay = screenObject.transform.Find("VideoDisplayWide");
-                if(videoDisplay == null) videoDisplay = screenObject.transform.Find("VideoDisplayTall");
+                if (videoDisplay == null) videoDisplay = screenObject.transform.Find("VideoDisplayTall");
 
                 if (videoDisplay != null)
                 {
                     var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
                     if (videoPlayer != null)
                     {
-                        videoPlayer.Pause();
+                        //videoPlayer.Pause();
                     }
                 }
 
@@ -732,11 +725,54 @@ namespace Assets.Scripts
                     }
                 }
             }
-            //}
-            //catch (Exception exception)
-            //{
-            //    Debug.Log(exception);
-            //}
+        }
+
+        public void VideoControl(int screenId, VideoControlVariant videoControl, int numberOfFrames = 96)
+        {
+            if (screenId > 0)
+            {
+                var compoundScreenId = CompoundScreenId(screenId);
+
+                Debug.Log($"Video control: {compoundScreenId}");
+
+                Transform screenObject = GetScreenObjectFromScreenId(compoundScreenId);
+
+                Debug.Log($"screenObject: {screenObject != null}");
+
+                var videoDisplay = screenObject.transform.Find("VideoDisplayWide");
+                if (videoDisplay == null) videoDisplay = screenObject.transform.Find("VideoDisplayTall");
+
+                if (videoDisplay != null)
+                {
+                    var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
+                    if (videoPlayer != null)
+                    {
+                        switch (videoControl)
+                        {
+                            case VideoControlVariant.Pause:
+                                videoPlayer.Pause();
+                                break;
+                            case VideoControlVariant.Play:
+                                videoPlayer.Play();
+                                break;
+                            case VideoControlVariant.Stop:
+                                videoPlayer.Stop();
+                                break;
+                            case VideoControlVariant.FastForward:
+                                videoPlayer.frame = videoPlayer.frame + (numberOfFrames);
+                                break;
+                            case VideoControlVariant.Rewind:
+                                videoPlayer.frame = videoPlayer.frame - (numberOfFrames);
+                                break;
+                            case VideoControlVariant.JumpToFrame:
+                                videoPlayer.frame = numberOfFrames;
+                                break;
+                        }
+                        videoPlayer.Pause();
+                    }
+                }
+
+            }
         }
 
         private bool AssignVideoToDisplay(int videoId, int screenId)
