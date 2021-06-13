@@ -22,7 +22,7 @@ namespace Assets.Scripts
         public static MediaDisplayManager instance;
         private int _sceneIndex;
         private float _floorAdjust = 1.25f;
-        private int _compositeScreenId = 0;
+        private int _compoundScreenId = 0;
         private int _currentVideoClip;
         private int _currentVideoStream;
 
@@ -77,8 +77,10 @@ namespace Assets.Scripts
             Videos = new List<MediaDetail>();
             _mediaStateBuffer = new List<MediaScreenDisplayBufferState>();
             _screenPortalBuffer = new List<ScreenPortalBufferState>();
-            
-            GetLocalVideosDetails();
+
+            Debug.Log("Get Videos from local storage");
+            var videoService = new VideoService();
+            Videos = videoService.GetLocalVideos();
 
             //GetVideoLinksFromTextFile();
 
@@ -168,7 +170,6 @@ namespace Assets.Scripts
 
         public int TargetedTeleportation(int screenId)
         {
-            var buffer = _screenPortalBuffer.FirstOrDefault(s => s.ScreenId == screenId && s.IsPortal);
             int destinationSceneId = _screenPortalBuffer.First(s => s.ScreenId == screenId && s.IsPortal).DestinationSceneId;
                     
             StartCoroutine(DoTeleportation(destinationSceneId));
@@ -351,13 +352,7 @@ namespace Assets.Scripts
                 }
             }
         }
-
-        private void GetLocalVideosDetails()
-        {
-            Debug.Log("Get Videos from local storage");
-            var videoService = new VideoService();
-            Videos = videoService.GetLocalVideos();
-        }
+        
 
         private void GetVideoLinksFromTextFile()
         {
@@ -633,7 +628,7 @@ namespace Assets.Scripts
             {
                 ScreenPortalStateModel state = new ScreenPortalStateModel
                 {
-                    screenId = _compositeScreenId,
+                    screenId = _compoundScreenId,
                     destinationSceneId = destinationSceneId,
                     isPortal = true
                 };
@@ -674,18 +669,24 @@ namespace Assets.Scripts
             _currentVideoStream = streamId;
         }
 
-        public void ScreenSelect(int screenId)
+        public MediaType ScreenSelectAndPlayMedia(int screenId)
         {
-            var compoundScreenId = CompoundScreenId(screenId);
+            MediaType currentMediaType = MediaType.None;
+
+            _compoundScreenId = CompoundScreenId(screenId);
 
             if (_currentVideoClip != 0)
             {
-                AssignVideoToDisplay(_currentVideoClip, compoundScreenId);
+                AssignVideoToDisplay(_currentVideoClip, _compoundScreenId);
+                currentMediaType = MediaType.VideoClip;
             }
             else
             {
-                AssignStreamToDisplay(_currentVideoStream, compoundScreenId);
+                AssignStreamToDisplay(_currentVideoStream, _compoundScreenId);
+                currentMediaType = MediaType.VideoStream;
             }
+
+            return currentMediaType;
         }
 
         public void ScreenClear(int screenId)
@@ -843,8 +844,6 @@ namespace Assets.Scripts
 
 
                             videoPlayer.url = thisVideoClip.LocalPath;
-
-                            videoPlayer.frame = 3000;
 
                             StartCoroutine(PrepareVideo(videoPlayer));
                         }
