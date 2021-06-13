@@ -23,8 +23,8 @@ namespace Assets.Scripts
         private int _sceneIndex;
         private float _floorAdjust = 1.25f;
         private int _compoundScreenId = 0;
-        private int _currentVideoClip;
-        private int _currentVideoStream;
+        private int _currentSelectedVideoClip;
+        private int _currentSelectedVideoStream;
 
         [SerializeField] private VideoClip[] _videoClips = new VideoClip[5];
         [SerializeField] private Transform _streamButton;
@@ -665,26 +665,30 @@ namespace Assets.Scripts
 
         public void MediaSelect(int videoId = 0, int streamId = 0)
         {
-            _currentVideoClip = videoId;
-            _currentVideoStream = streamId;
+            _currentSelectedVideoClip = videoId;
+            _currentSelectedVideoStream = streamId;
         }
 
         public MediaType ScreenSelectAndPlayMedia(int screenId)
         {
-            MediaType currentMediaType = MediaType.None;
+            var currentMediaType = MediaType.None;
 
             _compoundScreenId = CompoundScreenId(screenId);
 
-            if (_currentVideoClip != 0)
-            {
-                AssignVideoToDisplay(_currentVideoClip, _compoundScreenId);
-                currentMediaType = MediaType.VideoClip;
-            }
-            else
-            {
-                AssignStreamToDisplay(_currentVideoStream, _compoundScreenId);
-                currentMediaType = MediaType.VideoStream;
-            }
+            currentMediaType = _currentSelectedVideoClip != 0 ? MediaType.VideoClip : MediaType.VideoStream;
+
+            //if (_currentSelectedVideoClip != 0)
+            //{
+            //    //AssignVideoToDisplay(_currentVideoClip, _compoundScreenId);
+            //    currentMediaType = MediaType.VideoClip;
+            //}
+            //else
+            //{
+            //    //AssignStreamToDisplay(_currentSelectedVideoStream, _compoundScreenId);
+            //    currentMediaType = MediaType.VideoStream;
+            //}
+
+            StoreRealtimeScreenMediaState(_currentSelectedVideoClip, (int)currentMediaType, _compoundScreenId);
 
             return currentMediaType;
         }
@@ -855,7 +859,11 @@ namespace Assets.Scripts
                         var vc = _videoClips[videoId - 1];
                         videoPlayer.clip = vc;
                     }
+
+                    var currentVideoClip = GetMedia(videoId, MediaType.VideoClip);
                     
+                    currentVideoClip.IsDisplay = true;
+
                     return true;
                 }
 
@@ -867,6 +875,16 @@ namespace Assets.Scripts
                 return false;
             }
 
+        }
+
+        private MediaScreenDisplayBufferState GetMedia(int mediaId, MediaType mediaType)
+        {
+            var media =
+                _mediaStateBuffer
+                    .FirstOrDefault(m => m.MediaId == mediaId
+                                         && m.MediaTypeId == (int) mediaType);
+
+            return media;
         }
 
         private bool AssignStreamToDisplay(int streamId, int displayId)

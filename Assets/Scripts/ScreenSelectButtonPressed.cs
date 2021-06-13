@@ -9,6 +9,7 @@ namespace Assets.Scripts
     {
         [SerializeField] private Text _screenIdText;
         [SerializeField] private int _screenId;
+        [SerializeField] private Text _mediaDisplayText;
 
         private Text _buttonText;
 
