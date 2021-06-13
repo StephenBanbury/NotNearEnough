@@ -41,14 +41,12 @@ namespace Assets.Scripts.Services
 
                             int spacePos = video.Title.IndexOf(" ", StringComparison.Ordinal);
                             string idText = video.Title.Substring(0, spacePos + 1).Trim();
-
-                            Debug.Log($"Video ID: {idText}");
-
+                            
                             bool isInt = int.TryParse(idText, out var id);
 
                             if (isInt)
                             {
-                                Debug.Log($"VideosGet: {video.Title} / {video.Filename} / {video.Url}");
+                                Debug.Log($"VideosGet: ID: {idText} / {video.Title} / {video.Filename} / {video.Url}");
 
                                 video.MediaType = MediaType.VideoClip;
                                 video.Source = Source.Url;

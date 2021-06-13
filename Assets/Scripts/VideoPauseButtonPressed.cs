@@ -13,6 +13,7 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
+                Debug.Log($"Pause screen {_screenId}");
                 MediaDisplayManager.instance.VideoControl(_screenId, VideoControlVariant.Pause);
             }
         }

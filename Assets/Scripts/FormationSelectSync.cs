@@ -19,8 +19,8 @@ namespace Assets.Scripts
         protected override void OnRealtimeModelReplaced(FormationSelectSyncModel previousModel,
             FormationSelectSyncModel currentModel)
         {
-            Debug.Log($"PreviousModel: {previousModel != null}");
-            Debug.Log($"CurrentModel: {currentModel != null}");
+            //Debug.Log($"PreviousModel: {previousModel != null}");
+            //Debug.Log($"CurrentModel: {currentModel != null}");
 
             if (previousModel != null)
             {
@@ -50,7 +50,7 @@ namespace Assets.Scripts
 
         private void UpdateFormationId()
         {
-            Debug.Log($"UpdateFormationId {model.formationId}");
+            //Debug.Log($"UpdateFormationId {model.formationId}");
 
             if (model != null && model.formationId > 0)
             {

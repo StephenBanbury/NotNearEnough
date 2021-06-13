@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets.Scripts.Enums;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,15 +20,9 @@ namespace Assets.Scripts
 
             if (other.CompareTag("Hand"))
             {
-
-                if (_buttonText.text == "Play")
-                {
-                    StartCoroutine(Play());
-                }
-                else
-                {
-                    StartCoroutine(Pause());
-                }
+                Debug.Log($"Play on screen {_screenId}");
+                MediaType currentMediaType = MediaDisplayManager.instance.ScreenSelectAndPlayMedia(_screenId);
+                _screenIdText.text = _screenId.ToString();
             }
         }
 

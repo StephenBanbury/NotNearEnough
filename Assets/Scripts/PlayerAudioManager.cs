@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            Debug.Log($"Number of player audio clips: {_audioClips.Count}");
+            //Debug.Log($"Number of player audio clips: {_audioClips.Count}");
             //foreach (var audioClip in _audioClips)
             //{
             //    Debug.Log(audioClip.name);
