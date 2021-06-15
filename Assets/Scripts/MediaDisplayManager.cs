@@ -113,7 +113,7 @@ namespace Assets.Scripts
 
             MyCurrentScene = Scene.Scene1;
 
-            ShowSelectionPanel(false);
+            ShowSelectionPanel(true, false);
         }
         
         public ScreenAction GetNextScreenAction(int screenId)
@@ -170,6 +170,8 @@ namespace Assets.Scripts
 
         public int TargetedTeleportation(int screenId)
         {
+            Debug.Log("TargetedTeleportation");
+
             int destinationSceneId = _screenPortalBuffer.First(s => s.ScreenId == screenId && s.IsPortal).DestinationSceneId;
                     
             StartCoroutine(DoTeleportation(destinationSceneId));
@@ -217,18 +219,73 @@ namespace Assets.Scripts
             playerController.enabled = true;
             sceneSampleController.enabled = true;
 
-            MyCurrentScene = (Scene)sceneId;
+            MyCurrentScene = (Scene) sceneId;
 
-            ShowSelectionPanel(false);
+            ShowSelectionPanel(false, false);
         }
-        
-        private void ShowSelectionPanel(bool show = false)
+
+        private void ShowPanelButtonMessage(int screenId, int sceneId, string message)
         {
+            var screenIdText = screenId.ToString();
+            screenIdText = 3 > screenIdText.Length ? screenIdText : screenIdText.Substring(screenIdText.Length - 1);
+
+            screenId = int.Parse(screenIdText);
+
             foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
-                foreach (Transform child in panel.transform)
+                Debug.Log($"Panel name: {panel.name}");
+
+                if (panel.name == $"Selection Panel {sceneId}")
                 {
-                    child.gameObject.SetActive(show);
+                    Debug.Log($"{panel.name} found.");
+
+                    var texts = panel.GetComponentsInChildren<Text>();
+
+
+                    if (texts != null)
+                    {
+                        Debug.Log($"{texts.Length} texts found.");
+
+                        var textName = $"Current Media {screenId}";
+
+                        Debug.Log($"Looking for {textName}");
+
+                        var text = texts.FirstOrDefault(t => t.name == textName);
+
+                        if (text != null)
+                        {
+                            Debug.Log($"Found text {textName}");
+
+                            text.text = message;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void ShowSelectionPanel(bool applyToAll, bool show)
+        {
+            Debug.Log($"ShowSelectionPanel - applyToAll: {applyToAll}");
+
+            ShowSelectionPanel((int) MyCurrentScene, applyToAll, show);
+        }
+
+        private void ShowSelectionPanel(int sceneId, bool applyToAll, bool show)
+        {
+            Debug.Log($"ShowSelectionPanel - sceneId: {sceneId}, applyToAll: {applyToAll}");
+
+            foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
+            {
+                Debug.Log($"Panel name: {panel.name}");
+
+                if (applyToAll || panel.name == $"Selection Panel {sceneId}")
+                {
+                    foreach (Transform child in panel.transform)
+                    {
+                        child.gameObject.SetActive(show);
+                    }
                 }
             }
         }
@@ -869,6 +926,10 @@ namespace Assets.Scripts
                             videoPlayer.url = thisVideoClip.LocalPath;
 
                             StartCoroutine(PrepareVideo(videoPlayer));
+
+                            var sceneId = GetSceneIdFromScreenId(screenId);
+
+                            ShowPanelButtonMessage(screenId, sceneId, $"Vid: {videoId}");
                         }
                     }
                     else
@@ -1071,14 +1132,6 @@ namespace Assets.Scripts
                     {
                         indicator.text = sceneName;
                     }
-
-                    //foreach (Transform child in selectionPanels.transform)
-                    //{
-                    //    child.gameObject.SetActive(false);
-                    //}
-
-                    //var indicator = texts.FirstOrDefault(t => t.name == "SceneIndicator");
-                    //if (indicator != null) indicator.text = sceneName;
                 }
             }
             

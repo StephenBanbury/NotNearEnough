@@ -28,6 +28,7 @@ namespace Assets.Scripts
         {
             _messageText.text = _messages[_show ? 1 : 0];
             ShowPanel();
+
             _show = !_show;
         }
 
