@@ -929,7 +929,7 @@ namespace Assets.Scripts
 
                             var sceneId = GetSceneIdFromScreenId(screenId);
 
-                            ShowPanelButtonMessage(screenId, sceneId, $"Vid: {videoId}");
+                            ShowPanelButtonMessage(screenId, sceneId, $"Video: {videoId}");
                         }
                     }
                     else

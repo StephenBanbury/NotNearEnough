@@ -108,7 +108,7 @@ MonoBehaviour:
   _videoIdText: {fileID: 2677493626665514871}
   _videoId: 2
   _buttonText: {fileID: 1116008084494811981}
---- !u!114 &853165645447722536
+--- !u!114 &7471871020410051928
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,9 +117,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 157107652373720824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 1
 --- !u!1 &173387744619204676
 GameObject:
@@ -230,9 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 3
-  _mediaDisplayText: {fileID: 0}
 --- !u!114 &2187936103998205967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,7 +260,7 @@ MonoBehaviour:
   _videoIdText: {fileID: 2677493626665514871}
   _videoId: 9
   _buttonText: {fileID: 0}
---- !u!114 &5243352362590825896
+--- !u!114 &8888348296488490221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,9 +269,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 292248693622055011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 10
 --- !u!114 &5449858575566196595
 MonoBehaviour:
@@ -286,9 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 16
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &359962227412183147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,9 +1324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 11
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &1145037999797242333
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,9 +1726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 6
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &1817906108653833293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,9 +1897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 14
-  _mediaDisplayText: {fileID: 0}
 --- !u!114 &2589894781278695078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2077,7 +2069,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 13
---- !u!114 &8998828604245927684
+--- !u!114 &7971694796406471553
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2086,9 +2078,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2099683701727557590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 15
 --- !u!114 &2284614442138163553
 MonoBehaviour:
@@ -2102,9 +2095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 2
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &2160148679087769023
 GameObject:
   m_ObjectHideFlags: 0
@@ -2242,7 +2233,7 @@ MonoBehaviour:
   _videoIdText: {fileID: 2677493626665514871}
   _videoId: 7
   _buttonText: {fileID: 1261305499848086838}
---- !u!114 &5690677727354192353
+--- !u!114 &5022632082314271090
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2251,9 +2242,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2336717054586076016}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 13
 --- !u!1 &2370064012112792378
 GameObject:
@@ -2440,9 +2432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 7
-  _mediaDisplayText: {fileID: 0}
 --- !u!114 &8159888786720413730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2473,7 +2463,7 @@ MonoBehaviour:
   _videoIdText: {fileID: 2677493626665514871}
   _videoId: 6
   _buttonText: {fileID: 3031768807377576898}
---- !u!114 &9056264927119149914
+--- !u!114 &169384717323055377
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2482,9 +2472,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2651380246639425109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 8
 --- !u!114 &4314344111382196793
 MonoBehaviour:
@@ -3459,7 +3450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenId: 5
---- !u!114 &604923793261196182
+--- !u!114 &8210272195985911068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3468,9 +3459,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2954611414700593572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 2
 --- !u!114 &6712624028901140907
 MonoBehaviour:
@@ -3500,7 +3492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _formationIdText: {fileID: 3210222311985630831}
   _formationId: 10
---- !u!114 &4533855906476077936
+--- !u!114 &3439230800948200573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3509,9 +3501,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2981433125158692616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 16
 --- !u!1 &3115577397544827276
 GameObject:
@@ -3686,7 +3679,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 6
---- !u!114 &4940622091869240790
+--- !u!114 &5640541054940909250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3695,9 +3688,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3190152470306628530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 5
 --- !u!1 &3222745281956400213
 GameObject:
@@ -4723,9 +4717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 15
-  _mediaDisplayText: {fileID: 0}
 --- !u!114 &1770018194712753892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4977,9 +4969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 8
-  _mediaDisplayText: {fileID: 0}
 --- !u!114 &2150795894655281351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5324,7 +5314,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Video Clip
---- !u!114 &7840724044055047141
+--- !u!114 &5878378675322930913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5333,9 +5323,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4857094026639356149}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 12
 --- !u!114 &6495244697324873327
 MonoBehaviour:
@@ -5349,9 +5340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 5
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &4924802293494776115
 GameObject:
   m_ObjectHideFlags: 0
@@ -6304,9 +6293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 4
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &5587065131157166602
 GameObject:
   m_ObjectHideFlags: 0
@@ -6506,7 +6493,7 @@ MonoBehaviour:
   _videoIdText: {fileID: 2677493626665514871}
   _videoId: 16
   _buttonText: {fileID: 0}
---- !u!114 &1588170439250521926
+--- !u!114 &1982957529727653416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6515,9 +6502,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5744305034994991508}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 3
 --- !u!1 &5811849162969119196
 GameObject:
@@ -7050,7 +7038,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 15
---- !u!114 &7135191507644544484
+--- !u!114 &8428893049483515217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7059,9 +7047,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6080887252686651578}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 7
 --- !u!1 &6182866499507193732
 GameObject:
@@ -7423,7 +7412,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 6
---- !u!114 &4215316530501159831
+--- !u!114 &641347760774554414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7432,9 +7421,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6362985188771874119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 4
 --- !u!1 &6498211451893031382
 GameObject:
@@ -8869,7 +8859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _formationIdText: {fileID: 3210222311985630831}
   _formationId: 2
---- !u!114 &8605090301678802752
+--- !u!114 &6641623244880772447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8878,9 +8868,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7476759747808782248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 6
 --- !u!1 &7496238323209780717
 GameObject:
@@ -9302,9 +9293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 12
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &7913047157108811900
 GameObject:
   m_ObjectHideFlags: 0
@@ -9396,9 +9385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 13
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &7968308862653385009
 GameObject:
   m_ObjectHideFlags: 0
@@ -9635,9 +9622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 9
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &8265014025265766530
 GameObject:
   m_ObjectHideFlags: 0
@@ -9917,10 +9902,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 10
-  _mediaDisplayText: {fileID: 0}
---- !u!114 &339630128710997117
+--- !u!114 &9161637655291789347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9929,9 +9912,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8423464595264905104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 14
 --- !u!1 &8435381664471198536
 GameObject:
@@ -10263,7 +10247,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 13
---- !u!114 &6223808772677807308
+--- !u!114 &1159963893300579283
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10272,9 +10256,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8940091008806272236}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 11
 --- !u!1 &8969692105158281518
 GameObject:
@@ -10367,9 +10352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112b9f120837a2c42967dfd10c3076c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenIdText: {fileID: 1757663284340171723}
   _screenId: 1
-  _mediaDisplayText: {fileID: 0}
 --- !u!1 &9063066417592410838
 GameObject:
   m_ObjectHideFlags: 0
@@ -10463,7 +10446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _formationIdText: {fileID: 3210222311985630831}
   _formationId: 16
---- !u!114 &6764099529880015013
+--- !u!114 &9052584001150680087
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10472,9 +10455,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 9102965219362767433}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccdbc95b359c5a47a2643328c0a5dc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd7ead4f232cdb47af36a0beb9c91f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenIdText: {fileID: 0}
   _screenId: 9
 --- !u!1 &9153260876697867885
 GameObject:
@@ -12152,12 +12136,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (39)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -12668,12 +12652,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (44)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -12872,12 +12856,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (36)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -13070,12 +13054,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (47)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -13172,12 +13156,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (33)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -14478,12 +14462,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (46)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -14988,12 +14972,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (41)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -15390,12 +15374,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (32)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -16213,12 +16197,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (45)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -16616,12 +16600,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (40)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -16982,12 +16966,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (42)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -17084,12 +17068,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (37)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -18079,6 +18063,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.11716388
       objectReference: {fileID: 0}
+    - target: {fileID: 4024437608036353663, guid: 8181e1150108cbc4db40958c6f5b205c,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
@@ -18485,12 +18474,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (38)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -19291,12 +19280,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (35)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -19693,12 +19682,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (43)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -20005,12 +19994,12 @@ PrefabInstance:
     - target: {fileID: 4024437608036353923, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Name
-      value: SelectButtonRect (34)
+      value: Stop Button
       objectReference: {fileID: 0}
     - target: {fileID: 4168619930374842414, guid: 8181e1150108cbc4db40958c6f5b205c,
         type: 3}
       propertyPath: m_Text
-      value: Pause
+      value: Stop
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}

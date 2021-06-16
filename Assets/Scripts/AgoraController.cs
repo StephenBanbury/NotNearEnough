@@ -25,8 +25,8 @@ namespace Assets.Scripts
 
         private static AgoraInterface _app = null;
         private static List<AgoraUser> _agoraUsers;
-        private string _homeSceneName = "JoinRoom";
-        private string _playSceneName = "MainRoom";
+        //private string _homeSceneName = "JoinRoom";
+        //private string _playSceneName = "MainRoom";
 
         [SerializeField] private string _appID = "54f15673a8fd43318b10d4e42f8dd781";
         [SerializeField] private string _roomName;
