@@ -46,7 +46,7 @@ namespace Assets.Scripts.Services
 
                             if (isInt)
                             {
-                                Debug.Log($"VideosGet: ID: {idText} / {video.Title} / {video.Filename} / {video.Url}");
+                                Debug.Log($"VideosGet: {video.Title} / {video.Filename} / {video.Url} / ID: {id}");
 
                                 video.MediaType = MediaType.VideoClip;
                                 video.Source = Source.Url;

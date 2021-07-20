@@ -41,16 +41,24 @@ namespace Assets.Scripts
         [SerializeField] private Material _skybox2;
         [SerializeField] private Text _messageText;
 
+        private List<Camera> _allCameras;
+
         private List<ScreenPortalBufferState> _screenPortalBuffer;
-        private List<MediaScreenDisplayBufferState> _mediaStateBuffer;
+        private List<MediaScreenAssignState> _mediaStateBuffer;
+        private List<MediaScreenAssignState> _mediaStatePreparationBuffer;
         // _lastSelectionSelected = Scene=1; Formation=2; Stream=3; Clip=4; Screen=5; Portal=6
         private int _lastSelectionSelected;
+
+        const bool showHiddenScreens = false;
+        const bool showNumbers = false;
 
         public List<SceneDetail> Scenes { get; private set; }
         public List<Scene> CanTransformScene { get; set; }
         public Scene MyCurrentScene { get; set; }
         public List<MediaDetail> Videos { get; private set; }
         public List<ScreenActionModel> ScreenActions { get; private set; }
+
+        private PresetService _presetService;
 
         void Awake()
         {
@@ -75,12 +83,11 @@ namespace Assets.Scripts
         private IEnumerator AwaitVideosFromApiBeforeStart()
         {
             Videos = new List<MediaDetail>();
-            _mediaStateBuffer = new List<MediaScreenDisplayBufferState>();
+            _mediaStatePreparationBuffer = new List<MediaScreenAssignState>();
+            _mediaStateBuffer = new List<MediaScreenAssignState>();
             _screenPortalBuffer = new List<ScreenPortalBufferState>();
 
-            Debug.Log("Get Videos from local storage");
-            var videoService = new VideoService();
-            Videos = videoService.GetLocalVideos();
+            GetLocalVideosDetails();
 
             //GetVideoLinksFromTextFile();
 
@@ -111,9 +118,16 @@ namespace Assets.Scripts
 
             CreateStreamSelectButtons();
 
+            // Test: set preset screen displays
+            _presetService = new PresetService();
+            PresetSet();
+
             MyCurrentScene = Scene.Scene1;
 
             ShowSelectionPanel(true, false);
+
+            InitialiseAllCameras();
+            CameraSelect("Camera 0");
         }
         
         public ScreenAction GetNextScreenAction(int screenId)
@@ -409,7 +423,14 @@ namespace Assets.Scripts
                 }
             }
         }
-        
+
+
+        private void GetLocalVideosDetails()
+        {
+            Debug.Log("Get Videos from local storage");
+            var videoService = new VideoService();
+            Videos = videoService.GetLocalVideos();
+        }
 
         private void GetVideoLinksFromTextFile()
         {
@@ -571,7 +592,7 @@ namespace Assets.Scripts
 
                     if (assigned)
                     {
-                        _mediaStateBuffer.Add(new MediaScreenDisplayBufferState
+                        _mediaStateBuffer.Add(new MediaScreenAssignState
                         {
                             MediaTypeId = mediaInfo.mediaTypeId,
                             MediaId = mediaInfo.mediaId,
@@ -596,7 +617,7 @@ namespace Assets.Scripts
             }
             else
             {
-                MediaScreenDisplayBufferState bufferState = new MediaScreenDisplayBufferState
+                MediaScreenAssignState bufferState = new MediaScreenAssignState
                 {
                     ScreenDisplayId = screenId,
                     MediaTypeId = mediaTypeId,
@@ -709,6 +730,48 @@ namespace Assets.Scripts
             //{
             //    Debug.Log($"ScreenId {model.screenId} is portal: {model.isPortal}");
             //}
+        }
+        public void PresetSet()
+        {
+            // Test
+
+            var mediaScreenAssignStates = new List<MediaScreenAssignState>();
+
+            // test preset
+            for (int i = 1; i <= 16; i++)
+            {
+                mediaScreenAssignStates.Add(
+                    new MediaScreenAssignState
+                    {
+                        MediaId = i,
+                        MediaTypeId = (int)MediaType.VideoClip,
+                        ScreenDisplayId = i
+                    }
+                );
+            }
+
+            int presetId = _presetService.SetPresets(mediaScreenAssignStates);
+
+
+            mediaScreenAssignStates = new List<MediaScreenAssignState>();
+
+            // test preset
+            for (int i = 17; i <= 32; i++)
+            {
+                mediaScreenAssignStates.Add(
+                    new MediaScreenAssignState
+                    {
+                        MediaId = i - 16 + 100,
+                        MediaTypeId = (int)MediaType.VideoClip,
+                        ScreenDisplayId = i - 16
+                    }
+                );
+            }
+
+            presetId = _presetService.SetPresets(mediaScreenAssignStates);
+
+            Debug.Log($"presetId: {presetId}");
+
         }
 
         private Transform GetScreenObjectFromScreenId(int screenId)
@@ -957,7 +1020,7 @@ namespace Assets.Scripts
 
         }
 
-        private MediaScreenDisplayBufferState GetMedia(int mediaId, MediaType mediaType)
+        private MediaScreenAssignState GetMedia(int mediaId, MediaType mediaType)
         {
             var media =
                 _mediaStateBuffer
@@ -1068,10 +1131,10 @@ namespace Assets.Scripts
         {
             var thisFormation = new List<ScreenPosition>();
             var screenFormationService = new ScreenFormationService(scene);
-            
+
             switch (formation)
             {
-                case ScreenFormation.LargeSquare: 
+                case ScreenFormation.LargeSquare:
                     thisFormation = screenFormationService.LargeSquare();
                     break;
                 case ScreenFormation.SmallSquare:
@@ -1134,11 +1197,12 @@ namespace Assets.Scripts
                     }
                 }
             }
-            
+
             var sceneAudioTrans = sceneObject.transform.Find($"Scene Audio {_sceneIndex}");
             if (sceneAudioTrans == null)
             {
-                AudioSource sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition, Quaternion.identity);
+                AudioSource sceneAudio = Instantiate(_sceneAudio, _sceneAudio.transform.position + scenePosition,
+                    Quaternion.identity);
                 sceneAudio.transform.SetParent(sceneObject.transform);
                 sceneAudio.name = $"Scene Audio {_sceneIndex}";
             }
@@ -1146,11 +1210,12 @@ namespace Assets.Scripts
             var sceneLightsTrans = sceneObject.transform.Find($"Scene Lights {_sceneIndex}");
             if (sceneLightsTrans == null)
             {
-                GameObject sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition, Quaternion.identity);
+                GameObject sceneLights = Instantiate(_sceneLights, _sceneLights.transform.position + scenePosition,
+                    Quaternion.identity);
                 sceneLights.transform.SetParent(sceneObject.transform);
                 sceneLights.name = $"Scene Lights {_sceneIndex}";
             }
-            
+
             Scenes.Add(new SceneDetail
             {
                 Id = _sceneIndex,
@@ -1169,64 +1234,98 @@ namespace Assets.Scripts
                 screensContainer = new GameObject($"Screens {_sceneIndex}");
                 screensContainer.transform.SetParent(sceneObject.transform);
             }
-            
+
             var currentScene = Scenes.First(s => s.Id == _sceneIndex);
 
             foreach (var screenPosition in thisFormation)
             {
+                var screenId = _sceneIndex * 100 + screenPosition.Id;
+
                 //if (!screenPosition.Hide)
                 //{
-                    var vector3 = screenPosition.Vector3;
-                    vector3.y += _floorAdjust;
+                var vector3 = screenPosition.Vector3;
+                vector3.y += _floorAdjust;
 
-                    GameObject screen;
+                GameObject screen;
 
-                    var screenId = _sceneIndex * 100 + screenPosition.Id;
-                    GameObject thisScreen;
-                    string screenName;
+                GameObject thisScreen;
+                string screenName;
 
-                    if (screenPosition.Id % 2 != 0)
+                if (screenPosition.Id % 2 != 0)
+                {
+                    screenName = $"Screen {screenId}";
+                    thisScreen = _screen;
+                }
+                else
+                {
+                    screenName = $"Screen Variant {screenId}";
+                    thisScreen = _screenVariant;
+                }
+
+                screen = GameObject.Find(screenName);
+
+                if (screen == null)
+                {
+                    screen = Instantiate(thisScreen, vector3, Quaternion.identity);
+                    //screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
+                    screen.transform.Rotate(0, screenPosition.Rotation, 0);
+                    screen.transform.SetParent(screensContainer.transform);
+                    if (!showHiddenScreens && screenPosition.Hide)
                     {
-                        screenName = $"Screen {screenId}";
-                        thisScreen = _screen;
+                        screen.SetActive(false);
                     }
-                    else
-                    {
-                        screenName = $"Screen Variant {screenId}";
-                        thisScreen = _screenVariant;
-                    }
+                }
+                //else
+                //{
+                //    Debug.Log($"{screenName} exists");
+                //}
 
-                    screen = GameObject.Find(screenName);
+                screen.name = screenName;
 
-                    if (screen == null)
-                    {
-                        screen = Instantiate(thisScreen, vector3, Quaternion.identity);
-                        //screen = Realtime.Instantiate(screenName, vector3, Quaternion.identity);
-                        screen.transform.Rotate(0, screenPosition.Rotation, 0);
-                        screen.transform.SetParent(screensContainer.transform);
-                    }
-                    //else
-                    //{
-                    //    Debug.Log($"{screenName} exists");
-                    //}
-
-                    screen.name = screenName;
-
-                    var screenNumber = screen.GetComponentInChildren<Text>();
+                var screenNumber = screen.GetComponentInChildren<Text>();
+                if (screenNumber != null)
+                {
                     screenNumber.text = screenPosition.Id.ToString();
+                    screenNumber.enabled = showNumbers;
+                }
 
-                    currentScene.CurrentScreens.Add(screen);
+                var screenCamera = screen.GetComponentInChildren<Camera>();
+                if (screenCamera != null)
+                {
+                    screenCamera.name = $"Camera {screenId}";
+                }
 
-                    ScreenActions.Add(new ScreenActionModel
-                    {
-                        ScreenId = screenId
-                    });
+                currentScene.CurrentScreens.Add(screen);
 
-                    SetNextScreenAction(screenId);
+                ScreenActions.Add(new ScreenActionModel
+                {
+                    ScreenId = screenId
+                });
+
+                SetNextScreenAction(screenId);
                 //}
             }
 
             _sceneIndex++;
+        }
+
+        private void InitialiseAllCameras()
+        {
+            _allCameras = new List<Camera>();
+            foreach (var camera in Camera.allCameras)
+            {
+                _allCameras.Add(camera);
+                //Debug.Log($"{camera} added to _allCameras");
+            }
+        }
+
+        public void CameraSelect(string cameraName)
+        {
+            foreach (var camera in _allCameras)
+            {
+                camera.enabled = camera.name == cameraName;
+                camera.GetComponent<AudioListener>().enabled = camera.name == cameraName;
+            }
         }
 
         public void TweenScreens(ScreenFormation newFormation, int tweenTimeSeconds)
