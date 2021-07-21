@@ -60,6 +60,7 @@ namespace Assets.Scripts
 
         private PresetService _presetService;
         private bool _presetIsPlaying = false;
+        private int _currentPresetId = 0;
 
         void Awake()
         {
@@ -76,6 +77,8 @@ namespace Assets.Scripts
 
         void Start()
         {
+            Debug.Log($"mediaScreenDisplayStates: {model.mediaScreenDisplayStates.Count}");
+
             _startButton.SetActive(true);
             SetSkybox(false);
             StartCoroutine(AwaitVideosFromApiBeforeStart());
@@ -160,13 +163,33 @@ namespace Assets.Scripts
 
         private void MediaAssignedToDisplay(RealtimeSet<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
         {
-            Debug.Log("MediaAssignedToDisplay: -");
-            foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            Debug.Log($"mediaScreenDisplayStates: {mediaScreenDisplayStates.Count}");
+            Debug.Log($"mediaScreenDisplayState - screen: {mediaScreenDisplayState.screenDisplayId}, mediaId: {mediaScreenDisplayState.mediaId}");
+            Debug.Log($"remote: {remote}");
+
+            bool assigned = false;
+
+            switch (mediaScreenDisplayState.mediaTypeId)
             {
-                Debug.Log($"RealtimeSet: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+                case (int)MediaType.VideoClip:
+                    assigned = AssignVideoToDisplay(mediaScreenDisplayState.mediaId, mediaScreenDisplayState.screenDisplayId);
+                    break;
+
+                case (int)MediaType.VideoStream:
+                    assigned = AssignStreamToDisplay(mediaScreenDisplayState.mediaId, mediaScreenDisplayState.screenDisplayId);
+                    break;
             }
 
-            AssignMediaToDisplaysFromArray();
+            if (assigned)
+            {
+                _mediaStateBuffer.Add(new MediaScreenAssignState
+                {
+                    MediaTypeId = mediaScreenDisplayState.mediaTypeId,
+                    MediaId = mediaScreenDisplayState.mediaId,
+                    ScreenDisplayId = mediaScreenDisplayState.screenDisplayId
+                });
+            }
+
         }
 
         private void PortalAssignedToDisplay(RealtimeSet<ScreenPortalStateModel> screenPortalStates,
@@ -241,14 +264,10 @@ namespace Assets.Scripts
                     switch (mediaInfo.mediaTypeId)
                     {
                         case (int)MediaType.VideoClip:
-                            Debug.Log(
-                                $"Assign video clip {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
                             assigned = AssignVideoToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
                             break;
 
                         case (int)MediaType.VideoStream:
-                            Debug.Log(
-                                $"Assign video stream {mediaInfo.mediaId} to display {mediaInfo.screenDisplayId}");
                             assigned = AssignStreamToDisplay(mediaInfo.mediaId, mediaInfo.screenDisplayId);
                             break;
                     }
@@ -268,26 +287,25 @@ namespace Assets.Scripts
 
         public void StoreBufferScreenMediaState(int mediaId, int mediaTypeId, int screenId)
         {
-            var screenHasExistingMedia =
-                _mediaStateBuffer.FirstOrDefault(s => s.ScreenDisplayId == screenId);
+            var existingMediaOnScreen =
+                _mediaStateBuffer
+                    .FirstOrDefault(s => s.ScreenDisplayId == screenId);
 
-            Debug.Log($"StoreBufferScreenMediaState. Exists: {screenHasExistingMedia != null}");
+            Debug.Log($"StoreBufferScreenMediaState. Media exists in buffer: {existingMediaOnScreen != null}");
 
-            if (screenHasExistingMedia != null)
+            if (existingMediaOnScreen != null)
             {
-                screenHasExistingMedia.MediaTypeId = mediaTypeId;
-                screenHasExistingMedia.MediaId = mediaId;
+                existingMediaOnScreen.MediaTypeId = mediaTypeId;
+                existingMediaOnScreen.MediaId = mediaId;
             }
             else
             {
-                MediaScreenAssignState bufferState = new MediaScreenAssignState
+                _mediaStateBuffer.Add(new MediaScreenAssignState
                 {
                     ScreenDisplayId = screenId,
                     MediaTypeId = mediaTypeId,
                     MediaId = mediaId
-                };
-
-                _mediaStateBuffer.Add(bufferState);
+                });
             }
         }
 
@@ -297,65 +315,39 @@ namespace Assets.Scripts
 
             foreach (var prepBuffer in _mediaStatePreparationBuffer)
             {
-                var existing =
-                    _mediaStateBuffer.FirstOrDefault(s =>
-                        s.ScreenDisplayId == prepBuffer.ScreenDisplayId
-                    );
-
-                Debug.Log($"StoreBufferScreenMediaState. Exists: {existing != null}");
-
-                if (existing != null)
-                {
-                    existing.MediaTypeId = prepBuffer.MediaTypeId;
-                    existing.MediaId = prepBuffer.MediaId;
-                }
-                else
-                {
-                    MediaScreenAssignState mediaScreenDisplayBufferState = new MediaScreenAssignState
-                    {
-                        ScreenDisplayId = prepBuffer.ScreenDisplayId,
-                        MediaTypeId = prepBuffer.MediaTypeId,
-                        MediaId = prepBuffer.MediaId
-                    };
-
-                    _mediaStateBuffer.Add(mediaScreenDisplayBufferState);
-                }
+                StoreBufferScreenMediaState(prepBuffer.MediaId, prepBuffer.MediaTypeId, prepBuffer.ScreenDisplayId);
             }
         }
 
         public bool StoreRealtimeScreenMediaState(int mediaId, int mediaTypeId, int screenId)
         {
-            var mediaIsAlreadyOnScreen =
+            var isAlreadyOnScreen =
                 model.mediaScreenDisplayStates
                     .Any(s => s.screenDisplayId == screenId
                               && s.mediaTypeId == mediaTypeId
                               && s.mediaId == mediaId);
 
-            Debug.Log($"mediaIsAlreadyOnScreen: {mediaIsAlreadyOnScreen}");
+            Debug.Log($"StoreRealtimeScreenMediaState. This exact media already on screen: {isAlreadyOnScreen}");
 
-            if (mediaIsAlreadyOnScreen) return true;
+            if (isAlreadyOnScreen) return true;
 
-            var screenHasExistingMedia =
-                model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == screenId);
+            var existingMediaOnScreen =
+                model.mediaScreenDisplayStates
+                    .FirstOrDefault(s => s.screenDisplayId == screenId);
 
-            Debug.Log($"StoreRealtimeScreenMediaState. Exists: {screenHasExistingMedia != null}");
+            Debug.Log($"StoreRealtimeScreenMediaState. Other media exists on screen: {existingMediaOnScreen != null}");
 
-            if (screenHasExistingMedia != null)
+            if (existingMediaOnScreen != null)
             {
-                screenHasExistingMedia.mediaTypeId = (int)mediaTypeId;
-                screenHasExistingMedia.mediaId = mediaId;
+                model.mediaScreenDisplayStates.Remove(existingMediaOnScreen);
             }
-            else
-            {
-                MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
-                {
-                    screenDisplayId = screenId,
-                    mediaTypeId = mediaTypeId,
-                    mediaId = mediaId
-                };
 
-                model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
-            }
+            model.mediaScreenDisplayStates.Add(new MediaScreenDisplayStateModel
+            {
+                screenDisplayId = screenId,
+                mediaTypeId = mediaTypeId,
+                mediaId = mediaId
+            });
 
             return false;
         }
@@ -366,34 +358,7 @@ namespace Assets.Scripts
 
             foreach (var buffer in _mediaStatePreparationBuffer)
             {
-                var existing =
-                    model.mediaScreenDisplayStates.FirstOrDefault(s =>
-                        s.screenDisplayId == buffer.ScreenDisplayId);
-
-                //Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
-                Debug.Log($"buffer.Screen: {buffer.ScreenDisplayId}; buffer.MediaType: {buffer.MediaTypeId}; buffer.MediaId: {buffer.MediaId}");
-
-                //if (buffer.MediaTypeId == (int)MediaType.VideoClip && buffer.MediaId > 0)
-                //{
-                //    Debug.Log($"Video title: {Videos.FirstOrDefault(v => v.Id == buffer.MediaId).Title}");
-                //}
-
-                if (existing != null)
-                {
-                    existing.mediaTypeId = buffer.MediaTypeId;
-                    existing.mediaId = buffer.MediaId;
-                }
-                else
-                {
-                    MediaScreenDisplayStateModel mediaScreenDisplayState = new MediaScreenDisplayStateModel
-                    {
-                        screenDisplayId = buffer.ScreenDisplayId,
-                        mediaTypeId = buffer.MediaTypeId,
-                        mediaId = buffer.MediaId
-                    };
-
-                    model.mediaScreenDisplayStates.Add(mediaScreenDisplayState);
-                }
+                StoreRealtimeScreenMediaState(buffer.MediaId, buffer.MediaTypeId, buffer.ScreenDisplayId);
             }
         }
 
@@ -581,28 +546,28 @@ namespace Assets.Scripts
 
             foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
-                Debug.Log($"Panel name: {panel.name}");
+                //Debug.Log($"Panel name: {panel.name}");
 
                 if (panel.name == $"Selection Panel {sceneId}")
                 {
-                    Debug.Log($"{panel.name} found.");
+                    //Debug.Log($"{panel.name} found.");
 
                     var texts = panel.GetComponentsInChildren<Text>();
 
 
                     if (texts != null)
                     {
-                        Debug.Log($"{texts.Length} texts found.");
+                        //Debug.Log($"{texts.Length} texts found.");
 
                         var textName = $"Current Media {screenId}";
 
-                        Debug.Log($"Looking for {textName}");
+                        //Debug.Log($"Looking for {textName}");
 
                         var text = texts.FirstOrDefault(t => t.name == textName);
 
                         if (text != null)
                         {
-                            Debug.Log($"Found text {textName}");
+                            //Debug.Log($"Found text {textName}");
 
                             text.text = message;
                         }
@@ -849,12 +814,18 @@ namespace Assets.Scripts
 
         public void PresetSelect(int id)
         {
+            //_currentPresetId++;
+            PresetSelect();
+        }
+
+        private void PresetSelect()
+        {
             _presetIsPlaying = !_presetIsPlaying;
 
             if (_presetIsPlaying)
             {
-                Debug.Log($"Preset {id}");
-                var preset = _presetService.GetPreset(id);
+                Debug.Log($"Preset {_currentPresetId}");
+                var preset = _presetService.GetPreset(_currentPresetId);
 
                 _mediaStatePreparationBuffer = new List<MediaScreenAssignState>();
 
@@ -1049,13 +1020,15 @@ namespace Assets.Scripts
 
         private bool AssignVideoToDisplay(int videoId, int screenId)
         {
+            Debug.Log($"Assign video clip {videoId} to display {screenId}");
+
             //try
             //{
-                //Debug.Log("AssignVideoToDisplay");
-                //Debug.Log($"videoId: {videoId}");
-                //Debug.Log($"displayId: {displayId}");
+            //Debug.Log("AssignVideoToDisplay");
+            //Debug.Log($"videoId: {videoId}");
+            //Debug.Log($"displayId: {displayId}");
 
-                var displaySuffix = "Wide";
+            var displaySuffix = "Wide";
 
                 var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
                 var videoDisplayName = $"VideoDisplay{displaySuffix}";
@@ -1160,9 +1133,11 @@ namespace Assets.Scripts
 
         private bool AssignStreamToDisplay(int streamId, int displayId)
         {
+            Debug.Log($"Assign video stream {streamId} to display {displayId}");
+
             //try
             //{
-                if (streamId > 0 && displayId > 0)
+            if (streamId > 0 && displayId > 0)
                 {
                     var agoraUsers = AgoraController.instance.AgoraUsers;
 
