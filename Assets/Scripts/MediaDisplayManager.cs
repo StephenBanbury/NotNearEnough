@@ -158,24 +158,24 @@ namespace Assets.Scripts
             }
         }
 
-        private void MediaAssignedToDisplay(RealtimeArray<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
+        private void MediaAssignedToDisplay(RealtimeSet<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
         {
             Debug.Log("MediaAssignedToDisplay: -");
             foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
             {
-                Debug.Log($"RealtimeArray: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+                Debug.Log($"RealtimeSet: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
             }
 
             AssignMediaToDisplaysFromArray();
         }
 
-        private void PortalAssignedToDisplay(RealtimeArray<ScreenPortalStateModel> screenPortalStates,
+        private void PortalAssignedToDisplay(RealtimeSet<ScreenPortalStateModel> screenPortalStates,
             ScreenPortalStateModel screenPortalState, bool remote)
         {
             Debug.Log("PortalAssignedToDisplay: -");
             foreach (var modelScreenPortalState in model.screenPortalStates)
             {
-                Debug.Log($"RealtimeArray: {modelScreenPortalState.screenId} is portal: {modelScreenPortalState.isPortal}");
+                Debug.Log($"RealtimeSet: {modelScreenPortalState.screenId} is portal: {modelScreenPortalState.isPortal}");
             }
 
             AssignPortalToDisplaysFromArray();
@@ -877,7 +877,16 @@ namespace Assets.Scripts
             else
             {
                 Debug.Log("Stop playing preset");
-               
+
+                //var screenDisplay = model.mediaScreenDisplayStates.Where(s => s.screenDisplayId >= 101 && s.screenDisplayId <= 110);
+
+                //foreach (var mediaScreenDisplayStateModel in screenDisplay)
+                //{
+                //    model.mediaScreenDisplayStates.Remove(mediaScreenDisplayStateModel);
+                //}
+
+                //screenDisplay.mediaId++;
+                //model.mediaScreenDisplayStates.Add(screenDisplay);
             }
 
             Apply();
