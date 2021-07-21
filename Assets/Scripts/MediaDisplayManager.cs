@@ -59,6 +59,7 @@ namespace Assets.Scripts
         public List<ScreenActionModel> ScreenActions { get; private set; }
 
         private PresetService _presetService;
+        private bool _presetIsPlaying = false;
 
         void Awake()
         {
@@ -128,32 +129,9 @@ namespace Assets.Scripts
 
             //InitialiseAllCameras();
             //CameraSelect("Camera 0");
+            
         }
-
-
-        private void MediaAssignedToDisplay(RealtimeArray<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
-        {
-            Debug.Log("MediaAssignedToDisplay: -");
-            foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
-            {
-                Debug.Log($"RealtimeArray: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
-            }
-
-            AssignMediaToDisplaysFromArray();
-        }
-
-        private void PortalAssignedToDisplay(RealtimeArray<ScreenPortalStateModel> screenPortalStates,
-            ScreenPortalStateModel screenPortalState, bool remote)
-        {
-            Debug.Log("PortalAssignedToDisplay: -");
-            foreach (var modelScreenPortalState in model.screenPortalStates)
-            {
-                Debug.Log($"RealtimeArray: {modelScreenPortalState.screenId} is portal: {modelScreenPortalState.isPortal}");
-            }
-
-            AssignPortalToDisplaysFromArray();
-        }
-
+        
         protected override void OnRealtimeModelReplaced(MediaScreenDisplayModel previousModel, MediaScreenDisplayModel currentModel)
         {
             Debug.Log("OnRealtimeModelReplaced");
@@ -178,6 +156,29 @@ namespace Assets.Scripts
                 currentModel.mediaScreenDisplayStates.modelAdded += MediaAssignedToDisplay;
                 currentModel.screenPortalStates.modelAdded += PortalAssignedToDisplay;
             }
+        }
+
+        private void MediaAssignedToDisplay(RealtimeArray<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
+        {
+            Debug.Log("MediaAssignedToDisplay: -");
+            foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+            {
+                Debug.Log($"RealtimeArray: {(MediaType)modelMediaScreenDisplayState.mediaTypeId} to {modelMediaScreenDisplayState.screenDisplayId}");
+            }
+
+            AssignMediaToDisplaysFromArray();
+        }
+
+        private void PortalAssignedToDisplay(RealtimeArray<ScreenPortalStateModel> screenPortalStates,
+            ScreenPortalStateModel screenPortalState, bool remote)
+        {
+            Debug.Log("PortalAssignedToDisplay: -");
+            foreach (var modelScreenPortalState in model.screenPortalStates)
+            {
+                Debug.Log($"RealtimeArray: {modelScreenPortalState.screenId} is portal: {modelScreenPortalState.isPortal}");
+            }
+
+            AssignPortalToDisplaysFromArray();
         }
 
         private void AssignPortalToDisplaysFromArray()
@@ -298,9 +299,7 @@ namespace Assets.Scripts
             {
                 var existing =
                     _mediaStateBuffer.FirstOrDefault(s =>
-                        s.ScreenDisplayId == prepBuffer.ScreenDisplayId &&
-                        s.MediaTypeId == prepBuffer.MediaTypeId &&
-                        s.MediaId == prepBuffer.MediaId
+                        s.ScreenDisplayId == prepBuffer.ScreenDisplayId
                     );
 
                 Debug.Log($"StoreBufferScreenMediaState. Exists: {existing != null}");
@@ -368,15 +367,16 @@ namespace Assets.Scripts
             foreach (var buffer in _mediaStatePreparationBuffer)
             {
                 var existing =
-                    model.mediaScreenDisplayStates.FirstOrDefault(s => s.screenDisplayId == buffer.ScreenDisplayId);
+                    model.mediaScreenDisplayStates.FirstOrDefault(s =>
+                        s.screenDisplayId == buffer.ScreenDisplayId);
 
-                Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
+                //Debug.Log($"StoreRealtimeScreenMediaState. Exists: {existing != null}");
                 Debug.Log($"buffer.Screen: {buffer.ScreenDisplayId}; buffer.MediaType: {buffer.MediaTypeId}; buffer.MediaId: {buffer.MediaId}");
 
-                if (buffer.MediaTypeId == (int)MediaType.VideoClip)
-                {
-                    Debug.Log($"Video title: {Videos.FirstOrDefault(v => v.Id == buffer.MediaId).Title}");
-                }
+                //if (buffer.MediaTypeId == (int)MediaType.VideoClip && buffer.MediaId > 0)
+                //{
+                //    Debug.Log($"Video title: {Videos.FirstOrDefault(v => v.Id == buffer.MediaId).Title}");
+                //}
 
                 if (existing != null)
                 {
@@ -809,7 +809,7 @@ namespace Assets.Scripts
 
             var mediaScreenAssignStates = new List<MediaScreenAssignState>();
 
-            // test preset
+            // test preset 1
             for (int i = 1; i <= 16; i++)
             {
                 mediaScreenAssignStates.Add(
@@ -824,10 +824,11 @@ namespace Assets.Scripts
 
             int presetId = _presetService.SetPresets(mediaScreenAssignStates);
 
+            Debug.Log($"Set presetId: {presetId}");
 
             mediaScreenAssignStates = new List<MediaScreenAssignState>();
 
-            // test preset
+            // test preset 2
             for (int i = 17; i <= 32; i++)
             {
                 mediaScreenAssignStates.Add(
@@ -842,31 +843,41 @@ namespace Assets.Scripts
 
             presetId = _presetService.SetPresets(mediaScreenAssignStates);
 
-            Debug.Log($"presetId: {presetId}");
+            Debug.Log($"Set presetId: {presetId}");
 
         }
 
         public void PresetSelect(int id)
         {
-            Debug.Log($"Preset {id}");
-            var preset = _presetService.GetPreset(id);
+            _presetIsPlaying = !_presetIsPlaying;
 
-            _mediaStatePreparationBuffer = new List<MediaScreenAssignState>();
-
-            foreach (var state in preset.MediaScreenAssignStates)
+            if (_presetIsPlaying)
             {
-                var screenId = CompoundScreenId(state.ScreenDisplayId);
+                Debug.Log($"Preset {id}");
+                var preset = _presetService.GetPreset(id);
 
-                Debug.Log(
-                    $"Preset State - MediaType: {state.MediaTypeId}, MediaId: {state.MediaId}, Display: {screenId}");
+                _mediaStatePreparationBuffer = new List<MediaScreenAssignState>();
 
-                _mediaStatePreparationBuffer.Add(
-                    new MediaScreenAssignState
-                    {
-                        MediaId = state.MediaId,
-                        MediaTypeId = state.MediaTypeId,
-                        ScreenDisplayId = screenId
-                    });
+                foreach (var state in preset.MediaScreenAssignStates)
+                {
+                    var screenId = CompoundScreenId(state.ScreenDisplayId);
+
+                    Debug.Log(
+                        $"Preset State - MediaType: {state.MediaTypeId}, MediaId: {state.MediaId}, Display: {screenId}");
+
+                    _mediaStatePreparationBuffer.Add(
+                        new MediaScreenAssignState
+                        {
+                            MediaId = state.MediaId,
+                            MediaTypeId = state.MediaTypeId,
+                            ScreenDisplayId = screenId
+                        });
+                }
+            }
+            else
+            {
+                Debug.Log("Stop playing preset");
+               
             }
 
             Apply();

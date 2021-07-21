@@ -6,25 +6,36 @@ namespace Assets.Scripts
     public class WristButtonController : MonoBehaviour
     {
         [SerializeField] private Text _messageText;
+        [SerializeField] private int _buttonNumber;
         private string[] _messages;
         private bool _show;
 
         void Awake()
         {
             _show = false;
-            _messages = new[] { "Show", "Hide" };
-            ShowCurrentMessage();
+            _messages = new[] {"Show", "Hide"};
+            if (_buttonNumber == 1)
+            {
+                ChangeButtonMessage();
+            }
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Hand"))
             {
-                ShowCurrentMessage();
+                if (_buttonNumber == 1)
+                {
+                    ChangeButtonMessage();
+                }
+                else
+                {
+                    MediaDisplayManager.instance.PresetSelect(1);
+                }
             }
         }
 
-        private void ShowCurrentMessage()
+        private void ChangeButtonMessage()
         {
             _messageText.text = _messages[_show ? 1 : 0];
             ShowPanel();
