@@ -1090,6 +1090,8 @@ namespace Assets.Scripts
 
                             videoPlayer.url = thisVideoClip.LocalPath;
 
+                            videoPlayer.enabled = true;
+
                             StartCoroutine(PrepareVideo(videoPlayer));
 
                             var sceneId = GetSceneIdFromScreenId(screenId);
