@@ -145,6 +145,7 @@ namespace Assets.Scripts
 
                 // Unregister from events
                 previousModel.mediaScreenDisplayStates.modelAdded -= MediaAssignedToDisplay;
+                previousModel.mediaScreenDisplayStates.modelRemoved -= MediaRemovedFromDisplay;
                 previousModel.screenPortalStates.modelAdded -= PortalAssignedToDisplay;
             }
 
@@ -157,6 +158,7 @@ namespace Assets.Scripts
 
                 // Let us know when a new screen has changed 
                 currentModel.mediaScreenDisplayStates.modelAdded += MediaAssignedToDisplay;
+                currentModel.mediaScreenDisplayStates.modelRemoved += MediaRemovedFromDisplay;
                 currentModel.screenPortalStates.modelAdded += PortalAssignedToDisplay;
             }
         }
@@ -189,7 +191,17 @@ namespace Assets.Scripts
                     ScreenDisplayId = mediaScreenDisplayState.screenDisplayId
                 });
             }
+        }
 
+        private void MediaRemovedFromDisplay(RealtimeSet<MediaScreenDisplayStateModel> mediaScreenDisplayStates, MediaScreenDisplayStateModel mediaScreenDisplayState, bool remote)
+        {
+            Debug.Log($"MediaRemovedFromDisplay: {mediaScreenDisplayStates.Count}");
+            Debug.Log($"MediaRemovedFromDisplay - screen: {mediaScreenDisplayState.screenDisplayId}, mediaId: {mediaScreenDisplayState.mediaId}");
+            Debug.Log($"remote: {remote}");
+
+            var unCompoundScreenId = UnCompoundScreenId(mediaScreenDisplayState.screenDisplayId);
+
+            ClearScreen(unCompoundScreenId);
         }
 
         private void PortalAssignedToDisplay(RealtimeSet<ScreenPortalStateModel> screenPortalStates,
@@ -248,12 +260,12 @@ namespace Assets.Scripts
         {
             foreach (var mediaInfo in model.mediaScreenDisplayStates)
             {
-                var exists = _mediaStateBuffer.FirstOrDefault(m =>
+                var existing = _mediaStateBuffer.FirstOrDefault(m =>
                     m.ScreenDisplayId == mediaInfo.screenDisplayId &&
                     m.MediaTypeId == mediaInfo.mediaTypeId &&
                     m.MediaId == mediaInfo.mediaId);
 
-                if (exists != null)
+                if (existing != null)
                 {
                     Debug.Log($"MediaId {mediaInfo.mediaId} already exists on screen {mediaInfo.screenDisplayId}");
                 }
@@ -355,6 +367,7 @@ namespace Assets.Scripts
         public void StoreRealtimeScreenMediaState()
         {
             Debug.Log("In StoreRealtimeScreenMediaState");
+            Debug.Log($"_mediaStatePreparationBuffer: {_mediaStatePreparationBuffer.Count}");
 
             foreach (var buffer in _mediaStatePreparationBuffer)
             {
@@ -845,21 +858,21 @@ namespace Assets.Scripts
                             ScreenDisplayId = screenId
                         });
                 }
+
+                Apply();
             }
             else
             {
                 Debug.Log("Stop playing preset");
 
-                foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+                foreach (var displayState in model.mediaScreenDisplayStates)
                 {
-                    var unCompoundScreenId = UnCompoundScreenId(modelMediaScreenDisplayState.screenDisplayId);
-                    ClearScreen(unCompoundScreenId);
-
-                    model.mediaScreenDisplayStates.Remove(modelMediaScreenDisplayState);
+                    var isRemoved = model.mediaScreenDisplayStates.Remove(displayState);
+                    Debug.Log($"isRemoved: {isRemoved}");
                 }
             }
 
-            Apply();
+            //Apply();
         }
 
         public void Apply()
@@ -870,6 +883,17 @@ namespace Assets.Scripts
             //AssignMediaToDisplaysFromArray();
             
             _mediaStatePreparationBuffer.Clear();
+        }
+
+        public void RemoveVideo(int screenId)
+        {
+            var compoundScreenId = CompoundScreenId(screenId);
+
+            var displayState =
+                model.mediaScreenDisplayStates.FirstOrDefault(d => d.screenDisplayId == compoundScreenId);
+
+            var isRemoved = model.mediaScreenDisplayStates.Remove(displayState);
+            Debug.Log($"isRemoved: {isRemoved}");
         }
 
         public void ClearScreen(int screenId)
@@ -1031,90 +1055,91 @@ namespace Assets.Scripts
 
             var displaySuffix = "Wide";
 
-                var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
-                var videoDisplayName = $"VideoDisplay{displaySuffix}";
+            var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+            var videoDisplayName = $"VideoDisplay{displaySuffix}";
 
-                if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
+            if (videoId > 0 && screenId > 0) // && _displayVideo[localDisplayId].Id != videoId)
+            {
+                //Debug.Log($"Assign videoId: {videoId}");
+
+                Transform screenObject = GetScreenObjectFromScreenId(screenId);
+
+                var thisVideoClip = Videos.FirstOrDefault(v => v.Id == videoId);
+
+                //Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
+
+                var videoDisplay = screenObject.transform.Find(videoDisplayName);
+                var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
+
+                videoDisplay.gameObject.SetActive(true);
+                canvasDisplay.gameObject.SetActive(false);
+
+                var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
+
+                //Add AudioSource
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+
+                if (thisVideoClip.Source == Source.Url)
                 {
-                    //Debug.Log($"Assign videoId: {videoId}");
+                    //Debug.Log($"new path: {thisVideoClip.LocalPath}; current path on {videoPlayer.name}: {videoPlayer.url}");
 
-                    Transform screenObject = GetScreenObjectFromScreenId(screenId);
-
-                    var thisVideoClip = Videos.FirstOrDefault(v => v.Id == videoId);
-
-                    //Debug.Log($"Show video '{thisVideoClip.Title}' on display {screenObject.name}");
-
-                    var videoDisplay = screenObject.transform.Find(videoDisplayName);
-                    var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
-
-                    videoDisplay.gameObject.SetActive(true);
-                    canvasDisplay.gameObject.SetActive(false);
-
-                    var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
-
-                    //Add AudioSource
-                    AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-                    
-                    if (thisVideoClip.Source == Source.Url)
+                    if (thisVideoClip.LocalPath == videoPlayer.url)
                     {
-                        //Debug.Log($"new path: {thisVideoClip.LocalPath}; current path on {videoPlayer.name}: {videoPlayer.url}");
-
-                        if (thisVideoClip.LocalPath == videoPlayer.url)
+                        Debug.Log($"Video {videoId} is already playing on screen {screenId}");
+                        if (!videoPlayer.isPlaying)
                         {
-                            Debug.Log($"Video {videoId} is already playing on screen {screenId}");
-                            if (!videoPlayer.isPlaying)
-                            {
-                                videoPlayer.Play();
-                            }
-                        }
-                        else
-                        {
-                            // Video clip from Url
-                            //Debug.Log("URL video clip");
-
-                            videoPlayer.source = VideoSource.Url;
-
-
-                            // Set mode to Audio Source.
-                            videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
-                            // We want to control one audio track with the video player
-                            videoPlayer.controlledAudioTrackCount = 1;
-
-                            // We enable the first track, which has the id zero
-                            videoPlayer.EnableAudioTrack(0, true);
-
-                            // ...and we set the audio source for this track
-                            videoPlayer.SetTargetAudioSource(0, audioSource);
-
-
-                            videoPlayer.url = thisVideoClip.LocalPath;
-
                             videoPlayer.enabled = true;
-
-                            StartCoroutine(PrepareVideo(videoPlayer));
-
-                            var sceneId = GetSceneIdFromScreenId(screenId);
-
-                            ShowPanelButtonMessage(screenId, sceneId, $"Video: {videoId}");
+                            videoPlayer.Play();
                         }
                     }
                     else
                     {
-                        // Video clip from local storage
-                        //Debug.Log("Local video clip");
-                        var vc = _videoClips[videoId - 1];
-                        videoPlayer.clip = vc;
+                        // Video clip from Url
+                        //Debug.Log("URL video clip");
+
+                        videoPlayer.source = VideoSource.Url;
+
+
+                        // Set mode to Audio Source.
+                        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+                        // We want to control one audio track with the video player
+                        videoPlayer.controlledAudioTrackCount = 1;
+
+                        // We enable the first track, which has the id zero
+                        videoPlayer.EnableAudioTrack(0, true);
+
+                        // ...and we set the audio source for this track
+                        videoPlayer.SetTargetAudioSource(0, audioSource);
+
+
+                        videoPlayer.url = thisVideoClip.LocalPath;
+
+                        videoPlayer.enabled = true;
+
+                        StartCoroutine(PrepareVideo(videoPlayer));
+
+                        var sceneId = GetSceneIdFromScreenId(screenId);
+
+                        ShowPanelButtonMessage(screenId, sceneId, $"Video: {videoId}");
                     }
-
-                    //var currentVideoClip = GetMedia(videoId, MediaType.VideoClip);
-                    
-                    //currentVideoClip.IsDisplay = true;
-
-                    return true;
+                }
+                else
+                {
+                    // Video clip from local storage
+                    //Debug.Log("Local video clip");
+                    var vc = _videoClips[videoId - 1];
+                    videoPlayer.clip = vc;
                 }
 
-                return false;
+                //var currentVideoClip = GetMedia(videoId, MediaType.VideoClip);
+
+                //currentVideoClip.IsDisplay = true;
+
+                return true;
+            }
+
+            return false;
             //}
             //catch (Exception exception)
             //{
@@ -1141,41 +1166,41 @@ namespace Assets.Scripts
             //try
             //{
             if (streamId > 0 && displayId > 0)
+            {
+                var agoraUsers = AgoraController.instance.AgoraUsers;
+
+                if (agoraUsers.Any())
                 {
-                    var agoraUsers = AgoraController.instance.AgoraUsers;
-
-                    if (agoraUsers.Any())
+                    Debug.Log("agoraUsers: -");
+                    foreach (var user in agoraUsers)
                     {
-                        Debug.Log("agoraUsers: -");
-                        foreach (var user in agoraUsers)
-                        {
-                            Debug.Log(
-                                $" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
-                        }
-
-                        var agoraUser = agoraUsers.FirstOrDefault(u => u.Id == streamId);
-
-                        Debug.Log($"agoraUser exists: {agoraUser != null}");
-
-                        if (agoraUser != null)
-                        {
-                            if (agoraUser.IsLocal || agoraUser.LeftRoom)
-                            {
-                                Debug.Log(
-                                    $"Something has gone wrong - is local: {agoraUser.IsLocal}, left room: {agoraUser.LeftRoom}.");
-                            }
-                            else
-                            {
-                                agoraUser.DisplayId = displayId;
-                                AgoraController.instance.AssignStreamToDisplay(agoraUser);
-                            }
-                        }
+                        Debug.Log(
+                            $" - {user.Uid} (isLocal: {user.IsLocal}, leftRoom: {user.LeftRoom}, id: {user.Id})");
                     }
 
-                    return true;
+                    var agoraUser = agoraUsers.FirstOrDefault(u => u.Id == streamId);
+
+                    Debug.Log($"agoraUser exists: {agoraUser != null}");
+
+                    if (agoraUser != null)
+                    {
+                        if (agoraUser.IsLocal || agoraUser.LeftRoom)
+                        {
+                            Debug.Log(
+                                $"Something has gone wrong - is local: {agoraUser.IsLocal}, left room: {agoraUser.LeftRoom}.");
+                        }
+                        else
+                        {
+                            agoraUser.DisplayId = displayId;
+                            AgoraController.instance.AssignStreamToDisplay(agoraUser);
+                        }
+                    }
                 }
 
-                return false;
+                return true;
+            }
+
+            return false;
             //}
             //catch (Exception exception)
             //{

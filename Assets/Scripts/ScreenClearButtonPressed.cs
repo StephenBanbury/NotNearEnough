@@ -26,7 +26,7 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                MediaDisplayManager.instance.ClearScreen(_screenId);
+                MediaDisplayManager.instance.RemoveVideo(_screenId);
 
                 if (_playButton)
                 {
