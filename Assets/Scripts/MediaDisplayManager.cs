@@ -591,7 +591,7 @@ namespace Assets.Scripts
 
             foreach (var panel in GameObject.FindGameObjectsWithTag("SelectionPanel"))
             {
-                Debug.Log($"Panel name: {panel.name}");
+                //Debug.Log($"Panel name: {panel.name}");
 
                 if (applyToAll || panel.name == $"Selection Panel {sceneId}")
                 {
@@ -815,6 +815,7 @@ namespace Assets.Scripts
         public void PresetSelect(int id)
         {
             //_currentPresetId++;
+            _currentPresetId = 1;
             PresetSelect();
         }
 
@@ -824,7 +825,7 @@ namespace Assets.Scripts
 
             if (_presetIsPlaying)
             {
-                Debug.Log($"Preset {_currentPresetId}");
+                Debug.Log($"Select preset {_currentPresetId}");
                 var preset = _presetService.GetPreset(_currentPresetId);
 
                 _mediaStatePreparationBuffer = new List<MediaScreenAssignState>();
@@ -849,15 +850,13 @@ namespace Assets.Scripts
             {
                 Debug.Log("Stop playing preset");
 
-                //var screenDisplay = model.mediaScreenDisplayStates.Where(s => s.screenDisplayId >= 101 && s.screenDisplayId <= 110);
+                foreach (var modelMediaScreenDisplayState in model.mediaScreenDisplayStates)
+                {
+                    var unCompoundScreenId = UnCompoundScreenId(modelMediaScreenDisplayState.screenDisplayId);
+                    ClearScreen(unCompoundScreenId);
 
-                //foreach (var mediaScreenDisplayStateModel in screenDisplay)
-                //{
-                //    model.mediaScreenDisplayStates.Remove(mediaScreenDisplayStateModel);
-                //}
-
-                //screenDisplay.mediaId++;
-                //model.mediaScreenDisplayStates.Add(screenDisplay);
+                    model.mediaScreenDisplayStates.Remove(modelMediaScreenDisplayState);
+                }
             }
 
             Apply();
@@ -871,6 +870,42 @@ namespace Assets.Scripts
             //AssignMediaToDisplaysFromArray();
             
             _mediaStatePreparationBuffer.Clear();
+        }
+
+        public void ClearScreen(int screenId)
+        {
+            if (screenId > 0)
+            {
+                var compoundScreenId = CompoundScreenId(screenId);
+
+                Debug.Log($"Clear display {compoundScreenId}");
+
+                var displaySuffix = "Wide";
+
+                var canvasDisplayName = $"CanvasDisplay{displaySuffix}";
+                var videoDisplayName = $"VideoDisplay{displaySuffix}";
+
+                Transform screenObject = GetScreenObjectFromScreenId(compoundScreenId);
+
+                var videoDisplay = screenObject.transform.Find(videoDisplayName);
+                var canvasDisplay = screenObject.transform.Find(canvasDisplayName);
+
+                videoDisplay.gameObject.SetActive(true);
+                canvasDisplay.gameObject.SetActive(false);
+
+                var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
+
+                if (videoPlayer != null)
+                {
+                    videoPlayer.enabled = false;
+
+                    // Remove media?
+                    // Remove from RealtimeSet?
+
+
+                    //ShowPanelButtonMessage(screenId, sceneId, $"Video: {videoId}");
+                }
+            }
         }
 
         private Transform GetScreenObjectFromScreenId(int screenId)
@@ -891,6 +926,11 @@ namespace Assets.Scripts
         {
             var compoundId = (int) MyCurrentScene * 100 + screenId;
             return compoundId;
+        }
+        private int UnCompoundScreenId(int screenId)
+        {
+            var unCompoundId = screenId - (int) MyCurrentScene * 100;
+            return unCompoundId;
         }
 
         public void MediaSelect(int videoId = 0, int streamId = 0)
@@ -919,48 +959,7 @@ namespace Assets.Scripts
 
             return currentMediaType;
         }
-
-
-        // TODO: clear screen display of any media
-        public void ScreenClear(int screenId)
-        {
-            if (screenId > 0)
-            {
-                var compoundScreenId = CompoundScreenId(screenId);
-
-                Debug.Log($"Clear media from display {compoundScreenId}");
-                
-                Transform screenObject = GetScreenObjectFromScreenId(compoundScreenId);
-
-                Debug.Log($"screenObject: {screenObject != null}");
-
-                var videoDisplay = screenObject.transform.Find("VideoDisplayWide");
-                if (videoDisplay == null) videoDisplay = screenObject.transform.Find("VideoDisplayTall");
-
-                if (videoDisplay != null)
-                {
-                    var videoPlayer = videoDisplay.GetComponentInChildren<VideoPlayer>();
-                    if (videoPlayer != null)
-                    {
-                        //videoPlayer.Pause();
-                    }
-                }
-
-                var canvasDisplay = screenObject.transform.Find("CanvasDisplayWide");
-                if (canvasDisplay == null) canvasDisplay = screenObject.transform.Find("CanvasDisplayTall");
-
-                if (canvasDisplay != null)
-                {
-                    var canvas = videoDisplay.GetComponentInChildren<Canvas>();
-                    if (canvas != null)
-                    {
-                        //canvas.gameObject.SetActive(false);
-                        canvas.enabled = false;
-                    }
-                }
-            }
-        }
-
+        
         public void VideoControl(int screenId, VideoControlVariant videoControl, int numberOfFrames = 96)
         {
             if (screenId > 0)
@@ -986,6 +985,8 @@ namespace Assets.Scripts
 
                     if (videoPlayer != null)
                     {
+                        videoPlayer.enabled = true;
+
                         switch (videoControl)
                         {
                             case VideoControlVariant.Pause:

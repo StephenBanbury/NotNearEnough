@@ -13,7 +13,7 @@ namespace Assets.Scripts
         private Color _colourPlay;
         private Color _colourPause;
         private Text _buttonText;
-        private bool _isPlaying;
+        public bool IsPlaying { get; set; }
 
         private void Start()
         {
@@ -25,7 +25,7 @@ namespace Assets.Scripts
             _buttonText = gameObject.GetComponentInChildren<Text>();
             _buttonText.text = "Play";
 
-            _isPlaying = false;
+            IsPlaying = false;
         }
 
 
@@ -33,7 +33,9 @@ namespace Assets.Scripts
         {
             if (other.CompareTag("Hand"))
             {
-                if (_isPlaying)
+                var currentColour = GetComponent<Renderer>().material.GetColor("_Color");
+
+                if (IsPlaying)
                 {
                     StartCoroutine(Pause());
                 }
@@ -56,7 +58,7 @@ namespace Assets.Scripts
 
             yield return new WaitForSeconds(0.7f);
 
-            _isPlaying = true;
+            IsPlaying = true;
         }
 
         private IEnumerator Pause()
@@ -71,7 +73,7 @@ namespace Assets.Scripts
 
             yield return new WaitForSeconds(0.7f);
 
-            _isPlaying = false;
+            IsPlaying = false;
         }
     }
 }
