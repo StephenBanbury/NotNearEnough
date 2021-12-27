@@ -13,7 +13,7 @@ namespace Assets.Scripts
             if (other.CompareTag("Hand"))
             {
                 Debug. Log("TeleportManager.OnTriggerEnter");
-                StartCoroutine(MediaDisplayManager.instance.DoTeleportation(_sceneId));
+                //StartCoroutine(MediaDisplayManager.instance.DoTeleportation(_sceneId));
             }
         }
 

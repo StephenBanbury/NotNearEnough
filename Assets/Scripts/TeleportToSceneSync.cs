@@ -44,7 +44,7 @@ namespace Assets.Scripts
         public void DoUpdate()
         {
             Debug.Log($"DoUpdate! SceneId {model.sceneId}");
-            StartCoroutine(MediaDisplayManager.instance.DoTeleportation(model.sceneId));
+            //StartCoroutine(MediaDisplayManager.instance.DoTeleportation(model.sceneId));
         }
 
         public void SetNewScene(int id)

@@ -500,7 +500,7 @@ namespace Assets.Scripts
 
             int destinationSceneId = _screenPortalBuffer.First(s => s.ScreenId == screenId && s.IsPortal).DestinationSceneId;
                     
-            StartCoroutine(DoTeleportation(destinationSceneId));
+            //StartCoroutine(DoTeleportation(destinationSceneId));
             return destinationSceneId;
         }
 
@@ -1528,7 +1528,7 @@ namespace Assets.Scripts
 
         public void GrandFinale()
         {
-            StartCoroutine(DoTeleportation(9, true));
+            //StartCoroutine(DoTeleportation(9, true));
         }
 
         public void SetSkybox(bool useFinale)
