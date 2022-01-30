@@ -434,6 +434,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1.75
+  m_PresetInfoIsWorld: 1
 --- !u!114 &937161518170235670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,6 +534,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1.75
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1002892936644549755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,6 +1040,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1.75
+  m_PresetInfoIsWorld: 0
 --- !u!114 &9220485232361664646
 MonoBehaviour:
   m_ObjectHideFlags: 0
